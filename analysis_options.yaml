@@ -6,3 +6,4 @@ linter:
     constant_identifier_names : false
     prefer_mixin : false
     prefer_relative_imports : false
+    lines_longer_than_80_chars : false
