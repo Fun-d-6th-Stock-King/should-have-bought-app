@@ -19,6 +19,11 @@ class MyApp extends StatelessWidget {
           // 임시 색상
           primarySwatch: Colors.purple,
           accentColor: Colors.deepOrange,
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(0.0),
+            ),
+          ),
         ),
         home: Scaffold(
           appBar: AppBar(
