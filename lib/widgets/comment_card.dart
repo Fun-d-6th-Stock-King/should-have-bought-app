@@ -31,9 +31,17 @@ class _CommenltCardState extends State<CommenltCard> {
     return LayoutBuilder(
       builder: (context, constrains) {
         return Container(
-          height: (mediaQuery.size.height - mediaQuery.padding.top) * 0.50,
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 3,
+              color: Colors.grey[300],
+            ),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          height: (mediaQuery.size.height - mediaQuery.padding.top) * 0.52,
           width: (mediaQuery.size.width - mediaQuery.padding.left) * 0.90,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -42,12 +50,11 @@ class _CommenltCardState extends State<CommenltCard> {
                   Container(
                     height: constrains.maxHeight * 0.1,
                     width: constrains.maxWidth * 0.5,
-                    child: Tab(
-                      // TODO : icon 으로 Emoji image parameter 전달 받아야 함
-                      icon: Icon(
-                        Icons.thumb_up,
-                        size: (mediaQuery.size.width * 0.3),
-                      ),
+                    child:
+                        // TODO : icon 으로 Emoji image parameter 전달 받아야 함
+                        Icon(
+                      Icons.thumb_up,
+                      size: (mediaQuery.size.width * 0.3),
                     ),
                   ),
                   Container(
@@ -57,9 +64,12 @@ class _CommenltCardState extends State<CommenltCard> {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(top: 10),
-                          child: Icon(
-                            CupertinoIcons.heart,
-                            size: (mediaQuery.size.width * 0.08),
+                          child: IconButton(
+                            icon: Icon(
+                              CupertinoIcons.heart,
+                              size: (mediaQuery.size.width * 0.08),
+                            ),
+                            onPressed: () {},
                           ),
                         ),
                         Text(
@@ -73,37 +83,65 @@ class _CommenltCardState extends State<CommenltCard> {
                 ],
               ),
               SizedBox(
-                height: 50,
+                height: 40,
               ),
-              Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: CircleAvatar(
-                          // TODO : Child로 로고 이미지 전달받아야함
-                          backgroundColor: Colors.blue,
-                          radius: (mediaQuery.size.width * 0.05),
+              Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: CircleAvatar(
+                            // TODO : Child로 로고 이미지 전달받아야함
+                            backgroundColor: Colors.blue,
+                            radius: (mediaQuery.size.width * 0.05),
+                          ),
                         ),
+                        Text(
+                          // TODO : Parameter 전달받아야 함
+                          '삼성전자',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _renderCommentCard('망해도 국가가 살려줄 국민주'),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    _renderCommentCard('내가 벌때 쟤도 범'),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 15, top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '2021-03-04',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      '아빠 왜 그때 안샀어...',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        '댓글 N개 모두보기',
+                        style: TextStyle(color: Colors.grey),
                       ),
-                      Text(
-                        // TODO : Parameter 전달받아야 함
-                        '삼성전자',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  _renderCommentCard('망해도 국가가 살려줄 국민주'),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  _renderCommentCard('내가 벌때 쟤도 범')
-                ],
+                    )
+                  ],
+                ),
               ),
             ],
           ),
