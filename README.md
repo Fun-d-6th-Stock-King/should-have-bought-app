@@ -4,7 +4,7 @@
 ##  Struct
 
 |Directory|Path|Note|
-|--|---|---|---|
+|---------|----|----|
 |assets | images|image 자료가 담길 디렉토리, 추후 icon 으로 나눌 수도 있음|
 |assets | fonts|font 파일이 담길 디렉토리, Family 별로 세부 구분|
 |lib | models|model로 사용될 모듈|
