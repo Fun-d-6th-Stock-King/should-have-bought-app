@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/providers/provider_list.dart';
 import 'package:should_have_bought_app/routes.dart';
+import 'package:should_have_bought_app/screens.dart' show TabScreen;
 
 void main() {
   runApp(MyApp());
@@ -16,21 +17,24 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Should Have Bought',
         theme: ThemeData(
-          // 임시 색상
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.all(0.0),
-            ),
-          ),
+          primaryColor: Colors.white,
+          accentColor: Colors.black,
+          canvasColor: Colors.transparent,
         ),
         home: Scaffold(
           appBar: AppBar(
-            title: Text('Should Have Bought'),
+            leading: null,
+            title: Text('LOGO'),
+            elevation: 0,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.search, color: Colors.black,),
+                  onPressed: null
+              ),
+            ],
           ),
           body: Center(
-            child: Text('Hi'),
+            child: TabScreen(),
           ),
         ),
         // initialRoute: '/',
