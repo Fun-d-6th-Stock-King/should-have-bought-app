@@ -4,8 +4,10 @@ class MyPageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      child: Text('MyPageScreen'),
+    return  Scaffold(
+      body: Container(
+        child: Text('MyPageScreen'),
+      ),
     );
   }
 }

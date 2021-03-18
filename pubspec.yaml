@@ -35,7 +35,7 @@ dependencies:
   charts_flutter: ^0.10.0
   fl_chart: ^0.20.1
   syncfusion_flutter_charts: ^18.4.47
-
+  syncfusion_flutter_sliders: ^18.4.48-beta
 
 dev_dependencies:
   flutter_test:
