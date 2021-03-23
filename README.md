@@ -26,3 +26,63 @@
 
 **기타**
 - providers, routes 는 각각 `providers_list.dart` , `routes.dart` 에 작성된 예시를 참고
+
+## 개발 환경 세팅
+
+### firebase google 연동
+
+#### SHA-1 등록
+
+1.
+android studio로 open을 누르고 sholud-have-bought-app 프로젝트 내의 android를 최상위로 열기
+
+android studio 우측 상단 gradle 클릭 - Tasks - android - signingReport 클릭
+
+출력 되는 SHA1 입력
+
+#### google-services.json 파일 추가
+
+sholud-have-bought-app - android - app 하위에 추가
+
+
+####
+
+프로젝트 수준의 build.gradle (<project>/build.gradle):
+
+```
+buildscript {
+  repositories {
+    // Check that you have the following line (if not, add it):
+    google()  // Google's Maven repository
+  }
+  dependencies {
+    ...
+    // Add this line
+    classpath 'com.google.gms:google-services:4.3.5'
+  }
+}
+
+allprojects {
+  ...
+  repositories {
+    // Check that you have the following line (if not, add it):
+    google()  // Google's Maven repository
+    ...
+  }
+}
+```
+
+앱 수준의 build.gradle (<project>/<app-module>/build.gradle):
+
+
+
+apply plugin: 'com.android.application'
+// Add this line
+apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+
+}
+
+#### 연동 이슈시 참고
+https://282-ground.tistory.com/181
