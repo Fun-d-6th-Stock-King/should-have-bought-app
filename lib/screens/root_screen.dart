@@ -34,7 +34,7 @@ class _CreateRootScreenState extends State<RootScreen> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           print('[TEST] login');
-          print(snapshot.hasData);
+          print(snapshot.data);
           if(snapshot.connectionState == ConnectionState.waiting) {
             return LoadingScreen();
           }
