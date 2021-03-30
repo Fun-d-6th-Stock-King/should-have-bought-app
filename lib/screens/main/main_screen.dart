@@ -9,7 +9,7 @@ class MainScreen extends StatelessWidget {
         child: ListView.builder(
       itemCount: Provider.of<Widzets>(context).items.length,
       itemBuilder: (ctx, index) =>
-          Provider.of<Widzets>(context).items[index].child,
+          Provider.of<Widzets>(context, listen: false).items[index].child,
     ));
   }
 }

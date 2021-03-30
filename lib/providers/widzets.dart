@@ -1,12 +1,51 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/models/widzet.dart';
 
 class Widzets with ChangeNotifier {
   final List<Widzet> _items = [
-    Widzet("a", Text('a')),
-    Widzet("b", Text('b')),
-    Widzet("c", Text('c')),
-    Widzet("d", Text('d')),
+    Widzet(
+      "a",
+      Card(
+        child: ListTile(
+          title: Text('This is Title "A"'),
+          subtitle: Text('this Is subtitle'),
+          leading: Icon(Icons.place),
+          tileColor: Colors.red,
+        ),
+      ),
+    ),
+    Widzet(
+      "b",
+      Card(
+        child: ListTile(
+          title: Text('This is Title "B"'),
+          subtitle: Text('this Is subtitle'),
+          leading: Icon(Icons.place),
+          tileColor: Colors.green,
+        ),
+      ),
+    ),
+    Widzet(
+      "c",
+      Card(
+        child: ListTile(
+          title: Text('This is Title "C"'),
+          subtitle: Text('this Is subtitle'),
+          leading: Icon(Icons.place),
+          tileColor: Colors.yellow,
+        ),
+      ),
+    ),
+    Widzet(
+      "d",
+      Card(
+        child: ListTile(
+          title: Text('This is Title "D"'),
+          subtitle: Text('this Is subtitle'),
+          leading: Icon(Icons.place),
+        ),
+      ),
+    ),
   ];
   List<Widzet> get items {
     return [..._items];
@@ -20,6 +59,11 @@ class Widzets with ChangeNotifier {
 
   void insertItem(int index, Widzet item) {
     _items.insert(index, item);
+    notifyListeners();
+  }
+
+  void addItem(Widzet widzet) {
+    _items.add(widzet);
     notifyListeners();
   }
 }
