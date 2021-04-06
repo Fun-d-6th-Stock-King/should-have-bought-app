@@ -17,13 +17,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Should Have Bought',
         theme: ThemeData(
-          primaryColor: Colors.white,
+          primaryColor: Color.fromARGB(255, 229, 229, 229),
           accentColor: Colors.black,
           canvasColor: Colors.transparent,
         ),
         home: Scaffold(
           appBar: AppBar(
-            backgroundColor: Color.fromARGB(255, 229, 229, 229),
             leading: null,
             title: Text('LOGO'),
             elevation: 0,
