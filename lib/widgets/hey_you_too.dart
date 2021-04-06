@@ -19,7 +19,7 @@ class HeyYouToo extends StatelessWidget {
                 width: 172,
                 height: 31,
                 child: Text(
-                  '그때 살걸...야,너두?',
+                  '그때 살걸...야, 너두?',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
