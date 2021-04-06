@@ -23,14 +23,17 @@ class MyApp extends StatelessWidget {
         ),
         home: Scaffold(
           appBar: AppBar(
+            backgroundColor: Color.fromARGB(255, 229, 229, 229),
             leading: null,
             title: Text('LOGO'),
             elevation: 0,
             actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.search, color: Colors.black,),
-                  onPressed: null
-              ),
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.black,
+                  ),
+                  onPressed: null),
             ],
           ),
           body: Center(

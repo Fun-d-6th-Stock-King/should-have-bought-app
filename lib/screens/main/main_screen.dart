@@ -5,25 +5,19 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(
-              vertical: 27,
-              horizontal: 20,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 13.5,
+              ),
+              child: HeyYouToo(),
             ),
-            child: HeyYouToo(),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(
-              vertical: 13.5,
-              horizontal: 20,
-            ),
-            child: HeyYouToo(),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
