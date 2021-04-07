@@ -1,9 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:should_have_bought_app/models/calculator_stock.dart';
+
 class HeyYouToo extends StatelessWidget {
+  final _dummy = {
+    "code": "005930",
+    "company": "삼성전자",
+    "currentPrice": 85600,
+    "lastTradingDateTime": "2021 Apr 07 15:30:24",
+    "calculationResult": {
+      "investDate": "10년전",
+      "investPrice": 100000,
+      "yieldPrice": 470847.08,
+      "yieldPercent": 370.8471,
+      "oldCloseDate": "2011.04.07",
+      "oldPrice": 18180,
+      "holdingStock": 5.50055,
+      "salaryYear": 47084.71,
+      "salaryMonth": 3923.726
+    }
+  };
+
   @override
   Widget build(BuildContext context) {
+    var _stockData = CalculatorStock.fromMap(_dummy);
+    print(_stockData.name);
     return Column(
       children: <Widget>[
         Container(
@@ -78,7 +100,7 @@ class HeyYouToo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '삼성전자',
+                          '${_stockData.name}',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
@@ -101,26 +123,42 @@ class HeyYouToo extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Icon(
-                            CupertinoIcons.triangle_fill,
-                            size: 13,
-                            color: Color(0xffFF6561),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                CupertinoIcons.triangle_fill,
+                                size: 13,
+                                color: Color(0xffFF6561),
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                            ],
                           ),
                           Text(
-                            '395,820원',
+                            '${_stockData.yieldPrice.toStringAsFixed(0)}원',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffFF6561),
                             ),
                           ),
-                          Text(
-                            '(+295%)',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Color(0xffFF6561),
-                            ),
-                          )
+                          (_stockData.yieldPercent > 0)
+                              ? Text(
+                                  '(+${_stockData.yieldPercent.toStringAsFixed(0)})',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xffFF6561),
+                                  ),
+                                )
+                              : Text(
+                                  '(-${_stockData.yieldPercent.toStringAsFixed(0)})',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xffFF6561),
+                                  ),
+                                ),
                         ],
                       ),
                     )
@@ -153,7 +191,7 @@ class HeyYouToo extends StatelessWidget {
                               width: 53,
                               height: 23,
                               child: Text(
-                                '10년전',
+                                '${_stockData.investDate}',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 13,
@@ -168,7 +206,7 @@ class HeyYouToo extends StatelessWidget {
                             ),
                             Container(
                               child: Text(
-                                '100,000원',
+                                '${_stockData.investPrice}원',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
@@ -209,7 +247,7 @@ class HeyYouToo extends StatelessWidget {
                             ),
                             Container(
                               child: Text(
-                                '18,380원/1주',
+                                '${_stockData.oldPrice}/1주',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
