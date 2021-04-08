@@ -23,12 +23,12 @@ class MyApp extends StatelessWidget {
         ),
         home: Scaffold(
           appBar: AppBar(
+            backgroundColor:Color(0xFFF5F5F5),
             leading: null,
-            title: Text('LOGO'),
             elevation: 0,
             actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.search, color: Colors.black,),
+                  icon: Image(image: AssetImage('assets/icons/search.png')),
                   onPressed: null
               ),
             ],
