@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/constant.dart';
 
 class MainScreen extends StatelessWidget {
 
@@ -17,7 +18,7 @@ class MainScreen extends StatelessWidget {
                     Row(
                       children: [
                         Text("닉네임",style: TextStyle(
-                                 fontSize: 30, fontWeight: FontWeight.w500, height: 1.5, color:  Color(0xFFFFB800),)
+                                 fontSize: 30, fontWeight: FontWeight.w500, height: 1.5, color: mainColor,)
                         ),
                         Text(" 님,",style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.w500, height: 1.5)
@@ -39,7 +40,7 @@ class MainScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text("메인편집",style: TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500, height: 1.5, color:Color(0xFFFFB800))
+                      fontSize: 14, fontWeight: FontWeight.w500, height: 1.5, color:mainColor)
                     ),
                      //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
                   ],
