@@ -1,137 +1,215 @@
 import 'package:flutter/material.dart';
-import 'package:should_have_bought_app/constant.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
-class MainScreen extends StatelessWidget {
-
+class MainScreen extends StatefulWidget {
   @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final TextEditingController _controller = new TextEditingController();
+
+  String _selectedDateValue = '10년 전';
+  String _selectedCompanyValue = '삼성전자';
+  int _selectedPriceValue = 100000;
+  int value = 0;
+  List<String> dates = ['어제', '저번주', '한달 전', '6개월 전', '1년 전', '5년 전', '10년 전'];
+  List<String> company = [
+    '삼성전자',
+    '삼성SDI',
+    '삼성전기',
+    '삼성물산',
+    '카카오',
+    'LG 전자',
+    'LG 디스플레이'
+  ];
+
+  void _showDatePicker(BuildContext context) {
+    final _screenSize = MediaQuery.of(context).size;
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        width: _screenSize.width,
+        height: _screenSize.height * 0.3,
+        child: CupertinoPicker(
+          backgroundColor: Colors.white,
+          itemExtent: 30,
+          scrollController: FixedExtentScrollController(initialItem: 1),
+          children: [for (String val in dates) Text(val)],
+          onSelectedItemChanged: (value) {
+            setState(() {
+              _selectedDateValue = dates[value];
+              print('_selectedDateValue : $_selectedDateValue');
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showComponyPicker(BuildContext context) {
+    final _screenSize = MediaQuery.of(context).size;
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) => Container(
+        width: _screenSize.width,
+        height: _screenSize.height * 0.3,
+        child: CupertinoPicker(
+          backgroundColor: Colors.white,
+          itemExtent: 30,
+          scrollController: FixedExtentScrollController(initialItem: 1),
+          children: [for (String val in company) Text(val)],
+          onSelectedItemChanged: (value) {
+            setState(() {
+              _selectedCompanyValue = company[value];
+              print('_selectedCompanyValue : $_selectedCompanyValue');
+            });
+          },
+        ),
+      ),
+    );
+  }
+
   Widget build(BuildContext context) {
+    var viewSelectedDates = Row(
+      children: [
+        CupertinoButton(
+          child: Text(
+            _selectedDateValue,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          onPressed: () => _showDatePicker(context),
+        ),
+        Text(
+          '에',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
+      ],
+    );
+
+    var viewSelectedCompany = Row(
+      children: [
+        CupertinoButton(
+          child: Text(
+            _selectedCompanyValue,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          onPressed: () => _showComponyPicker(context),
+        ),
+        Text(
+          '를',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
+      ],
+    );
+
+    var viewSelectedPrice = Row(
+      children: [
+        Flexible(
+          flex: 1,
+          fit: FlexFit.loose,
+          child: TextField(
+            textAlign: TextAlign.left,
+            maxLength: 10,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              WhitelistingTextInputFormatter(RegExp('[0-9]')),
+            ],
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            ),
+            cursorColor: Colors.grey,
+            controller: _controller,
+            decoration: InputDecoration(
+              hintText: '100000',
+              hintStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 28,
+                fontWeight: FontWeight.w600,
+              ),
+              counterText: '',
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          fit: FlexFit.loose,
+          child: Text(
+            '원',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w100,
+            ),
+          ),
+        ),
+      ],
+    );
+
     return Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16,right: 16),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Center(
+          child: Container(
+            width: 320,
+            height: 340,
+            decoration: BoxDecoration(
+              color: Color(0xFFFFFFFF),
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xFFF1F1F1),
+                  offset: Offset(2.0, 13.0),
+                  blurRadius: 35.0,
+                ),
+              ],
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text("닉네임",style: TextStyle(
-                                 fontSize: 30, fontWeight: FontWeight.w500, height: 1.5, color: mainColor,)
-                        ),
-                        Text(" 님,",style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.w500, height: 1.5)
-                        ),
-                      ],
+                viewSelectedDates,
+                viewSelectedCompany,
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: viewSelectedPrice,
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: 500,
+                  child: Text(
+                    '샀었더라면...?',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w100,
                     ),
-                    CircleAvatar(
-                      backgroundImage: NetworkImage('https://www.woolha.com/media/2020/03/eevee.png'),
-                      backgroundColor: Colors.white,
-                    ),
-                  ],
-                ),
-                Text("오늘도 익절하는 하루 되세요.",style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.w500, height: 1.5)
-                ),
-                SizedBox(height: 21,),
-                // add 계산기
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text("메인편집",style: TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w500, height: 1.5, color:mainColor)
-                    ),
-                     //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
-                  ],
-                ),
-                SizedBox(
-                  height: 7,
-                ),
-                SizedBox(
-                    height: 340,
-                    child: Card(
-                      elevation: 0.4,
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 18.0),
-                        child: Container(),
-                      ),
-                    )
-                ),
-                SizedBox(height: 60,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("그때 살걸... 야, 너두?",style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w700, height: 1.5,)
-                    ),
-                    Row(
-                      children: [
-                        Text("더보기",style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w400, height: 1.5, color: Color(0xFF828282) )
-                        ),
-                        Icon(Icons.keyboard_arrow_right_outlined, color: Color(0xFF828282))
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                SizedBox(
-                    height: 164,
-                    child: Card(
-                      elevation: 0.4,
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 18.0),
-                        child: Container(),
-                      ),
-                    )
-                ),
-                SizedBox(height: 20,),
-                SizedBox(
-                    height: 164,
-                    child: Card(
-                      elevation: 0.4,
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 18.0),
-                        child: Container(),
-                      ),
-                    )
-                ),
-                SizedBox(height: 66,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("현재 주가",style: TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w700, height: 1.5,)
-                    ),
-                    Row(
-                      children: [
-                        Text("인기순",style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w400, height: 1.5, color: Color(0xFF828282) )
-                        ),
-                        Icon(Icons.keyboard_arrow_down_outlined, color: Color(0xFF828282))
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
+      ),
     );
   }
 }
