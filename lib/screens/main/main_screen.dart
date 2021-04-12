@@ -69,18 +69,7 @@ class MainScreen extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 18.0),
-                      child: Container(
-                        child: FlatButton(
-                          child: Text('무야호'),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) =>
-                                        CalculatorResultScreen()));
-                          },
-                        ),
-                      ),
+                      child: Container(),
                     ),
                   )),
               SizedBox(

@@ -1,4 +1,7 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator_stock.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   @override
@@ -23,12 +26,17 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       "salaryMonth": 3923.726
     }
   };
+  final _formatCurrency =
+      NumberFormat.simpleCurrency(locale: 'ko-KR', name: "", decimalDigits: 0);
 
   @override
   Widget build(BuildContext context) {
+    var _stockData = CalculatorStock.fromMap(_dummy);
     return Scaffold(
       appBar: AppBar(
         title: Text('그때 살껄'),
+        elevation: 0.0,
+        backgroundColor: defaultBackgroundColor,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -41,7 +49,102 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           padding: EdgeInsets.only(left: 16, right: 16),
           child: Column(
             children: <Widget>[
-              Text('hh'),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text:
+                                '${_stockData.calculationResult['investDate']}',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '에',
+                          ),
+                          TextSpan(
+                            text: ' ${_stockData.name}',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '를',
+                          )
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: _formatCurrency.format(
+                                _stockData.calculationResult['investPrice']),
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '원에 샀으면 지금..?',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 35),
+              Container(
+                height: 209,
+                width: 321,
+                child: Card(
+                  elevation: 0.4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: 18,
+                      right: 18,
+                      top: 18,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(text: '😭'),
+                              TextSpan(text: '481,140원')
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
