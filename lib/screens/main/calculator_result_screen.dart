@@ -32,6 +32,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   @override
   Widget build(BuildContext context) {
     var _stockData = CalculatorStock.fromMap(_dummy);
+    var _yieldPercent = _stockData.calculationResult['yieldPercent'];
     return Scaffold(
       appBar: AppBar(
         title: Text('그때 살껄'),
@@ -130,14 +131,56 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                         RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.black,
+                              color: (_yieldPercent > 0)
+                                  ? Colors.red
+                                  : (_yieldPercent < 0)
+                                      ? Colors.blue
+                                      : Colors.black,
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
                             ),
-                            children: <TextSpan>[
-                              TextSpan(text: '😭'),
-                              TextSpan(text: '481,140원')
+                            children: [
+                              (_yieldPercent > 0)
+                                  ? TextSpan(text: '😂 ')
+                                  : (_yieldPercent < 0)
+                                      ? TextSpan(text: '😱 ')
+                                      : TextSpan(text: '🤔 '),
+                              TextSpan(
+                                  text:
+                                      '${_formatCurrency.format(_stockData.calculationResult['yieldPrice'])}원'),
                             ],
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: (_yieldPercent > 0)
+                                  ? Colors.red
+                                  : (_yieldPercent < 0)
+                                      ? Colors.blue
+                                      : Colors.black,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            children: [
+                              (_yieldPercent > 0)
+                                  ? TextSpan(text: '+')
+                                  : TextSpan(text: '-'),
+                              TextSpan(
+                                text: '${_yieldPercent.toStringAsFixed(0)}%',
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          '${_stockData.calculationResult['oldCloseDate']} 종가 기준',
+                          style: TextStyle(
+                            color: Color(0xff949597),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
                           ),
                         )
                       ],
