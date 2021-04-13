@@ -49,6 +49,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         child: Container(
           padding: EdgeInsets.only(left: 16, right: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
@@ -182,9 +183,116 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                             fontSize: 12,
                             fontWeight: FontWeight.w300,
                           ),
+                        ),
+                        SizedBox(
+                          height: 31,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '1주당 27,050원',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Container(
+                                height: 20,
+                                child: VerticalDivider(
+                                  color: Color(0xff979797),
+                                ),
+                              ),
+                              Text(
+                                '3.6주 보유',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                         )
                       ],
                     ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                '연봉/월급으로 친다면?',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(
+                height: 18,
+              ),
+              Container(
+                width: 320,
+                height: 86,
+                child: Card(
+                  elevation: 0.3,
+                  color: Color(0xffF8F8F8).withOpacity(0.89),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '1년에',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff828282),
+                            ),
+                          ),
+                          Text(
+                            _formatCurrency.format(
+                                _stockData.calculationResult['salaryYear']),
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          )
+                        ],
+                      ),
+                      Container(
+                        height: 57,
+                        child: VerticalDivider(
+                          color: Color(0xff979797),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '1달에',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff828282),
+                            ),
+                          ),
+                          Text(
+                            _formatCurrency.format(
+                                _stockData.calculationResult['salaryMonth']),
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),
