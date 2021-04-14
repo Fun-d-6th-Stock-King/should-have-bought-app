@@ -73,14 +73,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: Center(
+    return Center(
           child: Container(
-            width: 320,
             height: 340,
             decoration: BoxDecoration(
               color: Color(0xFFFFFFFF),
@@ -117,8 +111,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               ],
             ),
           ),
-        ),
-      ),
     );
   }
 
