@@ -72,7 +72,57 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget build(BuildContext context) {
-    var viewSelectedDates = Row(
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Center(
+          child: Container(
+            width: 320,
+            height: 340,
+            decoration: BoxDecoration(
+              color: Color(0xFFFFFFFF),
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0xFFF1F1F1),
+                  offset: Offset(2.0, 13.0),
+                  blurRadius: 35.0,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                viewSelectedDates(context),
+                viewSelectedCompany(context),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: viewSelectedPrice(context),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  width: 500,
+                  child: Text(
+                    '샀었더라면...?',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w100,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget viewSelectedDates(BuildContext context) {
+    return Row(
       children: [
         CupertinoButton(
           child: Text(
@@ -95,8 +145,10 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ],
     );
+  }
 
-    var viewSelectedCompany = Row(
+  Widget viewSelectedCompany(BuildContext context) {
+    return Row(
       children: [
         CupertinoButton(
           child: Text(
@@ -119,8 +171,10 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ],
     );
+  }
 
-    var viewSelectedPrice = Row(
+  Widget viewSelectedPrice(BuildContext context) {
+    return Row(
       children: [
         Flexible(
           flex: 1,
@@ -162,54 +216,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ],
-    );
-
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: Center(
-          child: Container(
-            width: 320,
-            height: 340,
-            decoration: BoxDecoration(
-              color: Color(0xFFFFFFFF),
-              borderRadius: BorderRadius.circular(15.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFFF1F1F1),
-                  offset: Offset(2.0, 13.0),
-                  blurRadius: 35.0,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                viewSelectedDates,
-                viewSelectedCompany,
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: viewSelectedPrice,
-                ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width: 500,
-                  child: Text(
-                    '샀었더라면...?',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
