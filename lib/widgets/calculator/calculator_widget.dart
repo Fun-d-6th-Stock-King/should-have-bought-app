@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-class MainScreen extends StatefulWidget {
+class CalculatorWidget extends StatefulWidget {
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _CalculatorWidgetState createState() => _CalculatorWidgetState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _CalculatorWidgetState extends State<CalculatorWidget> {
 
   final TextEditingController _controller = new TextEditingController();
 
