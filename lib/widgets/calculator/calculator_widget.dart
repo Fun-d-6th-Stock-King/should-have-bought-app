@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+
+import 'company_item.dart';
 
 class CalculatorWidget extends StatefulWidget {
   @override
@@ -8,7 +12,6 @@ class CalculatorWidget extends StatefulWidget {
 }
 
 class _CalculatorWidgetState extends State<CalculatorWidget> {
-
   final TextEditingController _controller = new TextEditingController();
 
   String _selectedDateValue = '10년 전';
@@ -74,43 +77,43 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
   Widget build(BuildContext context) {
     return Center(
-          child: Container(
-            height: 340,
-            decoration: BoxDecoration(
-              color: Color(0xFFFFFFFF),
-              borderRadius: BorderRadius.circular(15.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFFF1F1F1),
-                  offset: Offset(2.0, 13.0),
-                  blurRadius: 35.0,
-                ),
-              ],
+      child: Container(
+        height: 340,
+        decoration: BoxDecoration(
+          color: Color(0xFFFFFFFF),
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFFF1F1F1),
+              offset: Offset(2.0, 13.0),
+              blurRadius: 35.0,
             ),
-            child: Column(
-              children: [
-                viewSelectedDates(context),
-                viewSelectedCompany(context),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: viewSelectedPrice(context),
-                ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  width: 500,
-                  child: Text(
-                    '샀었더라면...?',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                ),
-              ],
+          ],
+        ),
+        child: Column(
+          children: [
+            viewSelectedDates(context),
+            viewSelectedCompany(context),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: viewSelectedPrice(context),
             ),
-          ),
+            Container(
+              padding: EdgeInsets.all(20),
+              width: 500,
+              child: Text(
+                '샀었더라면...?',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w100,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -153,7 +156,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          onPressed: () => _showComponyPicker(context),
+          onPressed: () => showCompaniesMenu(context),
         ),
         Text(
           '를',
@@ -209,6 +212,98 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
           ),
         ),
       ],
+    );
+  }
+
+
+  void showCompaniesMenu(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        )),
+        builder: (ctx) {
+          return CompanyListBuilder(context);
+        });
+  }
+
+  Widget CompanyListBuilder(BuildContext context) {
+    return FutureBuilder(
+        future: Provider.of<CalculatorProvider>(context, listen: false)
+            .getCompanies(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+                backgroundColor: Colors.transparent,
+                body: Center(
+                  child: CircularProgressIndicator(
+                      backgroundColor: Colors.transparent
+                  ),
+                ));
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return CompanyList(context);
+          }
+          return Container(
+            width: 0,
+            height: 0,
+          );
+        });
+  }
+
+  Widget CompanyList(BuildContext context) {
+    return Consumer<CalculatorProvider>(
+        child: emptyCompanyList(context),
+        builder: (context, calculatorProvider, child) =>
+            calculatorProvider.companyList.isEmpty == true
+                ? child
+                : ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 400,
+                      maxHeight: 400,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:34.0,right: 34.0),
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () {},
+                            child: ListTile(
+                              title: Align(
+                                child: Text('검색'),
+                                alignment: Alignment(-0.83, 0),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: calculatorProvider.companyList.length,
+                                itemBuilder: (context, index) {
+                                  return CompanyItem(calculatorProvider.companyList[index]);
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ));
+  }
+
+  Widget emptyCompanyList(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child:ListTile(
+        leading: Text('leading'),
+        title:Text('title'),
+
+      ),
     );
   }
 }
