@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 
 import 'company_item.dart';
@@ -15,7 +17,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   final TextEditingController _controller = new TextEditingController();
 
   String _selectedDateValue = '10년 전';
-  String _selectedCompanyValue = '삼성전자';
+  Company _selectedCompany = Company('삼성전자','005930');
   int _selectedPriceValue = 100000;
   int value = 0;
   List<String> dates = ['어제', '저번주', '한달 전', '6개월 전', '1년 전', '5년 전', '10년 전'];
@@ -28,6 +30,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     'LG 전자',
     'LG 디스플레이'
   ];
+
+  void SetCompanyValue(Company company) {
+    setState(() {
+      _selectedCompany = company;
+    });
+  }
 
   void _showDatePicker(BuildContext context) {
     final _screenSize = MediaQuery.of(context).size;
@@ -52,28 +60,28 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     );
   }
 
-  void _showComponyPicker(BuildContext context) {
-    final _screenSize = MediaQuery.of(context).size;
-    showCupertinoModalPopup(
-      context: context,
-      builder: (_) => Container(
-        width: _screenSize.width,
-        height: _screenSize.height * 0.3,
-        child: CupertinoPicker(
-          backgroundColor: Colors.white,
-          itemExtent: 30,
-          scrollController: FixedExtentScrollController(initialItem: 1),
-          children: [for (String val in company) Text(val)],
-          onSelectedItemChanged: (value) {
-            setState(() {
-              _selectedCompanyValue = company[value];
-              print('_selectedCompanyValue : $_selectedCompanyValue');
-            });
-          },
-        ),
-      ),
-    );
-  }
+  // void _showComponyPicker(BuildContext context) {
+  //   final _screenSize = MediaQuery.of(context).size;
+  //   showCupertinoModalPopup(
+  //     context: context,
+  //     builder: (_) => Container(
+  //       width: _screenSize.width,
+  //       height: _screenSize.height * 0.3,
+  //       child: CupertinoPicker(
+  //         backgroundColor: Colors.white,
+  //         itemExtent: 30,
+  //         scrollController: FixedExtentScrollController(initialItem: 1),
+  //         children: [for (String val in company) Text(val)],
+  //         onSelectedItemChanged: (value) {
+  //           setState(() {
+  //             _selectedCompanyValue = company[value];
+  //             print('_selectedCompanyValue : $_selectedCompanyValue');
+  //           });
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget build(BuildContext context) {
     return Center(
@@ -90,28 +98,57 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            viewSelectedDates(context),
-            viewSelectedCompany(context),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: viewSelectedPrice(context),
-            ),
-            Container(
-              padding: EdgeInsets.all(20),
-              width: 500,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20,right:20, top:12,bottom: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              viewSelectedDates(context),
+              viewSelectedCompany(context),
+              viewSelectedPrice(context),
+              // ToDo: 한글 금액
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    height : 50,
+                    child: Text(
+                      '샀었더라면..?',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          SizedBox(
+            height: 50,
+          ),
+          Container(
+            height: 50,
+            width: MediaQuery.of(context).size.width,
+            child: CupertinoButton(
+              color: mainColor,
+              padding:EdgeInsets.all(0),
               child: Text(
-                '샀었더라면...?',
-                textAlign: TextAlign.start,
+                '지금 얼마?',
+                textAlign: TextAlign.left,
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w100,
+                  color: Color(0xFFFFFFFF),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
+              onPressed: () {},
             ),
-          ],
+          )
+            ],
+          ),
         ),
       ),
     );
@@ -120,18 +157,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   Widget viewSelectedDates(BuildContext context) {
     return Row(
       children: [
-        CupertinoButton(
-          child: Text(
-            _selectedDateValue,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          onPressed: () => _showDatePicker(context),
-        ),
+        SelectedButton(context,_selectedDateValue, _showDatePicker),
+        Padding(padding:EdgeInsets.only(right:10),),
         Text(
           '에',
           style: TextStyle(
@@ -146,18 +173,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   Widget viewSelectedCompany(BuildContext context) {
     return Row(
       children: [
-        CupertinoButton(
-          child: Text(
-            _selectedCompanyValue,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          onPressed: () => showCompaniesMenu(context),
-        ),
+        SelectedButton(context,_selectedCompany.company, showCompaniesMenu),
+        Padding(padding:EdgeInsets.only(right:10),),
         Text(
           '를',
           style: TextStyle(
@@ -168,49 +185,75 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
       ],
     );
   }
+  Widget SelectedButton(BuildContext context, String value, ValueChanged<BuildContext> showMenu) {
+    return Container(
+      height: 45,
+      decoration: BoxDecoration(
+        border: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+            )
+        )
+      ),
+      child: CupertinoButton(
+        padding:EdgeInsets.all(0),
+        child: Text(
+          value,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        onPressed: () => showMenu(context),
+      ),
+    );
+  }
 
   Widget viewSelectedPrice(BuildContext context) {
     return Row(
       children: [
-        Flexible(
-          flex: 1,
-          fit: FlexFit.loose,
-          child: TextField(
-            textAlign: TextAlign.left,
-            maxLength: 10,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              WhitelistingTextInputFormatter(RegExp('[0-9]')),
-            ],
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 300,
             ),
-            cursorColor: Colors.grey,
-            controller: _controller,
-            decoration: InputDecoration(
-              hintText: '100000',
-              hintStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 28,
-                fontWeight: FontWeight.w600,
+            child: IntrinsicWidth(
+              child: TextField(
+                textAlign: TextAlign.left,
+                maxLength: 10,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  WhitelistingTextInputFormatter(RegExp('[0-9]')),
+                ],
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w600,
+                ),
+                cursorColor: Colors.grey,
+                controller: _controller,
+                decoration: InputDecoration(
+                  isDense: true,
+                  hintText: '100000',
+                  hintStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  counterText: '',
+                ),
               ),
-              counterText: '',
             ),
           ),
-        ),
-        Flexible(
-          flex: 1,
-          fit: FlexFit.loose,
-          child: Text(
-            '원',
+        Padding(padding:EdgeInsets.only(right:10),),
+         Text(
+            '원에',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w100,
             ),
           ),
-        ),
       ],
     );
   }
@@ -285,7 +328,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                 scrollDirection: Axis.vertical,
                                 itemCount: calculatorProvider.companyList.length,
                                 itemBuilder: (context, index) {
-                                  return CompanyItem(calculatorProvider.companyList[index]);
+                                  return CompanyItem(
+                                      company:calculatorProvider.companyList[index],
+                                      onTap: SetCompanyValue,
+                                  );
                                 }),
                           ),
                         ],

@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 
 class CompanyItem extends StatelessWidget {
-  CompanyItem(this.company);
+  CompanyItem({this.company, this.onTap});
 
   final Company company;
-  //final ValueChanged<Map> save;
+  final ValueChanged<Company> onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        onTap(company);
         Navigator.pop(context);
       },
       child: Container(
