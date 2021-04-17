@@ -16,7 +16,7 @@ class CalculatorProvider with ChangeNotifier {
   void filterSearchResults(String query) {
     List<Company> dummySearchList = [];
     dummySearchList.addAll(_companyList?.cast<Company>());
-    print('dummySearchList:');
+
     if(query.isNotEmpty) {
       List<Company> dummyListData = [];
       dummyListData = dummySearchList.where((item) {
@@ -45,6 +45,7 @@ class CalculatorProvider with ChangeNotifier {
     // _allArticles = descSortArticles;
     //notifyListeners();
   }
+
   Future getCompanies() async {
     final result = await CalculatorApi.getCompanies();
     print(result['companyList']);

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../api.dart';
 
-class CalculatorApi {
+class CalculatorApi{
   static Future getResult() async {
     print('uri');
     print("$stockApiUrl/api/buythen/calculate");

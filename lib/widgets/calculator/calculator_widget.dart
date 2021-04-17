@@ -203,8 +203,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     );
   }
 
-  Widget SelectedButton(
-      BuildContext context, String value, ValueChanged<BuildContext> showMenu) {
+  Widget SelectedButton(BuildContext context, String value, ValueChanged<BuildContext> showMenu) {
     return Container(
       height: 45,
       decoration: BoxDecoration(
