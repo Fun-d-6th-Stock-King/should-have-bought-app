@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 
 import 'company_item.dart';
 
@@ -14,13 +19,13 @@ class CalculatorWidget extends StatefulWidget {
 }
 
 class _CalculatorWidgetState extends State<CalculatorWidget> {
-  final TextEditingController _controller = TextEditingController();
   TextEditingController _searchController = TextEditingController();
-  String _selectedDateValue = '10년 전';
-  Company _selectedCompany = Company('삼성전자', '005930');
-  int _selectedPriceValue = 100000;
+  TextEditingController _priceController = TextEditingController();
+  String _selectedDateValue = 'YEAR10';
+  Company _selectedCompany = Company(company: '삼성전자', code: '005930');
   int value = 0;
-  List<String> dates = ['어제', '저번주', '한달 전', '6개월 전', '1년 전', '5년 전', '10년 전'];
+  List<String> dates = ['DAY1','WEEK1','MONTH1','MONTH6','YEAR1','YEAR5','YEAR10'];
+  List<String> prices = ['100000','500000','1000000','5000000','10000000'];
   List<String> company = [
     '삼성전자',
     '삼성SDI',
@@ -31,18 +36,21 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     'LG 디스플레이'
   ];
   Future futureGetCompanyList;
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    futureGetCompanyList = Provider.of<CalculatorProvider>(context, listen: false)
-        .getCompanies();
+    futureGetCompanyList =
+        Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
+    _priceController.text = numberWithComma('100000');
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
   }
+
   void SetCompanyValue(Company company) {
     setState(() {
       _selectedCompany = company;
@@ -60,7 +68,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
           backgroundColor: Colors.white,
           itemExtent: 30,
           scrollController: FixedExtentScrollController(initialItem: 1),
-          children: [for (String val in dates) Text(val)],
+          children: [for (String date in dates) Text(dateValue[date])],
           onSelectedItemChanged: (value) {
             setState(() {
               _selectedDateValue = dates[value];
@@ -112,11 +120,14 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
         ),
         child: Padding(
           padding:
-              const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 12),
+              const EdgeInsets.only(left: 25, right: 25, top: 12, bottom: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              viewSelectedDates(context),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [viewSelectedDates(context), randomValues(context)],
+              ),
               viewSelectedCompany(context),
               viewSelectedPrice(context),
               // ToDo: 한글 금액
@@ -148,16 +159,38 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 child: CupertinoButton(
                   color: mainColor,
                   padding: EdgeInsets.all(0),
-                  child: Text(
+                  child: isLoading ? SizedBox(
+                    height: 20,
+                    child: Theme(
+                        data: Theme.of(context).copyWith(accentColor: defaultFontColor),
+                        child: CircularProgressIndicator()
+                    ),
+                  ) : Text(
                     '지금 얼마?',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: Color(0xFFFFFFFF),
+                      color: defaultFontColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
+                    await Provider.of<CalculatorProvider>(context,listen:false).getResult(
+                        CalculatorDto(
+                            code: _selectedCompany.code,
+                            investDate: _selectedDateValue,
+                            investPrice: intToCurrency(_priceController.text)
+                        ).toMap()
+                    ).then((value) {
+                      //ToDo: Provider API 호출 후 결과페이지 이동
+                    });
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
                 ),
               )
             ],
@@ -170,7 +203,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   Widget viewSelectedDates(BuildContext context) {
     return Row(
       children: [
-        SelectedButton(context, _selectedDateValue, _showDatePicker),
+        SelectedButton(context, dateValue[_selectedDateValue], _showDatePicker),
         Padding(
           padding: EdgeInsets.only(right: 10),
         ),
@@ -238,21 +271,21 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
           child: IntrinsicWidth(
             child: TextField(
               textAlign: TextAlign.left,
-              maxLength: 10,
+              maxLength: 13,
               keyboardType: TextInputType.number,
               inputFormatters: [
                 WhitelistingTextInputFormatter(RegExp('[0-9]')),
+                CurrencyInputFormatter(maxDigits: 10)
               ],
+              controller: _priceController,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 28,
                 fontWeight: FontWeight.w600,
               ),
               cursorColor: Colors.grey,
-              controller: _controller,
               decoration: InputDecoration(
                 isDense: true,
-                hintText: '100000',
                 hintStyle: TextStyle(
                   color: Colors.black,
                   fontSize: 28,
@@ -279,18 +312,22 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
   void showCompaniesMenu(BuildContext context) async {
     showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(8.0),
-        topRight: Radius.circular(8.0),
-      )),
-      builder: (ctx) {
-        return CompanyListBuilder(context);
-      }
-    ).whenComplete(() {
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        )),
+        builder: (ctx) {
+          return AnimatedPadding(
+              duration: Duration(milliseconds: 150),
+              curve: Curves.easeOut,
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: CompanyListBuilder(context));
+        }).whenComplete(() {
       //SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
   }
@@ -318,16 +355,15 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                           elevation: 5.0,
                           shadowColor: Colors.black,
                           child: TextField(
-                              onChanged: (value) {
-                              },
+                              onChanged: (value) {},
                               controller: _searchController,
                               decoration: InputDecoration(
                                   hintText: "Search",
                                   suffixIcon: Icon(Icons.search),
                                   fillColor: Colors.white,
                                   filled: true,
-                                  contentPadding:
-                                  EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                                  contentPadding: EdgeInsets.fromLTRB(
+                                      10.0, 10.0, 20.0, 10.0),
                                   enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                       borderSide: BorderSide(
@@ -336,9 +372,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       ),
                       SizedBox(height: 55),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 30),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 30, horizontal: 30),
                         child: CircularProgressIndicator(
-                                  backgroundColor: Colors.transparent),
+                            backgroundColor: Colors.transparent),
                       ),
                     ],
                   ),
@@ -365,7 +402,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 maxHeight: 400,
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+                padding: EdgeInsets.only(
+                  left: 25.0,
+                  right: 25.0,
+                ),
                 child: Column(
                   children: [
                     SizedBox(height: 15),
@@ -430,8 +470,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 elevation: 5.0,
                 shadowColor: Colors.black,
                 child: TextField(
-                    onChanged: (value) {
-                    },
+                    onChanged: (value) {},
                     controller: _searchController,
                     decoration: InputDecoration(
                         hintText: "Search",
@@ -439,11 +478,11 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         fillColor: Colors.white,
                         filled: true,
                         contentPadding:
-                        EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0),
-                            borderSide: BorderSide(
-                                color: Colors.white, width: 3.0)))),
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 3.0)))),
               ),
             ),
             SizedBox(height: 15),
@@ -451,5 +490,55 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
         ),
       ),
     );
+  }
+
+  Widget randomValues(BuildContext context) {
+    return InkWell(
+        child: Column(
+          children: [
+            Image(image: AssetImage('assets/icons/ico_random.png')),
+            Padding(padding: EdgeInsets.only(bottom: 2)),
+            Text(
+              '랜덤',
+              style: TextStyle(fontSize: 11, color: Color(0xFF828282)),
+            )
+          ],
+        ),
+        onTap: () {
+          CalculatorRandomValues();
+        });
+  }
+
+  Widget CalculatorRandomValues() {
+    List companyList = Provider.of<CalculatorProvider>(context,listen: false).companyList;
+    int RandomDate = Random().nextInt(dates.length);
+    int RandomCompany = Random().nextInt(companyList.length);
+    int RandomPrice = Random().nextInt(prices.length);
+    setState((){
+      _selectedDateValue = dates[RandomDate];
+      _selectedCompany = companyList[RandomCompany];
+    });
+    _priceController.text = numberWithComma(prices[RandomPrice]);
+  }
+}
+
+class CurrencyInputFormatter extends TextInputFormatter {
+  CurrencyInputFormatter({this.maxDigits});
+  final int maxDigits;
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if(newValue.selection.baseOffset == 0){
+      print(true);
+      return newValue;
+    }
+    if (maxDigits != null && newValue.selection.baseOffset > maxDigits) {
+      return oldValue;
+    }
+
+    double value = double.parse(newValue.text);
+    final formatter = NumberFormat("###,###,###,###");
+    String newText = formatter.format(value);
+    return newValue.copyWith(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length));
   }
 }
