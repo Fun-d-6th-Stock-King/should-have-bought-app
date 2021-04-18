@@ -4,8 +4,10 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/providers/provider_list.dart';
 import 'package:should_have_bought_app/routes.dart';
 import 'package:should_have_bought_app/screens.dart' show TabScreen;
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
-void main() {
+Future main() async {
+  await DotEnv.load(fileName: ".env");
   runApp(MyApp());
 }
 

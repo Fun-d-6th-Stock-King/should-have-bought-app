@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
-import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
+import 'package:should_have_bought_app/widgets.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -60,18 +60,21 @@ class MainScreen extends StatelessWidget {
               SizedBox(
                 height: 7,
               ),
-              SizedBox(
-                  height: 340,
-                  child: Card(
-                    elevation: 0.4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 18.0),
-                      child: Container(),
-                    ),
-                  )),
+              CalculatorWidget(),
+              // SizedBox(
+              //     height: 340,
+              //     child: Card(
+              //       elevation: 0.4,
+              //
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(15.0),
+              //       ),
+              //       child: Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: 18.0),
+              //         child: Container(),
+              //       ),
+              //     )
+              // ),
               SizedBox(
                 height: 60,
               ),
