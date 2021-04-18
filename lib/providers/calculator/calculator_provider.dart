@@ -6,6 +6,8 @@ class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
 
+  Map calculationResult = {};
+
   List get companyList {
     return _companyList;
   }
@@ -31,15 +33,12 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future getResult() async {
-    final result = await CalculatorApi.getResult();
-    // print('[getarticles]');
-    // List descSortArticles = articleList;
-    // descSortArticles.sort((b, a) => a['articleId'].compareTo(b['articleId']));
-    //
-    // _articles = descSortArticles;
-    // _allArticles = descSortArticles;
-    //notifyListeners();
+  Future getResult(Map params) async {
+    final result = await CalculatorApi.getResult(params);
+    print(result);
+    // ToDo: 모델 객체 만들어서 처리 필요.
+    calculationResult = result;
+    notifyListeners();
   }
 
   Future getCompanies() async {

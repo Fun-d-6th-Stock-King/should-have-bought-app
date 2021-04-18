@@ -19,7 +19,7 @@ class CalculatorDto {
     return {
       'code': code,
       'investDate': investDate,
-      'investPrice': investPrice,
+      'investPrice': "$investPrice",
     };
   }
 }

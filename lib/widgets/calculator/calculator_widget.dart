@@ -168,14 +168,16 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  onPressed: () {
-                    //ToDo: Provider API 호출 후 결과페이지 이동
-                    // await Provider.of<CalculatorProvider>(context,listen:false).getResult()
-                    print(CalculatorDto(
-                        code: _selectedCompany.code,
-                        investDate: _selectedDateValue,
-                        investPrice: intToCurrency(_priceController.text)
-                    ).toMap());
+                  onPressed: () async {
+                    await Provider.of<CalculatorProvider>(context,listen:false).getResult(
+                        CalculatorDto(
+                            code: _selectedCompany.code,
+                            investDate: _selectedDateValue,
+                            investPrice: intToCurrency(_priceController.text)
+                        ).toMap()
+                    ).then((value) {
+                      //ToDo: Provider API 호출 후 결과페이지 이동
+                    });
                   },
                 ),
               )
