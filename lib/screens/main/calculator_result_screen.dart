@@ -4,6 +4,8 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator_stock.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
+  static const routeId = '/calculator-result';
+
   @override
   _CalculatorResultScreenState createState() => _CalculatorResultScreenState();
 }

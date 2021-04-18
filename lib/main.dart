@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
             child: child,
           );
         },
+        routes: kRoutes,
         home: Scaffold(
           appBar: AppBar(
             backgroundColor: defaultBackgroundColor,
