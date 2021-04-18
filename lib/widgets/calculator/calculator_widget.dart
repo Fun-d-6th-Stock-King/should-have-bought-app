@@ -36,7 +36,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     'LG 디스플레이'
   ];
   Future futureGetCompanyList;
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -159,16 +159,25 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 child: CupertinoButton(
                   color: mainColor,
                   padding: EdgeInsets.all(0),
-                  child: Text(
+                  child: isLoading ? SizedBox(
+                    height: 20,
+                    child: Theme(
+                        data: Theme.of(context).copyWith(accentColor: defaultFontColor),
+                        child: CircularProgressIndicator()
+                    ),
+                  ) : Text(
                     '지금 얼마?',
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: Color(0xFFFFFFFF),
+                      color: defaultFontColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
                     await Provider.of<CalculatorProvider>(context,listen:false).getResult(
                         CalculatorDto(
                             code: _selectedCompany.code,
@@ -177,6 +186,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                         ).toMap()
                     ).then((value) {
                       //ToDo: Provider API 호출 후 결과페이지 이동
+                    });
+                    setState(() {
+                      isLoading = false;
                     });
                   },
                 ),
