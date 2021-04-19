@@ -9,6 +9,7 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 
 import 'company_item.dart';
@@ -24,8 +25,16 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String _selectedDateValue = 'YEAR10';
   Company _selectedCompany = Company(company: '삼성전자', code: '005930');
   int value = 0;
-  List<String> dates = ['DAY1','WEEK1','MONTH1','MONTH6','YEAR1','YEAR5','YEAR10'];
-  List<String> prices = ['100000','500000','1000000','5000000','10000000'];
+  List<String> dates = [
+    'DAY1',
+    'WEEK1',
+    'MONTH1',
+    'MONTH6',
+    'YEAR1',
+    'YEAR5',
+    'YEAR10'
+  ];
+  List<String> prices = ['100000', '500000', '1000000', '5000000', '10000000'];
   List<String> company = [
     '삼성전자',
     '삼성SDI',
@@ -48,7 +57,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
   }
 
   void SetCompanyValue(Company company) {
@@ -159,33 +167,41 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 child: CupertinoButton(
                   color: mainColor,
                   padding: EdgeInsets.all(0),
-                  child: isLoading ? SizedBox(
-                    height: 20,
-                    child: Theme(
-                        data: Theme.of(context).copyWith(accentColor: defaultFontColor),
-                        child: CircularProgressIndicator()
-                    ),
-                  ) : Text(
-                    '지금 얼마?',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: defaultFontColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  child: isLoading
+                      ? FittedBox(
+                          fit: BoxFit.cover,
+                          child: Theme(
+                              data: Theme.of(context)
+                                  .copyWith(accentColor: defaultFontColor),
+                              child: CircularProgressIndicator()),
+                        )
+                      : Text(
+                          '지금 얼마?',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: defaultFontColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                   onPressed: () async {
                     setState(() {
                       isLoading = true;
                     });
-                    await Provider.of<CalculatorProvider>(context,listen:false).getResult(
-                        CalculatorDto(
-                            code: _selectedCompany.code,
-                            investDate: _selectedDateValue,
-                            investPrice: intToCurrency(_priceController.text)
-                        ).toMap()
-                    ).then((value) {
-                      //ToDo: Provider API 호출 후 결과페이지 이동
+                    await Provider.of<CalculatorProvider>(context,
+                            listen: false)
+                        .getResult(CalculatorDto(
+                                code: _selectedCompany.code,
+                                investDate: _selectedDateValue,
+                                investPrice:
+                                    intToCurrency(_priceController.text))
+                            .toMap())
+                        .then((value) {
+                      print(Provider.of<CalculatorProvider>(context,
+                              listen: false)
+                          .calculationResult);
+                      Navigator.of(context)
+                          .pushNamed(CalculatorResultScreen.routeId);
                     });
                     setState(() {
                       isLoading = false;
@@ -510,11 +526,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   }
 
   Widget CalculatorRandomValues() {
-    List companyList = Provider.of<CalculatorProvider>(context,listen: false).companyList;
+    List companyList =
+        Provider.of<CalculatorProvider>(context, listen: false).companyList;
     int RandomDate = Random().nextInt(dates.length);
     int RandomCompany = Random().nextInt(companyList.length);
     int RandomPrice = Random().nextInt(prices.length);
-    setState((){
+    setState(() {
       _selectedDateValue = dates[RandomDate];
       _selectedCompany = companyList[RandomCompany];
     });
@@ -525,8 +542,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 class CurrencyInputFormatter extends TextInputFormatter {
   CurrencyInputFormatter({this.maxDigits});
   final int maxDigits;
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if(newValue.selection.baseOffset == 0){
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.selection.baseOffset == 0) {
       print(true);
       return newValue;
     }
