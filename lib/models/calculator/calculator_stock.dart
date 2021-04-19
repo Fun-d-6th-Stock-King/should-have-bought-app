@@ -9,7 +9,7 @@ class CalculatorStock {
   int yieldPercent;
   String oldCloseDate;
   int oldPrice;
-  int holdingStock;
+  double holdingStock;
   int salaryYear;
   int salaryMonth;
 
@@ -24,7 +24,7 @@ class CalculatorStock {
     yieldPercent = map['calculatedValue']['yieldPercent'].toInt();
     oldCloseDate = map['calculatedValue']['oldCloseDate'];
     oldPrice = map['calculatedValue']['oldPrice'];
-    holdingStock = map['calculatedValue']['holdingStock'].toInt();
+    holdingStock = map['calculatedValue']['holdingStock'];
     salaryYear = map['calculatedValue']['salaryYear'].toInt();
     salaryMonth = map['calculatedValue']['salaryMonth'].toInt();
   }
