@@ -12,18 +12,47 @@ class CalculatorResultScreen extends StatefulWidget {
 }
 
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
+  List<Color> colorSet;
+  Color topColor;
+
   final _formatCurrency =
       NumberFormat.simpleCurrency(locale: 'ko-KR', name: "", decimalDigits: 0);
+
+  void setBackgroundColor(int percent) {
+    if (percent > 0) {
+      colorSet = [
+        Color(0xffFF6561),
+        Color(0x00FF6561),
+      ];
+      topColor = Color(0xffFF6561);
+    } else if (percent < 0) {
+      colorSet = [
+        Color(0xff4990FF),
+        Color(0x004990FF),
+      ];
+      topColor = Color(0xff4990FF);
+    } else {
+      colorSet = [
+        defaultBackgroundColor,
+        defaultBackgroundColor,
+      ];
+      topColor = defaultBackgroundColor;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
       builder: (context, value, child) {
+        setBackgroundColor(value.calculationResult.yieldPercent);
         return Scaffold(
           appBar: AppBar(
-            title: Text('그때 살껄'),
             elevation: 0.0,
-            backgroundColor: defaultBackgroundColor,
+            backgroundColor: topColor,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             actions: [
               Padding(
                 padding: EdgeInsets.only(right: 16),
@@ -32,127 +61,157 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             ],
           ),
           body: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        MainTopText(
-                          investDate: value.calculationResult.investDate,
-                          companyName: value.calculationResult.name,
-                        ),
-                        MainBottomText(
-                          investPrice: _formatCurrency
-                              .format(value.calculationResult.investPrice),
-                        ),
-                      ],
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: 360,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: colorSet,
                     ),
                   ),
-                  SizedBox(height: 35),
-                  Container(
-                    height: 209,
-                    width: 321,
-                    child: Card(
-                      elevation: 0.4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 18,
-                          right: 18,
-                          top: 18,
-                        ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 16, right: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
-                          children: <Widget>[
-                            EmojiYieldPriceText(
-                              yieldPercent:
-                                  value.calculationResult.yieldPercent,
-                              yieldPrice: _formatCurrency
-                                  .format(value.calculationResult.yieldPrice),
+                          children: [
+                            MainTopText(
+                              investDate: value.calculationResult.investDate,
+                              companyName: value.calculationResult.name,
                             ),
-                            YieldPercentText(
-                              yieldPercent:
-                                  value.calculationResult.yieldPercent,
+                            MainBottomText(
+                              investPrice: _formatCurrency
+                                  .format(value.calculationResult.investPrice),
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              '${value.calculationResult.oldCloseDate} 종가 기준',
-                              style: TextStyle(
-                                color: Color(0xff949597),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 31,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '1주당 ${_formatCurrency.format(value.calculationResult.oldPrice)}원',
-                                    style: kOldStockTextStyle,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    child: VerticalDivider(
-                                      color: Color(0xff979797),
-                                    ),
-                                  ),
-                                  Text(
-                                    '${value.calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
-                                    style: kOldStockTextStyle,
-                                  ),
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    '연봉/월급으로 친다면?',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Container(
-                    width: 320,
-                    height: 86,
-                    child: Card(
-                      elevation: 0.3,
-                      color: Color(0xffF8F8F8).withOpacity(0.89),
-                      child: SalaryYearMonthText(
-                        salaryYear: _formatCurrency
-                            .format(value.calculationResult.salaryYear),
-                        salaryMonth: _formatCurrency.format(
-                          value.calculationResult.salaryMonth,
+                      SizedBox(height: 35),
+                      Container(
+                        height: 209,
+                        width: 321,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFFFFFFFF),
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFFF1F1F1),
+                                offset: Offset(2.0, 13.0),
+                                blurRadius: 35.0,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: 18,
+                              right: 18,
+                              top: 18,
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                EmojiYieldPriceText(
+                                  yieldPercent:
+                                      value.calculationResult.yieldPercent,
+                                  yieldPrice: _formatCurrency.format(
+                                      value.calculationResult.yieldPrice),
+                                ),
+                                YieldPercentText(
+                                  yieldPercent:
+                                      value.calculationResult.yieldPercent,
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Text(
+                                  '${value.calculationResult.oldCloseDate} 종가 기준',
+                                  style: TextStyle(
+                                    color: Color(0xff949597),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 31,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '1주당 ${_formatCurrency.format(value.calculationResult.oldPrice)}원',
+                                        style: kOldStockTextStyle,
+                                      ),
+                                      Container(
+                                        height: 20,
+                                        child: VerticalDivider(
+                                          color: Color(0xff979797),
+                                        ),
+                                      ),
+                                      Text(
+                                        '${value.calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
+                                        style: kOldStockTextStyle,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        '연봉/월급으로 친다면?',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 18,
+                      ),
+                      Container(
+                        width: 320,
+                        height: 86,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xffC2C2C2).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFFF1F1F1),
+                                offset: Offset(2.0, 13.0),
+                                blurRadius: 35.0,
+                              ),
+                            ],
+                          ),
+                          child: SalaryYearMonthText(
+                            salaryYear: _formatCurrency
+                                .format(value.calculationResult.salaryYear),
+                            salaryMonth: _formatCurrency.format(
+                              value.calculationResult.salaryMonth,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
@@ -236,7 +295,11 @@ class YieldPercentText extends StatelessWidget {
           fontWeight: FontWeight.w300,
         ),
         children: [
-          (yieldPercent > 0) ? TextSpan(text: '+') : TextSpan(text: '-'),
+          (yieldPercent > 0)
+              ? TextSpan(text: '+')
+              : (yieldPercent < 0)
+                  ? TextSpan(text: '-')
+                  : TextSpan(),
           TextSpan(
             text: '$yieldPercent%',
           ),
