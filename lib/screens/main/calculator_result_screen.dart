@@ -1,8 +1,12 @@
-import 'package:intl/intl.dart';
+import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -14,24 +18,53 @@ class CalculatorResultScreen extends StatefulWidget {
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   List<Color> colorSet;
   Color topColor;
-  bool _isLoading = false;
+  final List<String> _randomDates = [
+    'DAY1',
+    'WEEK1',
+    'MONTH1',
+    'MONTH6',
+    'YEAR1',
+    'YEAR5',
+    'YEAR10'
+  ];
+  final List<String> _randomPrices = [
+    '100000',
+    '500000',
+    '1000000',
+    '5000000',
+    '10000000'
+  ];
 
-  final _formatCurrency =
-      NumberFormat.simpleCurrency(locale: 'ko-KR', name: "", decimalDigits: 0);
+  Widget randomValues(BuildContext context, Function onTap) {
+    return InkWell(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image(image: AssetImage('assets/icons/ico_random.png')),
+          Padding(padding: EdgeInsets.only(bottom: 2)),
+          Text(
+            '랜덤',
+            style: TextStyle(fontSize: 11, color: Color(0xFF828282)),
+          )
+        ],
+      ),
+      onTap: onTap,
+    );
+  }
 
   void setBackgroundColor(int percent) {
     if (percent > 0) {
       colorSet = [
-        Color(0xffFF6561),
+        Color(0xa0FF6561),
         Color(0x00FF6561),
       ];
-      topColor = Color(0xffFF6561);
+      topColor = Color(0xa0FF6561);
     } else if (percent < 0) {
       colorSet = [
-        Color(0xff4990FF),
+        Color(0xa04990FF),
         Color(0x004990FF),
       ];
-      topColor = Color(0xff4990FF);
+      topColor = Color(0xa04990FF);
     } else {
       colorSet = [
         defaultBackgroundColor,
@@ -47,43 +80,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       builder: (context, value, child) {
         setBackgroundColor(value.calculationResult.yieldPercent);
         return Scaffold(
-          appBar: AppBar(
-            elevation: 0.0,
-            backgroundColor: topColor,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            actions: [
-              Container(
-                child: _isLoading
-                    ? Container(
-                        padding: EdgeInsets.only(right: 12),
-                        width: 30,
-                        child: FittedBox(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 3.0,
-                          ),
-                          fit: BoxFit.scaleDown,
-                          // alignment: Alignment.center,
-                        ),
-                      )
-                    : IconButton(
-                        padding: EdgeInsets.all(0.0),
-                        icon: Icon(Icons.refresh),
-                        onPressed: () async {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          await value.fetchResult();
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        },
-                      ),
-              ),
-            ],
-          ),
           body: SingleChildScrollView(
             child: Stack(
               children: <Widget>[
@@ -98,9 +94,53 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                   ),
                 ),
                 Container(
+                  padding: EdgeInsets.only(
+                    top: 40,
+                    bottom: 30,
+                    left: 12,
+                    right: 20,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back_ios),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Color(0x80FFFFFF),
+                        ),
+                        child: randomValues(context, () {
+                          final _companyList = value.companyList;
+                          final _randomDate =
+                              Random().nextInt(_randomDates.length);
+                          final _randomCompnay =
+                              Random().nextInt(_companyList.length);
+                          final _randomPrice =
+                              Random().nextInt(_randomPrices.length);
+                          value.randomResult(CalculatorDto(
+                            code: _companyList[_randomCompnay].code,
+                            investDate: _randomDates[_randomDate],
+                            investPrice:
+                                intToCurrency(_randomPrices[_randomPrice]),
+                          ).toMap());
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
                   padding: EdgeInsets.only(left: 16, right: 16),
                   child: Column(
                     children: <Widget>[
+                      SizedBox(
+                        height: 110,
+                      ),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
@@ -110,8 +150,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                               companyName: value.calculationResult.name,
                             ),
                             MainBottomText(
-                              investPrice: _formatCurrency
-                                  .format(value.calculationResult.investPrice),
+                              investPrice: numberWithComma(
+                                  value.calculationResult.investPrice),
                             ),
                           ],
                         ),
@@ -143,7 +183,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                                 EmojiYieldPriceText(
                                   yieldPercent:
                                       value.calculationResult.yieldPercent,
-                                  yieldPrice: _formatCurrency.format(
+                                  yieldPrice: numberWithComma(
                                       value.calculationResult.yieldPrice),
                                 ),
                                 YieldPercentText(
@@ -172,9 +212,10 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        '1주당 ${_formatCurrency.format(value.calculationResult.oldPrice)}원',
+                                      AutoSizeText(
+                                        '1주당 ${numberWithComma(value.calculationResult.oldPrice)}원',
                                         style: kOldStockTextStyle,
+                                        maxLines: 1,
                                       ),
                                       Container(
                                         height: 20,
@@ -182,9 +223,10 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                                           color: Color(0xff979797),
                                         ),
                                       ),
-                                      Text(
+                                      AutoSizeText(
                                         '${value.calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
                                         style: kOldStockTextStyle,
+                                        maxLines: 1,
                                       ),
                                     ],
                                   ),
@@ -227,9 +269,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                             ],
                           ),
                           child: SalaryYearMonthText(
-                            salaryYear: _formatCurrency
-                                .format(value.calculationResult.salaryYear),
-                            salaryMonth: _formatCurrency.format(
+                            salaryYear: numberWithComma(
+                                value.calculationResult.salaryYear),
+                            salaryMonth: numberWithComma(
                               value.calculationResult.salaryMonth,
                             ),
                           ),
@@ -261,17 +303,19 @@ class SalaryYearMonthText extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            AutoSizeText(
               '1년에',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: Color(0xff828282),
               ),
+              maxLines: 1,
             ),
-            Text(
+            AutoSizeText(
               salaryYear,
               style: kSalaryTextStyle,
+              maxLines: 1,
             )
           ],
         ),
@@ -328,7 +372,7 @@ class YieldPercentText extends StatelessWidget {
                   ? TextSpan(text: '-')
                   : TextSpan(),
           TextSpan(
-            text: '$yieldPercent%',
+            text: ' ${yieldPercent.abs()}%',
           ),
         ],
       ),
@@ -375,8 +419,8 @@ class MainBottomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
+    return AutoSizeText.rich(
+      TextSpan(
         style: TextStyle(
           fontSize: 24,
           color: Colors.black,
@@ -392,6 +436,7 @@ class MainBottomText extends StatelessWidget {
           ),
         ],
       ),
+      maxLines: 1,
     );
   }
 }
@@ -404,8 +449,8 @@ class MainTopText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
+    return AutoSizeText.rich(
+      TextSpan(
         style: TextStyle(
           fontSize: 24,
           color: Colors.black,
@@ -428,6 +473,7 @@ class MainTopText extends StatelessWidget {
           )
         ],
       ),
+      maxLines: 1,
     );
   }
 }

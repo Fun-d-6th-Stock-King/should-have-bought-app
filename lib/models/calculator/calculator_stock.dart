@@ -4,14 +4,14 @@ class CalculatorStock {
   int currentPrice;
   DateTime lastTradingDateTime;
   String investDate;
-  int investPrice;
-  int yieldPrice;
+  String investPrice;
+  String yieldPrice;
   int yieldPercent;
   String oldCloseDate;
-  int oldPrice;
+  String oldPrice;
   double holdingStock;
-  int salaryYear;
-  int salaryMonth;
+  String salaryYear;
+  String salaryMonth;
 
   CalculatorStock.fromJson(Map<dynamic, dynamic> map) {
     code = map['code'];
@@ -19,13 +19,13 @@ class CalculatorStock {
     currentPrice = map['currentPrice'].toInt();
     // lastTradingDateTime = DateTime.parse(map['lastTrandingDateTime']);
     investDate = map['calculatedValue']['investDate'];
-    investPrice = map['calculatedValue']['investPrice'];
-    yieldPrice = map['calculatedValue']['yieldPrice'].toInt();
+    investPrice = map['calculatedValue']['investPrice'].toString();
+    yieldPrice = map['calculatedValue']['yieldPrice'].toString();
     yieldPercent = map['calculatedValue']['yieldPercent'].toInt();
     oldCloseDate = map['calculatedValue']['oldCloseDate'];
-    oldPrice = map['calculatedValue']['oldPrice'];
+    oldPrice = map['calculatedValue']['oldPrice'].toString();
     holdingStock = map['calculatedValue']['holdingStock'];
-    salaryYear = map['calculatedValue']['salaryYear'].toInt();
-    salaryMonth = map['calculatedValue']['salaryMonth'].toInt();
+    salaryYear = map['calculatedValue']['salaryYear'].toString();
+    salaryMonth = map['calculatedValue']['salaryMonth'].toString();
   }
 }
