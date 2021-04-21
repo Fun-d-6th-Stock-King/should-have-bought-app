@@ -21,7 +21,7 @@ const kSalaryTextStyle = TextStyle(
 
 const kMainBoldTextStyle = TextStyle(
   fontSize: 28,
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.bold,
 );
 
 const kOldStockTextStyle = TextStyle(

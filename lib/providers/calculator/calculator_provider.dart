@@ -6,6 +6,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
+  Map<dynamic, dynamic> _lastParam;
 
   CalculatorStock calculationResult;
 
@@ -38,10 +39,18 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   Future getResult(Map params) async {
+    _lastParam = params;
     final result = await CalculatorApi.getResult(params);
     print(result);
     // ToDo: 모델 객체 만들어서 처리 필요.
-    calculationResult = CalculatorStock.fromMap(result);
+    calculationResult = CalculatorStock.fromJson(result);
+    notifyListeners();
+  }
+
+  Future fetchResult() async {
+    final result = await CalculatorApi.getResult(_lastParam);
+    print(result);
+    calculationResult = CalculatorStock.fromJson(result);
     notifyListeners();
   }
 

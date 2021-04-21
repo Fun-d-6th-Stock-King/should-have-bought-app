@@ -13,7 +13,7 @@ class CalculatorStock {
   int salaryYear;
   int salaryMonth;
 
-  CalculatorStock.from(Map<dynamic, dynamic> map) {
+  CalculatorStock.fromJson(Map<dynamic, dynamic> map) {
     code = map['code'];
     name = map['company'];
     currentPrice = map['currentPrice'].toInt();

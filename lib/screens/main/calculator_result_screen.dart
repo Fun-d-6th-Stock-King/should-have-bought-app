@@ -14,6 +14,7 @@ class CalculatorResultScreen extends StatefulWidget {
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   List<Color> colorSet;
   Color topColor;
+  bool _isLoading = false;
 
   final _formatCurrency =
       NumberFormat.simpleCurrency(locale: 'ko-KR', name: "", decimalDigits: 0);
@@ -54,9 +55,32 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
               onPressed: () => Navigator.of(context).pop(),
             ),
             actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: Icon(Icons.refresh),
+              Container(
+                child: _isLoading
+                    ? Container(
+                        padding: EdgeInsets.only(right: 12),
+                        width: 30,
+                        child: FittedBox(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3.0,
+                          ),
+                          fit: BoxFit.scaleDown,
+                          // alignment: Alignment.center,
+                        ),
+                      )
+                    : IconButton(
+                        padding: EdgeInsets.all(0.0),
+                        icon: Icon(Icons.refresh),
+                        onPressed: () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          await value.fetchResult();
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        },
+                      ),
               ),
             ],
           ),
@@ -76,9 +100,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                 Container(
                   padding: EdgeInsets.only(left: 16, right: 16),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Padding(
+                      Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
                           children: [
@@ -95,8 +118,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                       ),
                       SizedBox(height: 35),
                       Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         height: 209,
-                        width: 321,
                         child: Container(
                           decoration: BoxDecoration(
                             color: Color(0xFFFFFFFF),
@@ -174,18 +197,22 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                       SizedBox(
                         height: 30,
                       ),
-                      Text(
-                        '연봉/월급으로 친다면?',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          '연봉/월급으로 친다면?',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: 18,
                       ),
                       Container(
-                        width: 320,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         height: 86,
                         child: Container(
                           decoration: BoxDecoration(
@@ -358,10 +385,7 @@ class MainBottomText extends StatelessWidget {
         children: <TextSpan>[
           TextSpan(
             text: investPrice,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w500,
-            ),
+            style: kMainBoldTextStyle,
           ),
           TextSpan(
             text: '원에 샀으면 지금..?',
