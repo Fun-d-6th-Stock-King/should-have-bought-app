@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.white,
           accentColor: Colors.black,
-          canvasColor: Colors.transparent,
         ),
         builder: (context, child) {
           return ScrollConfiguration(
@@ -30,16 +29,16 @@ class MyApp extends StatelessWidget {
             child: child,
           );
         },
+        routes: kRoutes,
         home: Scaffold(
           appBar: AppBar(
-            backgroundColor:defaultBackgroundColor,
+            backgroundColor: defaultBackgroundColor,
             leading: null,
             elevation: 0,
             actions: <Widget>[
               IconButton(
                   icon: Image(image: AssetImage('assets/icons/search.png')),
-                  onPressed: null
-              ),
+                  onPressed: null),
             ],
           ),
           body: Center(
