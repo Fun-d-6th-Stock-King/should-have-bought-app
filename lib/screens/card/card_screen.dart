@@ -4,8 +4,10 @@ class CardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      child: Text('CardScreen'),
+    return  Scaffold(
+      body: Container(
+        child: Text('CardScreen'),
+      ),
     );
   }
 }

@@ -4,8 +4,10 @@ class BuyOrNotScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      child: Text('BuyOrNotScreen'),
+    return  Scaffold(
+      body: Container(
+        child: Text('BuyOrNotScreen'),
+      ),
     );
   }
 }

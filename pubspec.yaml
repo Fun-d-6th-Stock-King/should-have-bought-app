@@ -35,7 +35,8 @@ dependencies:
   charts_flutter: ^0.10.0
   fl_chart: ^0.20.1
   syncfusion_flutter_charts: ^18.4.47
-
+  flutter_dotenv: ^3.1.0
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -52,8 +53,15 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - assets/images
+  assets:
+    - .env
+    - assets/icons/ico_random.png
+    - assets/icons/atm_location.png
+    - assets/icons/Card.png
+    - assets/icons/home.png
+    - assets/icons/home_white.png
+    - assets/icons/Profile.png
+    - assets/icons/search.png
 
   # example:
   # fonts:
