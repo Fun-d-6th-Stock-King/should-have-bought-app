@@ -144,17 +144,18 @@ class _DraggableCardState extends State<DraggableCard>
 
   Offset _chooseRandomDragStart() {
     final cardContext = profileCardKey.currentContext;
+
     final cardTopLeft = (cardContext.findRenderObject() as RenderBox)
         .localToGlobal(const Offset(0.0, 0.0));
     final dragStartY =
-        cardContext.size.height * (Random().nextDouble() < 0.5 ? 0.25 : 0.75) +
+        cardContext.size?.height * (Random().nextDouble() < 0.5 ? 0.25 : 0.75) +
             cardTopLeft.dy;
-    return Offset(cardContext.size.width / 2 + cardTopLeft.dx, dragStartY);
+    return Offset(cardContext.size?.width ?? 300/ 2 + cardTopLeft.dx, dragStartY);
   }
 
   void _slideLeft() async {
     await Future.delayed(Duration(milliseconds: 1)).then((_) {
-      final screenWidth = context.size.width;
+      final screenWidth = context.size?.width ?? 300;
       dragStart = _chooseRandomDragStart();
       slideOutTween = Tween(
           begin: const Offset(0.0, 0.0), end: Offset(-2 * screenWidth, 0.0));
@@ -164,7 +165,7 @@ class _DraggableCardState extends State<DraggableCard>
 
   void _slideRight() async {
     await Future.delayed(Duration(milliseconds: 1)).then((_) {
-      final screenWidth = context.size.width;
+      final screenWidth = context.size?.width ?? 300;
       dragStart = _chooseRandomDragStart();
       slideOutTween = Tween(
           begin: const Offset(0.0, 0.0), end: Offset(2 * screenWidth, 0.0));
@@ -174,7 +175,7 @@ class _DraggableCardState extends State<DraggableCard>
 
   void _slideUp() async {
     await Future.delayed(Duration(milliseconds: 1)).then((_) {
-      final screenHeight = context.size.height;
+      final screenHeight = context.size?.height;
       dragStart = _chooseRandomDragStart();
       slideOutTween = Tween(
           begin: const Offset(0.0, 0.0), end: Offset(0.0, -2 * screenHeight));
@@ -191,9 +192,9 @@ class _DraggableCardState extends State<DraggableCard>
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
-    final isInLeftRegion = (cardOffset.dx / context.size.width) < -0.45;
-    final isInRightRegion = (cardOffset.dx / context.size.width) > 0.45;
-    final isInTopRegion = (cardOffset.dy / context.size.height) < -0.40;
+    final isInLeftRegion = (cardOffset.dx / context.size?.width ?? 300) < -0.45;
+    final isInRightRegion = (cardOffset.dx / context.size?.width ?? 300) > 0.45;
+    final isInTopRegion = (cardOffset.dy / context.size?.height) < -0.40;
 
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
@@ -222,21 +223,21 @@ class _DraggableCardState extends State<DraggableCard>
   void _onPanEnd(DragEndDetails details) {
     final dragVector = cardOffset / cardOffset.distance;
 
-    final isInLeftRegion = (cardOffset.dx / context.size.width) < -0.15;
-    final isInRightRegion = (cardOffset.dx / context.size.width) > 0.15;
-    final isInTopRegion = (cardOffset.dy / context.size.height) < -0.15;
+    final isInLeftRegion = (cardOffset.dx / context.size?.width ?? 300) < -0.15;
+    final isInRightRegion = (cardOffset.dx / context.size?.width ?? 300) > 0.15;
+    final isInTopRegion = (cardOffset.dy / context.size?.height) < -0.15;
 
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
         slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size.width));
+            begin: cardOffset, end: dragVector * (2 * context.size?.width ?? 300));
         slideOutAnimation.forward(from: 0.0);
 
         slideOutDirection =
         isInLeftRegion ? SlideDirection.left : SlideDirection.right;
       } else if (isInTopRegion) {
         slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size.height));
+            begin: cardOffset, end: dragVector * (2 * context.size?.height));
         slideOutAnimation.forward(from: 0.0);
 
         slideOutDirection = SlideDirection.up;
@@ -255,9 +256,9 @@ class _DraggableCardState extends State<DraggableCard>
   double _rotation(Rect dragBounds) {
     if (dragStart != null) {
       final rotationCornerMultiplier =
-      dragStart.dy >= dragBounds.top + (dragBounds.height / 2) ? -1 : 1;
+      dragStart.dy >= dragBounds.top + (dragBounds?.height / 2) ? -1 : 1;
       return (pi / 8) *
-          (cardOffset.dx / dragBounds.width) *
+          (cardOffset.dx / dragBounds?.width ?? 300) *
           rotationCornerMultiplier;
     } else {
       return 0.0;
@@ -278,15 +279,15 @@ class _DraggableCardState extends State<DraggableCard>
       _initAnchor();
     }
     print('test');
-    print(anchorBounds.width);
+    print(anchorBounds?.width ?? 300);
     return Transform(
       transform: Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
         ..rotateZ(_rotation(anchorBounds)),
       origin: _rotationOrigin(anchorBounds),
       child: Container(
         key: profileCardKey,
-        width: anchorBounds?.width,
-        height: anchorBounds.height,
+        width: anchorBounds?.width ?? 300,
+        height: anchorBounds?.height,
         padding: const EdgeInsets.all(16.0),
         child: GestureDetector(
           onPanStart: _onPanStart,
