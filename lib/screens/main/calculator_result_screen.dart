@@ -388,8 +388,8 @@ class EmojiYieldPriceText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
+    return AutoSizeText.rich(
+      TextSpan(
         style: TextStyle(
           color: (yieldPercent > 0)
               ? Colors.red
@@ -408,6 +408,7 @@ class EmojiYieldPriceText extends StatelessWidget {
           TextSpan(text: '$yieldPrice원'),
         ],
       ),
+      maxLines: 1,
     );
   }
 }
