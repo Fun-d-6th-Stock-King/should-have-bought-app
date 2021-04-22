@@ -37,14 +37,7 @@ class MyApp extends StatelessWidget {
             elevation: 0,
             actions: <Widget>[
               IconButton(
-<<<<<<< HEAD
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.black,
-                  ),
-=======
                   icon: Image(image: AssetImage('assets/icons/search.png')),
->>>>>>> origin/develop
                   onPressed: null),
             ],
           ),

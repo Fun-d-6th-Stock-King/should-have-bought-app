@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/widgets.dart';
+import 'package:should_have_bought_app/widgets/hey_you_too.dart';
 
 class MainScreen extends StatelessWidget {
   @override
@@ -78,29 +79,7 @@ class MainScreen extends StatelessWidget {
               SizedBox(
                 height: 60,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("그때 살걸... 야, 너두?",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        height: 1.5,
-                      )),
-                  Row(
-                    children: [
-                      Text("더보기",
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5,
-                              color: Color(0xFF828282))),
-                      Icon(Icons.keyboard_arrow_right_outlined,
-                          color: Color(0xFF828282))
-                    ],
-                  ),
-                ],
-              ),
+              HeyYouToo(),
               SizedBox(
                 height: 16,
               ),
