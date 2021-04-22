@@ -29,14 +29,10 @@ dependencies:
   provider: ^4.3.3
   intl: ^0.16.1
   http: ^0.13.0
-  carousel_slider: ^3.0.0
-  flutter_swiper: ^1.1.6
-  swipeable_card: ^1.0.2
-  charts_flutter: ^0.10.0
-  fl_chart: ^0.20.1
   syncfusion_flutter_charts: ^18.4.47
   flutter_dotenv: ^3.1.0
   auto_size_text: ^2.1.0
+  swipe_cards: ^0.0.4
 
 dev_dependencies:
   flutter_test:
