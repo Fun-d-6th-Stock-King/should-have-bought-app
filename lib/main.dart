@@ -10,9 +10,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 Future main() async {
   // TODO : .env.prod 사용시 file not found 에러, 확인 필요
   await DotEnv.load(fileName: ".env");
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-  ));
+
+  // 디버그시에 필요
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarColor: Colors.transparent,
+  // ));
   runApp(MyApp());
 }
 
