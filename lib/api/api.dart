@@ -4,6 +4,5 @@ final stockApiUrl = env['STOCK_API'];
 
 class Api {
   static void getToken() async{
-    //ToDo:
   }
 }
