@@ -79,6 +79,9 @@ class _LoginScreenState extends State<LoginWidget> {
             idToken: googleAuth.idToken,
             accessToken: googleAuth.accessToken))).user;
 
+    user.updateProfile(
+      displayName: 'test'
+    );
     return user;
   }
 }

@@ -5,7 +5,29 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens.dart';
 import 'package:should_have_bought_app/widgets/login/login_widget.dart';
 
-class TodayWordScreen extends StatelessWidget {
+class TodayWordScreen extends StatefulWidget {
+  @override
+  _TodayWordScreenState createState() => _TodayWordScreenState();
+}
+
+class _TodayWordScreenState extends State<TodayWordScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    test();
+  }
+
+  void test() async {
+    final user = await _auth.currentUser;
+    print(user);
+    if (user != null) {
+      final idToken = await user.getIdToken();
+      print(idToken);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +66,7 @@ class TodayWordScreen extends StatelessWidget {
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 height: 300,
                 child: Column(children: [
                   Container(
@@ -79,20 +101,19 @@ class TodayWordScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(8.0),
-              topRight: Radius.circular(8.0),
-            )),
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        )),
         builder: (ctx) {
           return AnimatedPadding(
-              duration: Duration(milliseconds: 150),
-              curve: Curves.easeOut,
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+            duration: Duration(milliseconds: 150),
+            curve: Curves.easeOut,
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Container(
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 height: 200,
-                child: _handleCurrentScreen()
-              ),
+                child: _handleCurrentScreen()),
           );
         });
   }
@@ -104,16 +125,16 @@ class TodayWordScreen extends StatelessWidget {
           print('[TEST] login');
           print(snapshot.hasData);
           print(snapshot.data);
-          if(snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingScreen();
-          } else {
-            if(snapshot.hasData) {
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
               print(snapshot.data);
               //Provider.of<UserCredentialProvider>(context, listen: false).setFirebaseUser(snapshot.data);
             }
-
-            return LoginWidget();
           }
+          return LoginWidget();
         });
   }
 }
