@@ -54,7 +54,52 @@ class TodayWordScreen extends StatelessWidget {
                         color: mainColor,
                         padding: EdgeInsets.all(0),
                         child: Text(
-                          '지금 얼마?',
+                          '등록하기',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: defaultFontColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        onPressed: () => _showLoginBottomSheet(context)),
+                  ),
+                ]),
+              ));
+        });
+  }
+
+  void _showLoginBottomSheet(BuildContext context) async {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(8.0),
+              topRight: Radius.circular(8.0),
+            )),
+        builder: (ctx) {
+          return AnimatedPadding(
+              duration: Duration(milliseconds: 150),
+              curve: Curves.easeOut,
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                height: 200,
+                child: Column(children: [
+                  Container(
+                    child: Text('login'),
+                  ),
+                  Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: CupertinoButton(
+                        color: mainColor,
+                        padding: EdgeInsets.all(0),
+                        child: Text(
+                          '등록하기',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: defaultFontColor,
