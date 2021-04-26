@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/screens.dart';
+import 'package:should_have_bought_app/widgets/login/login_widget.dart';
 
 class TodayWordScreen extends StatelessWidget {
   @override
@@ -88,29 +91,29 @@ class TodayWordScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                 height: 200,
-                child: Column(children: [
-                  Container(
-                    child: Text('login'),
-                  ),
-                  Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    child: CupertinoButton(
-                        color: mainColor,
-                        padding: EdgeInsets.all(0),
-                        child: Text(
-                          '등록하기',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: defaultFontColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onPressed: () async {}),
-                  ),
-                ]),
-              ));
+                child: _handleCurrentScreen()
+              ),
+          );
+        });
+  }
+
+  Widget _handleCurrentScreen() {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          print('[TEST] login');
+          print(snapshot.hasData);
+          print(snapshot.data);
+          if(snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingScreen();
+          } else {
+            if(snapshot.hasData) {
+              print(snapshot.data);
+              //Provider.of<UserCredentialProvider>(context, listen: false).setFirebaseUser(snapshot.data);
+            }
+
+            return LoginWidget();
+          }
         });
   }
 }
