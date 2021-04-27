@@ -316,7 +316,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
           padding: EdgeInsets.only(right: 10),
         ),
         Text(
-          '원에',
+          '원',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w100,
