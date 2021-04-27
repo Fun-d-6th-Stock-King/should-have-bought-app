@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/providers/provider_list.dart';
@@ -7,7 +8,13 @@ import 'package:should_have_bought_app/screens.dart' show TabScreen;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 Future main() async {
+  // TODO : .env.prod 사용시 file not found 에러, 확인 필요
   await DotEnv.load(fileName: ".env");
+
+  // 디버그시에 필요
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarColor: Colors.transparent,
+  // ));
   runApp(MyApp());
 }
 
@@ -18,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: kProviders,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Should Have Bought',
         theme: ThemeData(
           primaryColor: Colors.white,
