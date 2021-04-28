@@ -437,7 +437,7 @@ class MainBottomText extends StatelessWidget {
             style: kMainBoldTextStyle,
           ),
           TextSpan(
-            text: '원에 샀으면 지금..?',
+            text: '원 샀으면 지금..?',
           ),
         ],
       ),
