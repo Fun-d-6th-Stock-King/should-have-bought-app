@@ -7,6 +7,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: defaultBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
