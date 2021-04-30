@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ class HeyYouToo extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 213.0,
+        height: 220.0,
         viewportFraction: 0.7,
         enableInfiniteScroll: false,
       ),
@@ -45,8 +46,29 @@ class HeyYouToo extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 63),
-                    Text('10년전보다'),
-                    Text('+395,820원 (295%)'),
+                    Text(
+                      '10년전보다',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                    ),
+                    AutoSizeText.rich(
+                      TextSpan(
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 21,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(text: '+395,820원'),
+                            TextSpan(
+                              text: '(295%)',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ]),
+                    ),
                     SizedBox(height: 10),
                     Container(
                       width: 125,
