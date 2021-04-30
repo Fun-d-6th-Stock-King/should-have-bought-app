@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/widgets.dart';
-import 'package:should_have_bought_app/widgets/hey_you_too.dart';
+import 'package:should_have_bought_app/widgets/hey_you_too/hey_you_too.dart';
 
 class MainScreen extends StatelessWidget {
   @override

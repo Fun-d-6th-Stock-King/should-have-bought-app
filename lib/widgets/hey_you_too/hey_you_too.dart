@@ -18,14 +18,75 @@ class HeyYouToo extends StatelessWidget {
             return Container(
               width: MediaQuery.of(context).size.width * 0.6,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Color(0xffF5F5F5),
                 borderRadius: BorderRadius.all(
-                  Radius.circular(8.0),
+                  Radius.circular(25.0),
                 ),
               ),
-              child: Text(
-                'text $i',
-                style: TextStyle(fontSize: 16.0),
+              child: Container(
+                padding: EdgeInsets.only(left: 22, top: 22),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          '삼성전자',
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w700),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          '1분 전',
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w300),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 63),
+                    Text('10년전보다'),
+                    Text('+395,820원 (295%)'),
+                    SizedBox(height: 10),
+                    Container(
+                      width: 125,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(25.0),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            '현재가',
+                            style: TextStyle(
+                              color: Color(0xff6D6D6D),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Container(
+                            height: 10,
+                            child: VerticalDivider(
+                              width: 10,
+                            ),
+                          ),
+                          Text(
+                            '18,380원/1주',
+                            style: TextStyle(
+                              color: Color(0xff6D6D6D),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           },
