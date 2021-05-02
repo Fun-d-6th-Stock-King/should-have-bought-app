@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:should_have_bought_app/screens.dart';
 import 'package:should_have_bought_app/widgets/login/google_login_button.dart';
+import 'package:should_have_bought_app/widgets/login/kakao_login_button.dart';
 
 class LoginWidget extends StatefulWidget {
   LoginWidget();
@@ -38,7 +39,10 @@ class _LoginScreenState extends State<LoginWidget> {
         children: [
           GoogleLoginButton(onPressed: () {
             Navigator.pop(context);
-          })
+          }),
+          KakaoLoginButton(onPressed: () {
+            Navigator.pop(context);
+          }),
         ],
       ),
     );

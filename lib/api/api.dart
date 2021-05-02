@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final stockApiUrl = env['STOCK_API'];
+final firebaseFunctionApi = env['FIREBASE_FUNCTION_API'];
 
 class Api {
   static Future<String> getToken() async{
