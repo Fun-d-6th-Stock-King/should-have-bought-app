@@ -316,6 +316,7 @@ class SalaryYearMonthText extends StatelessWidget {
               salaryYear,
               style: kSalaryTextStyle,
               maxLines: 1,
+              minFontSize: 10,
             )
           ],
         ),
@@ -336,9 +337,11 @@ class SalaryYearMonthText extends StatelessWidget {
                 color: Color(0xff828282),
               ),
             ),
-            Text(
+            AutoSizeText(
               salaryMonth,
               style: kSalaryTextStyle,
+              maxLines: 1,
+              minFontSize: 10,
             ),
           ],
         )
@@ -388,8 +391,8 @@ class EmojiYieldPriceText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
+    return AutoSizeText.rich(
+      TextSpan(
         style: TextStyle(
           color: (yieldPercent > 0)
               ? Colors.red
@@ -408,6 +411,8 @@ class EmojiYieldPriceText extends StatelessWidget {
           TextSpan(text: '$yieldPrice원'),
         ],
       ),
+      minFontSize: 10,
+      maxLines: 1,
     );
   }
 }
@@ -432,11 +437,12 @@ class MainBottomText extends StatelessWidget {
             style: kMainBoldTextStyle,
           ),
           TextSpan(
-            text: '원에 샀으면 지금..?',
+            text: '원 샀으면 지금..?',
           ),
         ],
       ),
       maxLines: 1,
+      minFontSize: 10,
     );
   }
 }
@@ -474,6 +480,7 @@ class MainTopText extends StatelessWidget {
         ],
       ),
       maxLines: 1,
+      minFontSize: 10,
     );
   }
 }
