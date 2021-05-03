@@ -2,9 +2,26 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 
-class HeyYouToo extends StatelessWidget {
+class HeyYouToo extends StatefulWidget {
+  @override
+  _HeyYouTooState createState() => _HeyYouTooState();
+}
+
+class _HeyYouTooState extends State<HeyYouToo> {
+  List _historyList;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<CalculatorProvider>(context).getHistory(1, 10);
+    _historyList = Provider.of<CalculatorProvider>(context).calculateHistory;
+  }
+
   @override
   Widget build(BuildContext context) {
     return CarouselSlider(
@@ -13,7 +30,7 @@ class HeyYouToo extends StatelessWidget {
         viewportFraction: 0.7,
         enableInfiniteScroll: false,
       ),
-      items: [1, 2, 3, 4, 5].map((i) {
+      items: _historyList.map((history) {
         return Builder(
           builder: (context) {
             return Container(
@@ -33,7 +50,7 @@ class HeyYouToo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Text(
-                          '삼성전자',
+                          history.company,
                           style: TextStyle(
                               fontSize: 22, fontWeight: FontWeight.w700),
                         ),
@@ -47,7 +64,7 @@ class HeyYouToo extends StatelessWidget {
                     ),
                     SizedBox(height: 63),
                     Text(
-                      '10년전보다',
+                      '${history.investDateName}보다',
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                     ),
@@ -97,7 +114,7 @@ class HeyYouToo extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '18,380원/1주',
+                            '${numberWithComma(history.price)}원/1주',
                             style: TextStyle(
                               color: Color(0xff6D6D6D),
                               fontSize: 12,
