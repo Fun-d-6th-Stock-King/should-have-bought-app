@@ -63,22 +63,27 @@ class MainScreen extends StatelessWidget {
                 height: 7,
               ),
               CalculatorWidget(),
-              // SizedBox(
-              //     height: 340,
-              //     child: Card(
-              //       elevation: 0.4,
-              //
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(15.0),
-              //       ),
-              //       child: Padding(
-              //         padding: EdgeInsets.symmetric(horizontal: 18.0),
-              //         child: Container(),
-              //       ),
-              //     )
-              // ),
               SizedBox(
                 height: 60,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "그때 살걸... 야, 너두?",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text('더보기'),
+                      Icon(Icons.keyboard_arrow_right_outlined),
+                    ],
+                  )
+                  //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
+                ],
               ),
               HeyYouToo(),
               SizedBox(
