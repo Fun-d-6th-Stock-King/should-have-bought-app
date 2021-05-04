@@ -55,6 +55,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
+    - .env.prod
     - assets/icons/ico_random.png
     - assets/icons/atm_location.png
     - assets/icons/Card.png
