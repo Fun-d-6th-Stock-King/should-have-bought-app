@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kakao_flutter_sdk/common.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/providers/provider_list.dart';
@@ -13,6 +15,9 @@ Future main() async {
   await DotEnv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  KakaoContext.clientId = env['KAKAO_CLIENT_ID'];
+  KakaoContext.javascriptClientId = env['KAKAO_JAVASCRIPT_CLIENT_ID'];
   // 디버그시에 필요
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
   //   statusBarColor: Colors.transparent,

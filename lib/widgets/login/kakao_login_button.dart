@@ -47,7 +47,8 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
             // backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff5f6f7)),
               elevation: MaterialStateProperty.all<double>(0.0)),
           onPressed: () {
-            _isKakaoTalkInstalled ? _loginWithApp : _loginWithWeb;
+            print('onpress');
+            _isKakaoTalkInstalled ? _loginWithApp() : _loginWithWeb();
           }),
     );
   }
@@ -64,7 +65,7 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
   _loginWithApp() async {
     try {
       var code = await AuthCodeClient.instance.requestWithTalk();
-      //await _issueAccessToken(code);
+      await _getAccessToken(code);
     } catch (e) {
       print(e);
     }
@@ -72,6 +73,7 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
 
   _loginWithWeb() async {
     try {
+      print('_loginWithWeb');
       var code = await AuthCodeClient.instance.request();
       await _getAccessToken(code);
     } catch (e) {
