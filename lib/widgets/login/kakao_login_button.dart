@@ -26,36 +26,35 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ButtonTheme(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4.0),
-          side: BorderSide(color: Colors.black)),
-      child: ElevatedButton(
-          child: SizedBox(
-            width: 270,
-            height: 46,
-            child: Row(children: <Widget>[
-              //Image(image: AssetImage('assets/icons/ico_google.png')),
-              SizedBox(width: 70),
-              Expanded(
-                  flex: 2,
-                  child: Text('카카오로 로그인',
-                      style: TextStyle(fontSize: 12.0, height: 1.571)))
-            ]),
-          ),
-          style: ButtonStyle(
-              // backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff5f6f7)),
-              elevation: MaterialStateProperty.all<double>(0.0)),
-          onPressed: () {
-            _isKakaoTalkInstalled
-                ? _loginWithApp().then((_) {
-                    widget.onPressed == null ? "" : widget.onPressed();
-                  })
-                : _loginWithWeb().then((_) {
-                    widget.onPressed == null ? "" : widget.onPressed();
-                  });
-          }),
-    );
+    return ElevatedButton(
+        child: SizedBox(
+          width: 270,
+          height: 40,
+          child: Row(children: <Widget>[
+            Image(image: AssetImage('assets/icons/ico_kakao.png')),
+            SizedBox(width: 14),
+            Expanded(
+                flex: 2,
+                child: Text('카카오로 로그인',
+                    style: TextStyle(fontSize: 14.0, height: 1.571, color:Colors.black, fontWeight: FontWeight.bold)))
+          ]),
+        ),
+        style: ElevatedButton.styleFrom(
+            primary: Color(0xFFFFE600),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0), //side: BorderSide(color: Colors.red)
+            ),
+        ),
+        onPressed: () {
+          _isKakaoTalkInstalled
+              ? _loginWithApp().then((_) {
+                  widget.onPressed == null ? "" : widget.onPressed();
+                })
+              : _loginWithWeb().then((_) {
+                  widget.onPressed == null ? "" : widget.onPressed();
+                });
+        });
   }
 
   _initKakaoTalkInstalled() async {

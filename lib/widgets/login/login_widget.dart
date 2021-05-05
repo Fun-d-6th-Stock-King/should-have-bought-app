@@ -37,12 +37,26 @@ class _LoginScreenState extends State<LoginWidget> {
     return Container(
       child: Column(
         children: [
+          SizedBox(height: 24,),
           GoogleLoginButton(onPressed: () {
             Navigator.pop(context);
           }),
+          SizedBox(height: 8,),
           KakaoLoginButton(onPressed: () {
             Navigator.pop(context);
           }),
+          SizedBox(height: 8,),
+          InkWell(
+            child: Container(
+              width: 200,
+              height: 32,
+              alignment: Alignment.center,
+              child: Text('둘러보기', style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),),
+            ),
+            onTap: () =>Navigator.pop(context),
+          )
         ],
       ),
     );

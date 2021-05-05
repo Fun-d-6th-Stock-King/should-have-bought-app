@@ -68,9 +68,12 @@ flutter:
     - assets/icons/ico_card_up.png
     - assets/icons/ico_card_left.png
     - assets/icons/ico_card_right.png
+    - assets/ico_google.png
+    - assets/ico_kakao.png
     - assets/like-fountain.json
     - assets/heart-fountain.json
     - assets/celebaration-fountain.json
+
   # example:
   # fonts:
   #   - family: Schyler
