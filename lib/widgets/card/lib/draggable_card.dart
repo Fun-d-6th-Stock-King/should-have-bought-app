@@ -278,7 +278,6 @@ class _DraggableCardState extends State<DraggableCard>
     if (!isAnchorInitialized) {
       _initAnchor();
     }
-    print('test');
     print(anchorBounds?.width );
     return Transform(
       transform: Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)

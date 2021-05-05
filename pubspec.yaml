@@ -36,7 +36,7 @@ dependencies:
   firebase_auth: ^1.0.1
   google_sign_in: ^5.0.1
   kakao_flutter_sdk: ^0.6.1
-  simple_animations: ^3.1.1
+  lottie: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +65,12 @@ flutter:
     - assets/icons/ico_loading.png
     - assets/icons/ico_loading_background.png
     - assets/icons/ico_default_profile.png
-
+    - assets/icons/ico_card_up.png
+    - assets/icons/ico_card_left.png
+    - assets/icons/ico_card_right.png
+    - assets/like-fountain.json
+    - assets/heart-fountain.json
+    - assets/celebaration-fountain.json
   # example:
   # fonts:
   #   - family: Schyler
