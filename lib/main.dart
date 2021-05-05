@@ -9,6 +9,7 @@ import 'package:should_have_bought_app/providers/provider_list.dart';
 import 'package:should_have_bought_app/routes.dart';
 import 'package:should_have_bought_app/screens.dart' show TabScreen;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 
 Future main() async {
   // TODO : .env.prod 사용시 file not found 에러, 확인 필요
@@ -46,16 +47,6 @@ class MyApp extends StatelessWidget {
         },
         routes: kRoutes,
         home: Scaffold(
-          appBar: AppBar(
-            backgroundColor: defaultBackgroundColor,
-            leading: null,
-            elevation: 0,
-            actions: <Widget>[
-              IconButton(
-                  icon: Image(image: AssetImage('assets/icons/search.png')),
-                  onPressed: null),
-            ],
-          ),
           body: Center(
             child: TabScreen(),
           ),

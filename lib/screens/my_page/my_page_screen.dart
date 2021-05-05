@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/screens/main/main_screen.dart';
+import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 
 class MyPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: DefaultAppBar(context),
       body: Container(
         child: Column(
           children: [
