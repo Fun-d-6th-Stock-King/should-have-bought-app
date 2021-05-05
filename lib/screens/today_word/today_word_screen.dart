@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens.dart';
+import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
+import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:should_have_bought_app/widgets/login/login_widget.dart';
+import 'package:should_have_bought_app/widgets/util/loading/loading_widget.dart';
 
 class TodayWordScreen extends StatefulWidget {
   @override
@@ -16,21 +19,13 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    test();
   }
 
-  void test() async {
-    final user = await _auth.currentUser;
-    print(user);
-    if (user != null) {
-      final idToken = await user.getIdToken();
-      print(idToken);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: DefaultAppBar(context),
       body: Column(
         children: [
           Container(
@@ -48,7 +43,7 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
       ),
     );
   }
-
+   // TODO: 등록 버튼 (정민님)
   void _showCreateWordBottomSheet(BuildContext context) async {
     showModalBottomSheet(
         context: context,
@@ -87,54 +82,14 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onPressed: () => _showLoginBottomSheet(context)),
+                        // TODO: 등록로직 필요 (정민님)
+                        onPressed: () => _auth.currentUser == null ? LoginHandler(context) : _registerFlow()),
                   ),
                 ]),
               ));
         });
   }
+  void _registerFlow() {
 
-  void _showLoginBottomSheet(BuildContext context) async {
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(8.0),
-          topRight: Radius.circular(8.0),
-        )),
-        builder: (ctx) {
-          return AnimatedPadding(
-            duration: Duration(milliseconds: 150),
-            curve: Curves.easeOut,
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Container(
-                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-                height: 200,
-                child: _handleCurrentScreen()),
-          );
-        });
-  }
-
-  Widget _handleCurrentScreen() {
-    return StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          print('[TEST] login');
-          print(snapshot.hasData);
-          print(snapshot.data);
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingScreen();
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              print(snapshot.data);
-              //Provider.of<UserCredentialProvider>(context, listen: false).setFirebaseUser(snapshot.data);
-            }
-          }
-          return LoginWidget();
-        });
   }
 }

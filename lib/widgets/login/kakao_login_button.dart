@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/auth.dart';
 import 'package:kakao_flutter_sdk/common.dart';
 import 'package:should_have_bought_app/api/login/firebase_kakao_api.dart';
+import 'package:should_have_bought_app/widgets/util/loading/loading_widget.dart';
 
 class KakaoLoginButton extends StatefulWidget {
   final VoidCallback onPressed;
@@ -14,7 +15,6 @@ class KakaoLoginButton extends StatefulWidget {
 }
 
 class _KakaoLoginButtonState extends State<KakaoLoginButton> {
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isKakaoTalkInstalled = false;
 
@@ -44,11 +44,16 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
             ]),
           ),
           style: ButtonStyle(
-            // backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff5f6f7)),
+              // backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff5f6f7)),
               elevation: MaterialStateProperty.all<double>(0.0)),
           onPressed: () {
-            print('onpress');
-            _isKakaoTalkInstalled ? _loginWithApp() : _loginWithWeb();
+            _isKakaoTalkInstalled
+                ? _loginWithApp().then((_) {
+                    widget.onPressed == null ? "" : widget.onPressed();
+                  })
+                : _loginWithWeb().then((_) {
+                    widget.onPressed == null ? "" : widget.onPressed();
+                  });
           }),
     );
   }
@@ -86,11 +91,12 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
       var token = await AuthApi.instance.issueAccessToken(authCode);
       AccessTokenStore.instance.toStore(token);
       String kakaoToken = token.toJson()['access_token'];
-      final data = {'token':kakaoToken};
-      print('kakaoToken:'+kakaoToken);
+      final data = {'token': kakaoToken};
+      print('kakaoToken:' + kakaoToken);
       Map customToken = await FirebaseKakaoApi.verifyToken(data);
 
-      UserCredential userCredential = (await _auth.signInWithCustomToken(customToken['firebase_token']));
+      UserCredential userCredential =
+          (await _auth.signInWithCustomToken(customToken['firebase_token']));
       User user = userCredential.user;
 
       return user;

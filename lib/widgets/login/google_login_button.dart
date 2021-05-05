@@ -38,8 +38,8 @@ class _GoogleLoginButtonState extends State<GoogleLoginButton> {
               // backgroundColor: MaterialStateProperty.all<Color>(Color(0xfff5f6f7)),
               elevation: MaterialStateProperty.all<double>(0.0)),
           onPressed: () {
-            _handleGoogleSignIn().then((value) {
-              widget.onPressed !=null ? widget.onPressed(): "";
+            _handleGoogleSignIn().then((_) {
+              widget.onPressed == null ? "" : widget.onPressed();
             });
           }),
     );
@@ -54,7 +54,8 @@ class _GoogleLoginButtonState extends State<GoogleLoginButton> {
             idToken: googleAuth.idToken, accessToken: googleAuth.accessToken)))
         .user;
 
-    user.updateProfile(displayName: 'test');
+    //TODO: UPDATE FLOW 필요
+    //user.updateProfile(displayName: 'test');
     return user;
   }
 }
