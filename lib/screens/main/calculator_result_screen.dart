@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:math' as math;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,22 +54,10 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
   void setBackgroundColor(int percent) {
     if (percent > 0) {
-      colorSet = [
-        Color(0xa0FF6561),
-        Color(0x00FF6561),
-      ];
-      topColor = Color(0xa0FF6561);
+      topColor = Color(0xffFF6561);
     } else if (percent < 0) {
-      colorSet = [
-        Color(0xa04990FF),
-        Color(0x004990FF),
-      ];
-      topColor = Color(0xa04990FF);
+      topColor = Color(0xff4990FF);
     } else {
-      colorSet = [
-        defaultBackgroundColor,
-        defaultBackgroundColor,
-      ];
       topColor = defaultBackgroundColor;
     }
   }
@@ -83,15 +71,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           body: SingleChildScrollView(
             child: Stack(
               children: <Widget>[
-                Container(
-                  height: 360,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: colorSet,
-                    ),
-                  ),
+                CustomPaint(
+                  painter: MyPainter(topColor),
+                  size: Size(1000, 1000),
                 ),
                 Container(
                   padding: EdgeInsets.only(
@@ -118,11 +100,11 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                         child: randomValues(context, () {
                           final _companyList = value.companyList;
                           final _randomDate =
-                              Random().nextInt(_randomDates.length);
+                              math.Random().nextInt(_randomDates.length);
                           final _randomCompnay =
-                              Random().nextInt(_companyList.length);
+                              math.Random().nextInt(_companyList.length);
                           final _randomPrice =
-                              Random().nextInt(_randomPrices.length);
+                              math.Random().nextInt(_randomPrices.length);
                           value.randomResult(CalculatorDto(
                             code: _companyList[_randomCompnay].code,
                             investDate: _randomDates[_randomDate],
@@ -483,4 +465,27 @@ class MainTopText extends StatelessWidget {
       minFontSize: 10,
     );
   }
+}
+
+// This is the Painter class
+class MyPainter extends CustomPainter {
+  final Color topColor;
+  MyPainter(this.topColor);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = topColor;
+    var path = Path();
+
+    path.moveTo(0, size.height * 0.3);
+    path.quadraticBezierTo(
+        size.width / 2, size.height / 2.5, size.width, size.height * 0.3);
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
