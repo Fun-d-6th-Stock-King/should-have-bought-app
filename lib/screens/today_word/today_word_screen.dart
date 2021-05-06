@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens.dart';
+import 'package:should_have_bought_app/screens/main/example/example.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:should_have_bought_app/widgets/login/login_widget.dart';
@@ -26,13 +27,7 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DefaultAppBar(context),
-      body: Column(
-        children: [
-          Container(
-            child: Text('TodayWordScreen'),
-          ),
-        ],
-      ),
+      body: Example(),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100.0),
         child: FloatingActionButton(
