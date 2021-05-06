@@ -63,6 +63,8 @@ flutter:
     - assets/icons/Profile.png
     - assets/icons/search.png
 
+    - assets/images/plus_chick.png
+
   # example:
   # fonts:
   #   - family: Schyler

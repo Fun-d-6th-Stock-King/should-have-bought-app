@@ -25,6 +25,5 @@ const kMainBoldTextStyle = TextStyle(
 );
 
 const kOldStockTextStyle = TextStyle(
-  fontSize: 16,
   fontWeight: FontWeight.w700,
 );

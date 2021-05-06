@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
-import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
 
@@ -16,7 +15,7 @@ class CalculatorResultScreen extends StatefulWidget {
 }
 
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
-  List<Color> colorSet;
+  Color textColor;
   Color topColor;
   final List<String> _randomDates = [
     'DAY1',
@@ -55,10 +54,13 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   void setBackgroundColor(int percent) {
     if (percent > 0) {
       topColor = Color(0xffFF6561);
+      textColor = Colors.white;
     } else if (percent < 0) {
       topColor = Color(0xff4990FF);
+      textColor = Colors.white;
     } else {
-      topColor = defaultBackgroundColor;
+      topColor = Color(0xffF2F2F2);
+      textColor = Colors.black;
     }
   }
 
@@ -73,7 +75,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
               children: <Widget>[
                 CustomPaint(
                   painter: MyPainter(topColor),
-                  size: Size(1000, 1000),
+                  size: Size(1200, 1200),
                 ),
                 Container(
                   padding: EdgeInsets.only(
@@ -117,6 +119,19 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                   ),
                 ),
                 Container(
+                  height: 360,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Center(
+                        child: Image(
+                          image: AssetImage('assets/images/plus_chick.png'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
                   padding: EdgeInsets.only(left: 16, right: 16),
                   child: Column(
                     children: <Widget>[
@@ -130,15 +145,21 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                             MainTopText(
                               investDate: value.calculationResult.investDate,
                               companyName: value.calculationResult.name,
+                              textColor: textColor,
+                            ),
+                            MainMidText(
+                              companyName: value.calculationResult.name,
+                              textColor: textColor,
                             ),
                             MainBottomText(
                               investPrice: numberWithComma(
                                   value.calculationResult.investPrice),
+                              textColor: textColor,
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 35),
+                      SizedBox(height: 75),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         height: 209,
@@ -148,8 +169,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                             borderRadius: BorderRadius.circular(15.0),
                             boxShadow: [
                               BoxShadow(
-                                color: Color(0xFFF1F1F1),
-                                offset: Offset(2.0, 13.0),
+                                color: Color(0x1F5A5A5A),
+                                offset: Offset(6.0, 8.0),
                                 blurRadius: 35.0,
                               ),
                             ],
@@ -197,7 +218,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                                       AutoSizeText(
                                         '1주당 ${numberWithComma(value.calculationResult.oldPrice)}원',
                                         style: kOldStockTextStyle,
-                                        maxLines: 1,
+                                        minFontSize: 15,
+                                        maxLines: 2,
                                       ),
                                       Container(
                                         height: 20,
@@ -208,7 +230,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                                       AutoSizeText(
                                         '${value.calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
                                         style: kOldStockTextStyle,
-                                        maxLines: 1,
+                                        minFontSize: 15,
+                                        maxLines: 2,
                                       ),
                                     ],
                                   ),
@@ -351,13 +374,8 @@ class YieldPercentText extends StatelessWidget {
           fontWeight: FontWeight.w300,
         ),
         children: [
-          (yieldPercent > 0)
-              ? TextSpan(text: '+')
-              : (yieldPercent < 0)
-                  ? TextSpan(text: '-')
-                  : TextSpan(),
           TextSpan(
-            text: ' ${yieldPercent.abs()}%',
+            text: '(${yieldPercent.abs()}%)',
           ),
         ],
       ),
@@ -385,11 +403,7 @@ class EmojiYieldPriceText extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         children: [
-          (yieldPercent > 0)
-              ? TextSpan(text: '😂 ')
-              : (yieldPercent < 0)
-                  ? TextSpan(text: '😱 ')
-                  : TextSpan(text: '🤔 '),
+          (yieldPercent > 0) ? TextSpan(text: '+ ') : TextSpan(text: '- '),
           TextSpan(text: '$yieldPrice원'),
         ],
       ),
@@ -401,8 +415,9 @@ class EmojiYieldPriceText extends StatelessWidget {
 
 class MainBottomText extends StatelessWidget {
   final String investPrice;
+  final Color textColor;
 
-  MainBottomText({this.investPrice});
+  MainBottomText({this.investPrice, this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -410,7 +425,7 @@ class MainBottomText extends StatelessWidget {
       TextSpan(
         style: TextStyle(
           fontSize: 24,
-          color: Colors.black,
+          color: textColor,
           fontWeight: FontWeight.w300,
         ),
         children: <TextSpan>[
@@ -432,8 +447,9 @@ class MainBottomText extends StatelessWidget {
 class MainTopText extends StatelessWidget {
   final String investDate;
   final String companyName;
+  final Color textColor;
 
-  MainTopText({this.investDate, this.companyName});
+  MainTopText({this.investDate, this.companyName, this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -441,7 +457,7 @@ class MainTopText extends StatelessWidget {
       TextSpan(
         style: TextStyle(
           fontSize: 24,
-          color: Colors.black,
+          color: textColor,
           fontWeight: FontWeight.w300,
         ),
         children: <TextSpan>[
@@ -452,6 +468,30 @@ class MainTopText extends StatelessWidget {
           TextSpan(
             text: '에 ',
           ),
+        ],
+      ),
+      maxLines: 1,
+      minFontSize: 10,
+    );
+  }
+}
+
+class MainMidText extends StatelessWidget {
+  final String companyName;
+  final Color textColor;
+
+  MainMidText({this.companyName, this.textColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return AutoSizeText.rich(
+      TextSpan(
+        style: TextStyle(
+          fontSize: 24,
+          color: textColor,
+          fontWeight: FontWeight.w300,
+        ),
+        children: <TextSpan>[
           TextSpan(
             text: companyName,
             style: kMainBoldTextStyle,
