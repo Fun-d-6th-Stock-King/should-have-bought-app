@@ -11,30 +11,39 @@ class HeyYouToo extends StatefulWidget {
 }
 
 class _HeyYouTooState extends State<HeyYouToo> {
-  List _historyList;
+  List<dynamic> _historyList;
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
-    Provider.of<CalculatorProvider>(context).getHistory(1, 10);
     _historyList = Provider.of<CalculatorProvider>(context).calculateHistory;
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 220.0,
-        viewportFraction: 0.7,
-        enableInfiniteScroll: false,
-      ),
-      items: _historyList.map((history) {
-        return Builder(
-          builder: (context) {
-            return HistoryCard(history);
-          },
-        );
-      }).toList(),
-    );
+    return _historyList.isEmpty
+        ? Container(
+            height: 220.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(),
+              ],
+            ))
+        : CarouselSlider(
+            options: CarouselOptions(
+              height: 220.0,
+              viewportFraction: 0.7,
+              enableInfiniteScroll: false,
+            ),
+            items: _historyList.map((history) {
+              return Builder(
+                builder: (context) {
+                  return HistoryCard(history);
+                },
+              );
+            }).toList(),
+          );
   }
 }

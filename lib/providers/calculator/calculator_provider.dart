@@ -70,12 +70,14 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future getHistory(int pageNo, int pageSize) async {
+  Future getHistory({int pageNo = 1, int pageSize = 10}) async {
+    var list = [];
     final result = await CalculatorApi.getHistoryList(pageNo, pageSize);
-    List list = result['calculationHistList'];
-
-    _calculateHistory =
-        list.map((history) => CalculatorHistory.fromJson(history)).toList();
-    notifyListeners();
+    list = result['calculationHistList'];
+    if (list != null) {
+      _calculateHistory =
+          list.map((history) => CalculatorHistory.fromJson(history)).toList();
+      notifyListeners();
+    }
   }
 }

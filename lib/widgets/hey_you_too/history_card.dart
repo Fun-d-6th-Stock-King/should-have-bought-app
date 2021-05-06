@@ -27,14 +27,16 @@ class HistoryCard extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Text(
-                  history.company,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+                AutoSizeText(
+                  '${history.company} ',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  maxFontSize: 22,
+                  maxLines: 1,
                 ),
-                SizedBox(width: 5),
-                Text(
-                  '1분 전',
+                AutoSizeText(
+                  convertMinuteToHours(history.createdDate),
                   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w300),
+                  maxLines: 1,
                 ),
               ],
             ),
@@ -45,30 +47,32 @@ class HistoryCard extends StatelessWidget {
             ),
             AutoSizeText.rich(
               TextSpan(
-                  style: TextStyle(
-                    color: (history.yieldPercent > 0)
-                        ? Colors.red
-                        : (history.yieldPercent < 0)
-                            ? Colors.blue
-                            : Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 21,
-                  ),
-                  children: <TextSpan>[
-                    (history.yieldPercent > 0)
-                        ? TextSpan(text: '+')
-                        : (history.yieldPercent < 0)
-                            ? TextSpan(text: '-')
-                            : TextSpan(),
-                    TextSpan(text: '${numberWithComma(history.yieldPrice)}원'),
-                    TextSpan(
-                      text: '(${history.yieldPercent}%)',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+                style: TextStyle(
+                  color: (history.yieldPercent > 0)
+                      ? Colors.red
+                      : (history.yieldPercent < 0)
+                          ? Colors.blue
+                          : Colors.black,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 21,
+                ),
+                children: <TextSpan>[
+                  (history.yieldPercent > 0)
+                      ? TextSpan(text: '+')
+                      : (history.yieldPercent < 0)
+                          ? TextSpan(text: '-')
+                          : TextSpan(),
+                  TextSpan(text: '${numberWithComma(history.yieldPrice)}원'),
+                  TextSpan(
+                    text: '(${history.yieldPercent}%)',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ]),
+                  ),
+                ],
+              ),
+              maxLines: 1,
             ),
             SizedBox(height: 10),
             Container(
