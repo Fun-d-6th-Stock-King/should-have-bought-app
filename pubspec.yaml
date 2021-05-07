@@ -37,6 +37,7 @@ dependencies:
   google_sign_in: ^5.0.1
   kakao_flutter_sdk: ^0.6.1
   lottie: ^1.0.1
+  flutter_easyloading: ^3.0.0
 
 dev_dependencies:
   flutter_test:
