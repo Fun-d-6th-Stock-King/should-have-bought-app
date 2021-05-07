@@ -50,6 +50,27 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     }
   }
 
+  void randomValues(CalculatorProvider value) {
+    setState(() {
+      isLoading = true;
+    });
+    final _companyList = value.companyList;
+    final _randomDate = Random().nextInt(_randomDates.length);
+    final _randomCompnay = Random().nextInt(_companyList.length);
+    final _randomPrice = Random().nextInt(_randomPrices.length);
+    value
+        .randomResult(CalculatorDto(
+      code: _companyList[_randomCompnay].code,
+      investDate: _randomDates[_randomDate],
+      investPrice: intToCurrency(_randomPrices[_randomPrice]),
+    ).toMap())
+        .then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
@@ -88,7 +109,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                         child: isLoading
                             ? LoadingRandomWidget()
                             : RandomWidget(onTap: () {
-                                RandomValues(value);
+                                randomValues(value);
                               }),
                       ),
                     ],
@@ -195,7 +216,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                                         '1주당 ${numberWithComma(value.calculationResult.oldPrice)}원',
                                         style: kOldStockTextStyle,
                                         minFontSize: 15,
-                                        maxLines: 2,
+                                        maxLines: 1,
                                       ),
                                       Container(
                                         height: 20,
@@ -207,7 +228,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                                         '${value.calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
                                         style: kOldStockTextStyle,
                                         minFontSize: 15,
-                                        maxLines: 2,
+                                        maxLines: 1,
                                       ),
                                     ],
                                   ),
@@ -267,27 +288,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         );
       },
     );
-  }
-
-  void RandomValues(value) {
-    setState(() {
-      isLoading = true;
-    });
-    final _companyList = value.companyList;
-    final _randomDate = Random().nextInt(_randomDates.length);
-    final _randomCompnay = Random().nextInt(_companyList.length);
-    final _randomPrice = Random().nextInt(_randomPrices.length);
-    value
-        .randomResult(CalculatorDto(
-      code: _companyList[_randomCompnay].code,
-      investDate: _randomDates[_randomDate],
-      investPrice: intToCurrency(_randomPrices[_randomPrice]),
-    ).toMap())
-        .then((_) {
-      setState(() {
-        isLoading = false;
-      });
-    });
   }
 }
 
