@@ -6,6 +6,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
+  List _tenYearHighList = [];
   CalculatorStock calculationResult;
 
   List get companyList {
@@ -14,6 +15,10 @@ class CalculatorProvider with ChangeNotifier {
 
   List get searchCompanyList {
     return _searchCompanyList;
+  }
+
+  List get tenYearHighList {
+    return _tenYearHighList;
   }
 
   void filterSearchResults(String query) {
@@ -61,5 +66,18 @@ class CalculatorProvider with ChangeNotifier {
 
     print(_companyList[1].code);
     notifyListeners();
+  }
+
+  Future getTenYearHigher() async {
+    final result = await CalculatorApi.getTenYearHigher();
+    List list = result;
+
+    if (list != null) {
+      _tenYearHighList = list
+          .map((e) =>
+              {"company": e["company"], "high": e["maxQuote"]["high"].toInt()})
+          .toList();
+      notifyListeners();
+    }
   }
 }

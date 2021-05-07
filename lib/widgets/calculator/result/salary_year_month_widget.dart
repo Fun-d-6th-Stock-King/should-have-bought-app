@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/utils.dart';
 
-class SalaryYearMonthCard extends StatelessWidget {
+class SalaryYearMonthWidget extends StatelessWidget {
   final String salaryYear;
   final String salaryMonth;
 
-  SalaryYearMonthCard({this.salaryYear, this.salaryMonth});
+  SalaryYearMonthWidget({this.salaryYear, this.salaryMonth});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
+      children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -57,7 +58,7 @@ class SalaryYearMonthCard extends StatelessWidget {
                       maxLines: 1,
                     ),
                     AutoSizeText(
-                      salaryYear,
+                      numberWithComma(salaryYear),
                       style: kSalaryTextStyle,
                       maxLines: 1,
                       minFontSize: 10,
@@ -82,7 +83,7 @@ class SalaryYearMonthCard extends StatelessWidget {
                       ),
                     ),
                     AutoSizeText(
-                      salaryMonth,
+                      numberWithComma(salaryMonth),
                       style: kSalaryTextStyle,
                       maxLines: 1,
                       minFontSize: 10,

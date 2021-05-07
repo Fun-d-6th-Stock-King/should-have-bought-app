@@ -10,6 +10,7 @@ import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/loading_random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/salary_year_month_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/ten_year_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -21,6 +22,7 @@ class CalculatorResultScreen extends StatefulWidget {
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color textColor;
   Color topColor;
+
   final List<String> _randomDates = [
     'DAY1',
     'WEEK1',
@@ -39,7 +41,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   ];
   bool isLoading = false;
 
-  void setBackgroundColor(int percent) {
+  void setBackgroundColor() {
+    final percent =
+        Provider.of<CalculatorProvider>(context).calculationResult.yieldPercent;
     if (percent > 0) {
       topColor = Color(0xffFF6561);
       textColor = Colors.white;
@@ -52,15 +56,16 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     }
   }
 
-  void randomValues(CalculatorProvider value) {
+  void randomValues() {
     setState(() {
       isLoading = true;
     });
-    final _companyList = value.companyList;
+    final _companyList =
+        Provider.of<CalculatorProvider>(context, listen: false).companyList;
     final _randomDate = Random().nextInt(_randomDates.length);
     final _randomCompnay = Random().nextInt(_companyList.length);
     final _randomPrice = Random().nextInt(_randomPrices.length);
-    value
+    Provider.of<CalculatorProvider>(context, listen: false)
         .randomResult(CalculatorDto(
       code: _companyList[_randomCompnay].code,
       investDate: _randomDates[_randomDate],
@@ -75,197 +80,192 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CalculatorProvider>(
-      builder: (context, value, child) {
-        setBackgroundColor(value.calculationResult.yieldPercent);
-        return Scaffold(
-          body: SingleChildScrollView(
-            child: Stack(
-              children: <Widget>[
-                CustomPaint(
-                  painter: MyPainter(topColor),
-                  size: Size(1200, 1200),
-                ),
-                Container(
-                  padding: EdgeInsets.only(
-                    top: 40,
-                    bottom: 30,
-                    left: 12,
-                    right: 20,
+    setBackgroundColor();
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Stack(
+          children: <Widget>[
+            CustomPaint(
+              painter: MyPainter(topColor),
+              size: Size(1200, 1200),
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                top: 40,
+                bottom: 30,
+                left: 12,
+                right: 20,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: Color(0x80FFFFFF),
+                  Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: Color(0x80FFFFFF),
+                    ),
+                    child: isLoading
+                        ? LoadingRandomWidget()
+                        : RandomWidget(onTap: () {
+                            randomValues();
+                          }),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 360,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Center(
+                    child: Image(
+                      image: AssetImage('assets/images/plus_chick.png'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 110,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        MainTopText(
+                          textColor: textColor,
                         ),
-                        child: isLoading
-                            ? LoadingRandomWidget()
-                            : RandomWidget(onTap: () {
-                                randomValues(value);
-                              }),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 360,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Center(
-                        child: Image(
-                          image: AssetImage('assets/images/plus_chick.png'),
+                        MainMidText(
+                          textColor: textColor,
                         ),
-                      ),
-                    ],
+                        MainBottomText(
+                          textColor: textColor,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 110,
+                  SizedBox(height: 75),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    height: 209,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(15.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x1F5A5A5A),
+                            offset: Offset(6.0, 8.0),
+                            blurRadius: 35.0,
+                          ),
+                        ],
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: 18,
+                          right: 18,
+                          top: 18,
+                        ),
                         child: Column(
-                          children: [
-                            MainTopText(
-                              investDate: value.calculationResult.investDate,
-                              companyName: value.calculationResult.name,
-                              textColor: textColor,
+                          children: <Widget>[
+                            EmojiYieldPriceText(),
+                            YieldPercentText(),
+                            SizedBox(
+                              height: 8,
                             ),
-                            MainMidText(
-                              companyName: value.calculationResult.name,
-                              textColor: textColor,
+                            Text(
+                              '${Provider.of<CalculatorProvider>(context).calculationResult.oldCloseDate} 종가 기준',
+                              style: TextStyle(
+                                color: Color(0xff949597),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                            MainBottomText(
-                              investPrice: numberWithComma(
-                                  value.calculationResult.investPrice),
-                              textColor: textColor,
+                            SizedBox(
+                              height: 31,
                             ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 15,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  AutoSizeText(
+                                    '1주당 ${numberWithComma(Provider.of<CalculatorProvider>(context).calculationResult.oldPrice)}원',
+                                    style: kOldStockTextStyle,
+                                    minFontSize: 15,
+                                    maxLines: 1,
+                                  ),
+                                  Container(
+                                    height: 20,
+                                    child: VerticalDivider(
+                                      color: Color(0xff979797),
+                                    ),
+                                  ),
+                                  AutoSizeText(
+                                    '${Provider.of<CalculatorProvider>(context).calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
+                                    style: kOldStockTextStyle,
+                                    minFontSize: 15,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      SizedBox(height: 75),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        height: 209,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xFFFFFFFF),
-                            borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0x1F5A5A5A),
-                                offset: Offset(6.0, 8.0),
-                                blurRadius: 35.0,
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: 18,
-                              right: 18,
-                              top: 18,
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                EmojiYieldPriceText(
-                                  yieldPercent:
-                                      value.calculationResult.yieldPercent,
-                                  yieldPrice: numberWithComma(
-                                      value.calculationResult.yieldPrice),
-                                ),
-                                YieldPercentText(
-                                  yieldPercent:
-                                      value.calculationResult.yieldPercent,
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '${value.calculationResult.oldCloseDate} 종가 기준',
-                                  style: TextStyle(
-                                    color: Color(0xff949597),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 31,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      AutoSizeText(
-                                        '1주당 ${numberWithComma(value.calculationResult.oldPrice)}원',
-                                        style: kOldStockTextStyle,
-                                        minFontSize: 15,
-                                        maxLines: 1,
-                                      ),
-                                      Container(
-                                        height: 20,
-                                        child: VerticalDivider(
-                                          color: Color(0xff979797),
-                                        ),
-                                      ),
-                                      AutoSizeText(
-                                        '${value.calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
-                                        style: kOldStockTextStyle,
-                                        minFontSize: 15,
-                                        maxLines: 1,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      SalaryYearMonthCard(
-                        salaryYear: value.calculationResult.salaryYear,
-                        salaryMonth: value.calculationResult.salaryMonth,
-                      )
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Provider.of<CalculatorProvider>(context)
+                              .calculationResult
+                              .yieldPercent >
+                          0
+                      ? SalaryYearMonthWidget(
+                          salaryYear: Provider.of<CalculatorProvider>(context)
+                              .calculationResult
+                              .salaryYear,
+                          salaryMonth: Provider.of<CalculatorProvider>(context)
+                              .calculationResult
+                              .salaryMonth,
+                        )
+                      : TenYearWidget(
+                          money: convertMoney(
+                              Provider.of<CalculatorProvider>(context)
+                                  .calculationResult
+                                  .investPrice),
+                        )
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }
 
 class YieldPercentText extends StatelessWidget {
-  final int yieldPercent;
-
-  YieldPercentText({this.yieldPercent});
-
   @override
   Widget build(BuildContext context) {
+    final yieldPercent =
+        Provider.of<CalculatorProvider>(context).calculationResult.yieldPercent;
     return RichText(
       text: TextSpan(
         style: TextStyle(
@@ -288,13 +288,12 @@ class YieldPercentText extends StatelessWidget {
 }
 
 class EmojiYieldPriceText extends StatelessWidget {
-  final int yieldPercent;
-  final String yieldPrice;
-
-  EmojiYieldPriceText({this.yieldPercent, this.yieldPrice});
-
   @override
   Widget build(BuildContext context) {
+    final yieldPercent =
+        Provider.of<CalculatorProvider>(context).calculationResult.yieldPercent;
+    final yieldPrice = numberWithComma(
+        Provider.of<CalculatorProvider>(context).calculationResult.yieldPrice);
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(
@@ -318,13 +317,14 @@ class EmojiYieldPriceText extends StatelessWidget {
 }
 
 class MainBottomText extends StatelessWidget {
-  final String investPrice;
   final Color textColor;
 
-  MainBottomText({this.investPrice, this.textColor});
+  MainBottomText({this.textColor});
 
   @override
   Widget build(BuildContext context) {
+    final investPrice = numberWithComma(
+        Provider.of<CalculatorProvider>(context).calculationResult.investPrice);
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(
@@ -349,14 +349,14 @@ class MainBottomText extends StatelessWidget {
 }
 
 class MainTopText extends StatelessWidget {
-  final String investDate;
-  final String companyName;
   final Color textColor;
 
-  MainTopText({this.investDate, this.companyName, this.textColor});
+  MainTopText({this.textColor});
 
   @override
   Widget build(BuildContext context) {
+    final investDate =
+        Provider.of<CalculatorProvider>(context).calculationResult.investDate;
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(
@@ -381,13 +381,14 @@ class MainTopText extends StatelessWidget {
 }
 
 class MainMidText extends StatelessWidget {
-  final String companyName;
   final Color textColor;
 
-  MainMidText({this.companyName, this.textColor});
+  MainMidText({this.textColor});
 
   @override
   Widget build(BuildContext context) {
+    final companyName =
+        Provider.of<CalculatorProvider>(context).calculationResult.name;
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(

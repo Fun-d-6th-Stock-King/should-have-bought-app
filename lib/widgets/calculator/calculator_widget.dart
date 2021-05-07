@@ -11,7 +11,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
-import 'package:should_have_bought_app/widgets/calculator/random_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 
 import 'company_item.dart';
 
