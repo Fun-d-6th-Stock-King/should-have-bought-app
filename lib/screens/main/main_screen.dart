@@ -1,46 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/widgets.dart';
+import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
+import 'package:should_have_bought_app/widgets/main/header_widget.dart';
 
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: DefaultAppBar(context),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text("닉네임",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                            height: 1.5,
-                            color: mainColor,
-                          )),
-                      Text(" 님,",
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5)),
-                    ],
-                  ),
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://www.woolha.com/media/2020/03/eevee.png'),
-                    backgroundColor: Colors.white,
-                  ),
-                ],
-              ),
-              Text("오늘도 익절하는 하루 되세요.",
-                  style: TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.w500, height: 1.5)),
+              HeaderWidget(),
               SizedBox(
                 height: 21,
               ),
