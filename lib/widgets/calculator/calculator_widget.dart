@@ -20,8 +20,7 @@ class CalculatorWidget extends StatefulWidget {
   _CalculatorWidgetState createState() => _CalculatorWidgetState();
 }
 
-class _CalculatorWidgetState extends State<CalculatorWidget>  {
-
+class _CalculatorWidgetState extends State<CalculatorWidget> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   String _selectedDateValue = 'YEAR10';
@@ -54,7 +53,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget>  {
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma('100000');
-
   }
 
   @override
@@ -137,7 +135,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget>  {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [viewSelectedDates(context), randomValuesButton(context)],
+                children: [
+                  viewSelectedDates(context),
+                  randomValuesButton(context)
+                ],
               ),
               viewSelectedCompany(context),
               viewSelectedPrice(context),
@@ -200,9 +201,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget>  {
                                     intToCurrency(_priceController.text))
                             .toMap())
                         .then((value) {
-                      print(Provider.of<CalculatorProvider>(context,
-                              listen: false)
-                          .calculationResult);
                       Navigator.of(context)
                           .pushNamed(CalculatorResultScreen.routeId);
                     });
