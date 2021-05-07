@@ -39,6 +39,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	 <key>LSApplicationQueriesSchemes</key>
+      <array>
+          <string>kakaoe5687159bd1b4768b1c21cfd1551fbfa</string>
+          <string>kakaokompassauth</string>
+          <string>storykompassauth</string>
+          <string>kakaolink</string>
+          <string>kakaotalk-5.9.7</string>
+      </array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

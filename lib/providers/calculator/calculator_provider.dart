@@ -6,7 +6,6 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
-
   CalculatorStock calculationResult;
 
   List get companyList {
