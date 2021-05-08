@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleLoginButton extends StatefulWidget {
@@ -37,9 +38,14 @@ class _GoogleLoginButtonState extends State<GoogleLoginButton> {
             borderRadius: BorderRadius.circular(5.0), //side: BorderSide(color: Colors.red)
           ),
         ),
-        onPressed: () {
+        onPressed: () async {
+          await EasyLoading.show(
+            status: 'loading...',
+            maskType: EasyLoadingMaskType.black,
+          );
           _handleGoogleSignIn().then((_) {
             widget.onPressed == null ? "" : widget.onPressed();
+            EasyLoading.dismiss();
           });
         });
   }

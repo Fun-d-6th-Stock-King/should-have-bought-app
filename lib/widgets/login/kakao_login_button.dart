@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:kakao_flutter_sdk/auth.dart';
 import 'package:kakao_flutter_sdk/common.dart';
 import 'package:should_have_bought_app/api/login/firebase_kakao_api.dart';
@@ -46,13 +47,19 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
               borderRadius: BorderRadius.circular(5.0), //side: BorderSide(color: Colors.red)
             ),
         ),
-        onPressed: () {
+        onPressed: () async {
+          await EasyLoading.show(
+            status: 'loading...',
+            maskType: EasyLoadingMaskType.black,
+          );
           _isKakaoTalkInstalled
               ? _loginWithApp().then((_) {
                   widget.onPressed == null ? "" : widget.onPressed();
+                  EasyLoading.dismiss();
                 })
               : _loginWithWeb().then((_) {
                   widget.onPressed == null ? "" : widget.onPressed();
+                  EasyLoading.dismiss();
                 });
         });
   }
@@ -72,16 +79,16 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
       await _getAccessToken(code);
     } catch (e) {
       print(e);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("$e")));
     }
   }
 
   _loginWithWeb() async {
     try {
-      print('_loginWithWeb');
       var code = await AuthCodeClient.instance.request();
       await _getAccessToken(code);
     } catch (e) {
-      print(e);
     }
   }
 
@@ -105,3 +112,4 @@ class _KakaoLoginButtonState extends State<KakaoLoginButton> {
     }
   }
 }
+
