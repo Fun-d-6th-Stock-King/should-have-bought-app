@@ -7,6 +7,8 @@ import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/calculator/loading_random_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/random_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -34,23 +36,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     '5000000',
     '10000000'
   ];
+  bool isLoading = false;
 
-  Widget randomValues(BuildContext context, Function onTap) {
-    return InkWell(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image(image: AssetImage('assets/icons/ico_random.png')),
-          Padding(padding: EdgeInsets.only(bottom: 2)),
-          Text(
-            '랜덤',
-            style: TextStyle(fontSize: 11, color: Color(0xFF828282)),
-          )
-        ],
-      ),
-      onTap: onTap,
-    );
-  }
 
   void setBackgroundColor(int percent) {
     if (percent > 0) {
@@ -115,20 +102,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                           borderRadius: BorderRadius.circular(18),
                           color: Color(0x80FFFFFF),
                         ),
-                        child: randomValues(context, () {
-                          final _companyList = value.companyList;
-                          final _randomDate =
-                              Random().nextInt(_randomDates.length);
-                          final _randomCompnay =
-                              Random().nextInt(_companyList.length);
-                          final _randomPrice =
-                              Random().nextInt(_randomPrices.length);
-                          value.randomResult(CalculatorDto(
-                            code: _companyList[_randomCompnay].code,
-                            investDate: _randomDates[_randomDate],
-                            investPrice:
-                                intToCurrency(_randomPrices[_randomPrice]),
-                          ).toMap());
+                        child: isLoading ? LoadingRandomWidget()
+                        : RandomWidget(onTap: (){
+                          RandomValues(value);
                         }),
                       ),
                     ],
@@ -286,6 +262,28 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         );
       },
     );
+  }
+  void RandomValues(value) {
+    setState(() {
+      isLoading = true;
+    });
+    final _companyList = value.companyList;
+    final _randomDate =
+    Random().nextInt(_randomDates.length);
+    final _randomCompnay =
+    Random().nextInt(_companyList.length);
+    final _randomPrice =
+    Random().nextInt(_randomPrices.length);
+    value.randomResult(CalculatorDto(
+      code: _companyList[_randomCompnay].code,
+      investDate: _randomDates[_randomDate],
+      investPrice:
+      intToCurrency(_randomPrices[_randomPrice]),
+    ).toMap()).then((_){
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 }
 

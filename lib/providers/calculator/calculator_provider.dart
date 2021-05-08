@@ -8,7 +8,6 @@ class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
   List _calculateHistory = [];
-
   CalculatorStock calculationResult;
 
   List get companyList {

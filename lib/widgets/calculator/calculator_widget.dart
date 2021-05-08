@@ -11,6 +11,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/calculator/random_widget.dart';
 
 import 'company_item.dart';
 
@@ -19,7 +20,8 @@ class CalculatorWidget extends StatefulWidget {
   _CalculatorWidgetState createState() => _CalculatorWidgetState();
 }
 
-class _CalculatorWidgetState extends State<CalculatorWidget> {
+class _CalculatorWidgetState extends State<CalculatorWidget>  {
+
   TextEditingController _searchController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   String _selectedDateValue = 'YEAR10';
@@ -52,6 +54,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma('100000');
+
   }
 
   @override
@@ -134,7 +137,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [viewSelectedDates(context), randomValues(context)],
+                children: [viewSelectedDates(context), randomValuesButton(context)],
               ),
               viewSelectedCompany(context),
               viewSelectedPrice(context),
@@ -513,24 +516,13 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     );
   }
 
-  Widget randomValues(BuildContext context) {
-    return InkWell(
-        child: Column(
-          children: [
-            Image(image: AssetImage('assets/icons/ico_random.png')),
-            Padding(padding: EdgeInsets.only(bottom: 2)),
-            Text(
-              '랜덤',
-              style: TextStyle(fontSize: 11, color: Color(0xFF828282)),
-            )
-          ],
-        ),
-        onTap: () {
-          CalculatorRandomValues();
-        });
+  Widget randomValuesButton(BuildContext context) {
+    return RandomWidget(onTap: () {
+      CalculatorRandomValues();
+    });
   }
 
-  Widget CalculatorRandomValues() {
+  void CalculatorRandomValues() {
     List companyList =
         Provider.of<CalculatorProvider>(context, listen: false).companyList;
     int RandomDate = Random().nextInt(dates.length);

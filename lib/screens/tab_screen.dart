@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens.dart'
     show MainScreen, BuyOrNotScreen, CardScreen, TodayWordScreen, MyPageScreen;
@@ -16,6 +17,8 @@ class _TabScreenState extends State<TabScreen> {
   @override
   void initState() {
     super.initState();
+    EasyLoading.instance.animationStyle = EasyLoadingAnimationStyle.scale;
+    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.fadingCircle;
     _screens = [
       MainScreen(),
       BuyOrNotScreen(),

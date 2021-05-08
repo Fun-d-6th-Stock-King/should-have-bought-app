@@ -28,3 +28,16 @@ const kOldStockTextStyle = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w700,
 );
+
+const kCardTitleTextStyle = TextStyle(
+  fontSize: 24,
+  height: 35/24,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
+const kCardContentTextStyle = TextStyle(
+  fontSize: 16,
+  height: 20/16,
+  fontWeight: FontWeight.w400,
+  color: Colors.black
+);

@@ -28,6 +28,28 @@
 
   <title>should_have_bought_app</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.3.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+           https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+		var firebaseConfig = {
+			apiKey: "AIzaSyBp7uMxZKbmbB28Hbfx99sJ-UdGDtM4UDw",
+			authDomain: "should-have-bought.firebaseapp.com",
+			projectId: "should-have-bought",
+			storageBucket: "should-have-bought.appspot.com",
+			messagingSenderId: "776376064068",
+			appId: "1:776376064068:web:26cf4188c8811372a1c411"
+		};
+		// Initialize Firebase
+		firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
 </head>
 <body>
   <!-- This script installs service_worker.js to provide PWA functionality to

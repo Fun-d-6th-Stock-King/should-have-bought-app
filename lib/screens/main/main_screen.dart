@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/widgets.dart';
+<<<<<<< HEAD
 import 'package:should_have_bought_app/widgets/hey_you_too/hey_you_too.dart';
 
 class MainScreen extends StatefulWidget {
@@ -23,10 +24,15 @@ class _MainScreenState extends State<MainScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
+=======
+import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
+import 'package:should_have_bought_app/widgets/main/header_widget.dart';
+>>>>>>> develop
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
       backgroundColor: defaultBackgroundColor,
       body: RefreshIndicator(
         onRefresh: () async {
@@ -55,6 +61,68 @@ class _MainScreenState extends State<MainScreen> {
                             style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.w500,
+=======
+      appBar: DefaultAppBar(context),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HeaderWidget(),
+              SizedBox(
+                height: 21,
+              ),
+              // add 계산기
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text("메인편집",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                          color: mainColor)),
+                  //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
+                ],
+              ),
+              SizedBox(
+                height: 7,
+              ),
+              CalculatorWidget(),
+              // SizedBox(
+              //     height: 340,
+              //     child: Card(
+              //       elevation: 0.4,
+              //
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(15.0),
+              //       ),
+              //       child: Padding(
+              //         padding: EdgeInsets.symmetric(horizontal: 18.0),
+              //         child: Container(),
+              //       ),
+              //     )
+              // ),
+              SizedBox(
+                height: 60,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("그때 살걸... 야, 너두?",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        height: 1.5,
+                      )),
+                  Row(
+                    children: [
+                      Text("더보기",
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+>>>>>>> develop
                               height: 1.5,
                               color: mainColor,
                             )),
