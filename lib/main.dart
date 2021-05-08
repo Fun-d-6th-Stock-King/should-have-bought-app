@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Should Have Bought',
         theme: ThemeData(
-          primaryColor: Colors.white,
+          primaryColor: Color.fromARGB(255, 229, 229, 229),
           accentColor: Colors.black,
         ),
         builder: EasyLoading.init(),

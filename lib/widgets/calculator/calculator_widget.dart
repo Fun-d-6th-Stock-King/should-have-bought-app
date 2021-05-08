@@ -200,11 +200,16 @@ class _CalculatorWidgetState extends State<CalculatorWidget>  {
                                     intToCurrency(_priceController.text))
                             .toMap())
                         .then((value) {
-                      print(Provider.of<CalculatorProvider>(context,
-                              listen: false)
-                          .calculationResult);
                       Navigator.of(context)
-                          .pushNamed(CalculatorResultScreen.routeId);
+                          .pushNamed(CalculatorResultScreen.routeId)
+                          .then((value) => {
+                                if (value == 'update')
+                                  {
+                                    Provider.of<CalculatorProvider>(context,
+                                            listen: false)
+                                        .getHistory()
+                                  }
+                              });
                     });
                     setState(() {
                       isLoading = false;

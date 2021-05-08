@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/api/calculator/calculator_api.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
+  List _calculateHistory = [];
   CalculatorStock calculationResult;
 
   List get companyList {
@@ -14,6 +16,10 @@ class CalculatorProvider with ChangeNotifier {
 
   List get searchCompanyList {
     return _searchCompanyList;
+  }
+
+  List get calculateHistory {
+    return _calculateHistory;
   }
 
   void filterSearchResults(String query) {
@@ -61,5 +67,16 @@ class CalculatorProvider with ChangeNotifier {
 
     print(_companyList[1].code);
     notifyListeners();
+  }
+
+  Future getHistory({int pageNo = 1, int pageSize = 10}) async {
+    var list = [];
+    final result = await CalculatorApi.getHistoryList(pageNo, pageSize);
+    list = result['calculationHistList'];
+    if (list != null) {
+      _calculateHistory =
+          list.map((history) => CalculatorHistory.fromJson(history)).toList();
+      notifyListeners();
+    }
   }
 }
