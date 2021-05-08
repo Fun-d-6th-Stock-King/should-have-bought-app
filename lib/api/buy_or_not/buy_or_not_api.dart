@@ -3,14 +3,13 @@ import 'dart:convert';
 import '../api.dart';
 import 'package:http/http.dart' as http;
 
-class BuyOrNotApi {
+class BuyOrNotApi extends Api{
   static Future getEvaluationLists() async {
+
+    Map<String, String> header = await Api.getHeader();
     final response = await http.get(
       Uri.parse("$stockApiUrl/api/buyornot"),
-      headers: <String, String> {
-        'Content-Type': 'application/json',
-        //'Authorization': token,
-      },
+      headers: header,
     );
     print('[GET] /api/buyornot');
     print(response.statusCode);
@@ -20,4 +19,7 @@ class BuyOrNotApi {
     }
     throw Exception(response.statusCode.toString()+":"+response.body.toString());
   }
+
+  //TODO: 정민님 POST API 구현
+
 }

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:kakao_flutter_sdk/common.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
@@ -36,15 +37,16 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Should Have Bought',
         theme: ThemeData(
-          primaryColor: Colors.white,
+          primaryColor: Color.fromARGB(255, 229, 229, 229),
           accentColor: Colors.black,
         ),
-        builder: (context, child) {
-          return ScrollConfiguration(
-            behavior: MyBehavior(),
-            child: child,
-          );
-        },
+        builder: EasyLoading.init(),
+        //     (context, child) {
+        //   return ScrollConfiguration(
+        //     behavior: MyBehavior(),
+        //     child: child,
+        //   );
+        // },
         routes: kRoutes,
         home: Scaffold(
           body: Center(

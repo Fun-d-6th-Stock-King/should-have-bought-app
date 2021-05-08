@@ -202,7 +202,15 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                             .toMap())
                         .then((value) {
                       Navigator.of(context)
-                          .pushNamed(CalculatorResultScreen.routeId);
+                          .pushNamed(CalculatorResultScreen.routeId)
+                          .then((value) => {
+                                if (value == 'update')
+                                  {
+                                    Provider.of<CalculatorProvider>(context,
+                                            listen: false)
+                                        .getHistory()
+                                  }
+                              });
                     });
                     setState(() {
                       isLoading = false;
