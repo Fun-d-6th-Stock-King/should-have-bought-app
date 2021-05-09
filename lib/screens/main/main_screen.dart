@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/widgets.dart';
+import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/hey_you_too/hey_you_too.dart';
 
 class MainScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: defaultBackgroundColor,
+      appBar: DefaultAppBar(context),
       body: RefreshIndicator(
         onRefresh: () async {
           Provider.of<CalculatorProvider>(context, listen: false)
