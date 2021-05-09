@@ -246,6 +246,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                               .salaryMonth,
                         )
                       : TenYearWidget(
+                          day: Provider.of<CalculatorProvider>(context)
+                              .calculationResult
+                              .investDate,
                           money: convertMoney(
                               Provider.of<CalculatorProvider>(context)
                                   .calculationResult
