@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-const mainColor = Color(0xFFFFB800);
+const mainColor = Color(0xFFFF9900);
 const defaultBackgroundColor = Color(0xFFFFFFFF);
 const defaultFontColor = Color(0xFFFFFFFF);
+
+const possibleColor = Color(0xFFFF8888);
+const nagativeColor = Color(0xFF5D99F2);
 
 Map<String, String> dateValue = {
   'DAY1': '어제',
