@@ -87,7 +87,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
           ),
           SizedBox(height: 20),
           Container(
-            height: 50,
+            height: 60,
             child: TabBarView(
               children: [
                 Container(
@@ -146,8 +146,6 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                           return FittedBox(
                             fit: BoxFit.fitWidth,
                             child: Container(
-                              // margin: EdgeInsets.all(10),
-                              height: 30,
                               decoration: BoxDecoration(
                                 color: Color(0x17939393),
                                 borderRadius: BorderRadius.all(
@@ -155,7 +153,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                                 ),
                               ),
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding: EdgeInsets.symmetric(horizontal: 10.0),
                                 child: Text(
                                   _sectorList[index],
                                   textAlign: TextAlign.center,
@@ -170,7 +168,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                         },
                       ),
                     ),
-                    SizedBox(height: 5),
+                    SizedBox(height: 10),
                     Center(
                       child: Text('외 40개 코스피 성장 기업 평균'),
                     )
