@@ -35,7 +35,6 @@ class _TenYearWidgetState extends State<TenYearWidget> {
       children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             '${widget.day}? ${widget.money}원 이면...😭',
             style: TextStyle(

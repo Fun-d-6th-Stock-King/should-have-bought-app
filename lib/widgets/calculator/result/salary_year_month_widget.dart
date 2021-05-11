@@ -15,7 +15,6 @@ class SalaryYearMonthWidget extends StatelessWidget {
       children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             '연봉/월급으로 친다면?',
             style: TextStyle(
@@ -28,7 +27,6 @@ class SalaryYearMonthWidget extends StatelessWidget {
           height: 18,
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
           height: 86,
           child: Container(
             decoration: BoxDecoration(

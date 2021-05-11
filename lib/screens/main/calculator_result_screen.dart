@@ -6,6 +6,7 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
 
 import 'package:should_have_bought_app/widgets/calculator/result/loading_random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
@@ -158,7 +159,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                   ),
                   SizedBox(height: 75),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
                     height: 209,
                     child: Container(
                       decoration: BoxDecoration(
@@ -253,7 +253,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                               Provider.of<CalculatorProvider>(context)
                                   .calculationResult
                                   .investPrice),
-                        )
+                        ),
+                  SizedBox(height: 50),
+                  IncreaseRateTabWidget(),
                 ],
               ),
             ),
