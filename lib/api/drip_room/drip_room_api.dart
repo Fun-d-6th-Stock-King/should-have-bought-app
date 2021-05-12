@@ -20,6 +20,7 @@ class DripRoomApi extends Api{
     }
     throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
   }
+
   static Future setEvaluation(Map data) async {
 
     Map<String, String> header = await Api.getHeader();

@@ -172,8 +172,19 @@ class DripCardWidget extends StatelessWidget {
         ));
   }
 }
+class BestDripCardWidget extends StatefulWidget {
+  @override
+  _CreateBestDripCardWidgetState createState() => _CreateBestDripCardWidgetState();
+}
+class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
 
-class BestDripCardWidget extends StatelessWidget {
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    Provider.of<DripRoomProvider>(context, listen: false).getTodayBest();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -183,51 +194,59 @@ class BestDripCardWidget extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 13.0,),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '박셀 바이오',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+      child: Consumer<DripRoomProvider>(
+        builder: (context, dripRoomProvider, child) {
+          EvaluationItem evaluationItem = dripRoomProvider.todayBest;
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13.0,),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '닉네임',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          height: 17 / 12),
+                      evaluationItem.company,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     ),
-                    Text(
-                      '2020-03-04',
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w300,
-                          color: Color(0xFF828282)),
-                    )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '닉네임',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              height: 17 / 12),
+                        ),
+                        Text(
+                          '2020-03-04',
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xFF828282)),
+                        )
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          SizedBox(height: 9),
-          Divider(
-            color: Color(0xFF8E8E8E),
-            thickness: 0.6,
-          ),
-          SizedBox(height: 9),
-          Padding(
-            padding: const EdgeInsets.only(left: 13.0),
-            child: ProsAndConsWidget(),
-          )
-        ],
+              ),
+              SizedBox(height: 9),
+              Divider(
+                color: Color(0xFF8E8E8E),
+                thickness: 0.6,
+              ),
+              SizedBox(height: 9),
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: ProsAndConsWidget(
+                  pros: evaluationItem.pros,
+                  cons: evaluationItem.cons,
+                ),
+              )
+            ],
+          );
+        }
       ),
     );
   }
