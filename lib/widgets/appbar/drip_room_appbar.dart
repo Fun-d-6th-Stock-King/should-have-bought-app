@@ -13,7 +13,7 @@ Widget DripRoomAppBar(BuildContext context) {
     elevation: 0,
     actions: <Widget>[
       IconButton(
-          icon: Image(image: AssetImage('assets/icons/search.png')),
+          icon: Image(image: AssetImage('assets/icons/ico_search_white.png')),
           onPressed: null),
     ],
   );

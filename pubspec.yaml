@@ -78,6 +78,12 @@ flutter:
     - assets/celebaration-fountain.json
     - assets/images/plus_chick.png
     - assets/icons/ico_heart.png
+    - assets/icons/ico_check.png
+    - assets/icons/ico_like.png
+    - assets/icons/ico_like_big.png
+    - assets/icons/ico_unlike.png
+    - assets/icons/ico_unlike_big.png
+    - assets/icons/ico_search_white.png
 
   # example:
   # fonts:

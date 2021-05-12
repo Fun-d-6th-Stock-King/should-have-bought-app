@@ -1,34 +1,77 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
+import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
 
-class DripRoomScreen extends StatelessWidget {
+class DripRoomScreen extends StatefulWidget {
+  @override
+  _DripRoomScreenState createState() => _DripRoomScreenState();
+}
+class _DripRoomScreenState extends State<DripRoomScreen> {
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    Map<String, dynamic> parmeters = {'order':'LATELY'};
+    Provider.of<DripRoomProvider>(context, listen:false).getEvaluationList(parmeters);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin:EdgeInsets.only(bottom: 100),
-        child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              if(index == 0) {
-                return DripRoomWidget();
+      backgroundColor: Color(0xFFF6F6F6),
+      body: Consumer<DripRoomProvider>(
+        builder: (context, dripRoomProvider, child) {
+          List evaluationItemList = dripRoomProvider.evaluationItemList;
+          return Container(
+            margin:EdgeInsets.only(bottom: 100),
+            child: ListView.builder(
+                itemCount: evaluationItemList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  if(index == 0) {
+                    return Column(
+                      children: [
+                        DripRoomWidget(),
+                        SizedBox(height: 37),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text('최신순'),
+                                  Icon(Icons.keyboard_arrow_down_outlined)
+                                ],
+                              ),
+                              SizedBox(height: 11),
+                              DripCardWidget(evaluationItemList[index])
+                            ],
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: DripCardWidget(evaluationItemList[index]),
+                  );
               }
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                margin: EdgeInsets.only(bottom: 15),
-                child: BestDripCardWidget(),
-              );
-          }
-        ),
+            ),
+          );
+        }
       ),
     );
   }
 }
 
 class DripRoomWidget extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -64,66 +107,53 @@ class DripRoomWidget extends StatelessWidget {
             ),
           )
         ]),
-        SizedBox(height: 37),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text('최신순'),
-                  Icon(Icons.keyboard_arrow_down_outlined)
-                ],
-              ),
-              SizedBox(height: 11),
-              DripCardWidget()
-            ],
-          ),
-        )
       ],
     );
   }
 }
 
 class DripCardWidget extends StatelessWidget {
+  final EvaluationItem evaluationItem;
+  DripCardWidget(this.evaluationItem);
+
   @override
   Widget build(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 26),
+        margin : const EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(25),
         ),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'SK 바이오',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '닉네임',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          height: 17 / 12),
-                    ),
-                    Text(
-                      '32,547',
-                      style:
-                          TextStyle(fontSize: 11, color: Color(0xFF828282)),
-                    )
-                  ],
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 13.0,),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    evaluationItem.company,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2, right: 4),
+                        child: Image(image: AssetImage('assets/icons/ico_like.png')),
+                      ),
+                      Text(
+                        evaluationItem.likeCount.toString(),
+                        style:
+                            TextStyle(fontSize: 11, color: Color(0xFF828282)),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 6),
             Divider(
@@ -132,8 +162,11 @@ class DripCardWidget extends StatelessWidget {
             ),
             SizedBox(height: 14),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 13.0),
-              child: ProsAndConsWidget(),
+              padding: const EdgeInsets.only(left: 13.0),
+              child: ProsAndConsWidget(
+                pros: evaluationItem.pros,
+                cons: evaluationItem.cons,
+              ),
             ),
           ],
         ));
@@ -153,7 +186,7 @@ class BestDripCardWidget extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 13.0),
+            padding: const EdgeInsets.symmetric(horizontal: 13.0,),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,14 +217,14 @@ class BestDripCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 11),
+          SizedBox(height: 9),
           Divider(
             color: Color(0xFF8E8E8E),
             thickness: 0.6,
           ),
-          SizedBox(height: 14),
+          SizedBox(height: 9),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 13.0),
+            padding: const EdgeInsets.only(left: 13.0),
             child: ProsAndConsWidget(),
           )
         ],
@@ -201,6 +234,10 @@ class BestDripCardWidget extends StatelessWidget {
 }
 
 class ProsAndConsWidget extends StatelessWidget {
+  final String pros;
+  final String cons;
+  ProsAndConsWidget({@required this.pros, @required this.cons});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -224,11 +261,16 @@ class ProsAndConsWidget extends StatelessWidget {
               ),
             ),
             SizedBox(width: 11),
-            Text(
-              '망해도 국가가 살려줄 국민주',
-              style: TextStyle(
-                  fontWeight: FontWeight.w400, fontSize: 14, height: 20 / 14),
-            )
+            Expanded(
+              child: AutoSizeText(
+                pros ?? '',
+                style: TextStyle(
+                fontWeight: FontWeight.w400, fontSize: 14, height: 20 / 14),
+                presetFontSizes: [14, 13],
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         SizedBox(
@@ -253,11 +295,16 @@ class ProsAndConsWidget extends StatelessWidget {
               ),
             ),
             SizedBox(width: 11),
-            Text(
-              '내가 벌떄 쟤도 범',
-              style: TextStyle(
-                  fontWeight: FontWeight.w400, fontSize: 14, height: 20 / 14),
-            )
+            Expanded(
+              child: AutoSizeText(
+                cons ?? '',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400, fontSize: 14, height: 20 / 14),
+                presetFontSizes: [14, 13],
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         )
       ],

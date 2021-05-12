@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
-import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/screens/card/card_button.dart';
 import 'package:should_have_bought_app/widgets/appbar/card_appbar.dart';
 import 'package:should_have_bought_app/widgets/card/lib/swipe_cards.dart';
