@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
-import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
+import 'package:should_have_bought_app/screens/drip_room/drip_room_detail_screen.dart';
 
 class DripRoomScreen extends StatefulWidget {
   @override
@@ -18,8 +18,12 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    Map<String, dynamic> parmeters = {'order':'LATELY'};
-    Provider.of<DripRoomProvider>(context, listen:false).getEvaluationList(parmeters);
+    Map<String, dynamic> parmeters = {'order':'LATELY','pageNo':'1', 'pageSize':'100'};
+    bool isEmpty = Provider.of<DripRoomProvider>(context, listen:false).evaluationItemList.length == 0 ? true : false;
+    if(isEmpty) {
+      Provider.of<DripRoomProvider>(context, listen: false)
+          .getEvaluationList(parmeters);
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -118,58 +122,63 @@ class DripCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 26),
-        margin : const EdgeInsets.only(bottom: 15),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 13.0,),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    evaluationItem.company,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 2, right: 4),
-                        child: Image(image: AssetImage('assets/icons/ico_like.png')),
-                      ),
-                      Text(
-                        evaluationItem.likeCount.toString(),
-                        style:
-                            TextStyle(fontSize: 11, color: Color(0xFF828282)),
-                      )
-                    ],
-                  ),
-                ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DripRoomDetailScreen(evaluationItem)));
+      },
+      child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 26),
+          margin : const EdgeInsets.only(bottom: 15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13.0,),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      evaluationItem.company,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2, right: 4),
+                          child: Image(image: AssetImage('assets/icons/ico_like.png')),
+                        ),
+                        Text(
+                          evaluationItem.likeCount.toString(),
+                          style:
+                              TextStyle(fontSize: 11, color: Color(0xFF828282)),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 6),
-            Divider(
-              color: Color(0xFF8E8E8E),
-              thickness: 0.6,
-            ),
-            SizedBox(height: 14),
-            Padding(
-              padding: const EdgeInsets.only(left: 13.0),
-              child: ProsAndConsWidget(
-                pros: evaluationItem.pros,
-                cons: evaluationItem.cons,
+              SizedBox(height: 6),
+              Divider(
+                color: Color(0xFF8E8E8E),
+                thickness: 0.6,
               ),
-            ),
-          ],
-        ));
+              SizedBox(height: 14),
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: ProsAndConsWidget(
+                  pros: evaluationItem.pros,
+                  cons: evaluationItem.cons,
+                ),
+              ),
+            ],
+          )),
+    );
   }
 }
 class BestDripCardWidget extends StatefulWidget {
@@ -206,7 +215,7 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      evaluationItem.company,
+                      evaluationItem?.company ?? '',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     ),
                     Column(
@@ -240,8 +249,8 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
               Padding(
                 padding: const EdgeInsets.only(left: 13.0),
                 child: ProsAndConsWidget(
-                  pros: evaluationItem.pros,
-                  cons: evaluationItem.cons,
+                  pros: evaluationItem?.pros ?? '',
+                  cons: evaluationItem?.cons ?? '',
                 ),
               )
             ],
