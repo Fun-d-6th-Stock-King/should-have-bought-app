@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 
 class IncreaseRateTabWidget extends StatefulWidget {
   @override
@@ -6,11 +8,18 @@ class IncreaseRateTabWidget extends StatefulWidget {
 }
 
 class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
-  List _sectorList = [
-    '삼성전자',
-    'SK하이닉스',
-    '원익IPS',
-  ];
+  @override
+  void didChangeDependencies() {
+    final _companyCode =
+        Provider.of<CalculatorProvider>(context).latestDto['code'];
+    final _investDate =
+        Provider.of<CalculatorProvider>(context).latestDto['investDate'];
+    final _investPrice = int.parse(
+        Provider.of<CalculatorProvider>(context).latestDto['investPrice']);
+    Provider.of<CalculatorProvider>(context, listen: false)
+        .getSectorData(_companyCode, _investDate, _investPrice);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +60,8 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: 210),
                   child: Tab(
-                    text: '동일업종()',
+                    text:
+                        '동일업종(${Provider.of<CalculatorProvider>(context).sectorData.sectorKor})',
                   ),
                 ),
               ],
@@ -69,7 +79,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  '+ 286%',
+                  '${Provider.of<CalculatorProvider>(context).sectorData.kospiYieldPercent}%',
                   style: TextStyle(
                       fontSize: 32,
                       color: Color(0xffFF6B76),
@@ -138,7 +148,10 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                       height: 25,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemCount: _sectorList.length,
+                        itemCount: Provider.of<CalculatorProvider>(context)
+                            .sectorData
+                            .companies
+                            .length,
                         separatorBuilder: (context, index) {
                           return SizedBox(width: 25);
                         },
@@ -155,7 +168,9 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: 10.0),
                                 child: Text(
-                                  _sectorList[index],
+                                  Provider.of<CalculatorProvider>(context)
+                                      .sectorData
+                                      .companies[index]['company'],
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 15,
@@ -170,7 +185,8 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                     ),
                     SizedBox(height: 10),
                     Center(
-                      child: Text('외 40개 코스피 성장 기업 평균'),
+                      child: Text(
+                          '외 ${Provider.of<CalculatorProvider>(context).sectorData.companyCnt}개 코스피 성장 기업 평균'),
                     )
                   ],
                 ),
