@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -272,13 +273,19 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
       ))),
       child: CupertinoButton(
         padding: EdgeInsets.all(0),
-        child: Text(
-          value,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 240,
+          ),
+          child: AutoSizeText(
+            value,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 1,
           ),
         ),
         onPressed: () => showMenu(context),
