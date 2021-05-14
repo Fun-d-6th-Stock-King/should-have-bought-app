@@ -5,6 +5,7 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
+import 'file:///D:/git/workspace/fun_d_6/should-have-bought-app/lib/screens/drip_room/drip_room_tab_screen.dart';
 
 class StockDetailScreen extends StatefulWidget {
   final EvaluationItem evaluationItem;
@@ -42,7 +43,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
         body: TabBarView(
           children: [
             BuyorNotTabScreen(widget.evaluationItem),
-            DripRoomTabScreen(widget.evaluationItem),
+            DripRoomTabScreen(),
           ],
         ),
       ),
@@ -170,26 +171,6 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
           ]),
         );
       }
-    );
-  }
-}
-
-class DripRoomTabScreen extends StatelessWidget {
-  final EvaluationItem evaluationItem;
-
-  DripRoomTabScreen(this.evaluationItem);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ListView(
-        children: [
-          Container(
-            child: Text('heelo'),
-          )
-        ],
-      ),
     );
   }
 }

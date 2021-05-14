@@ -39,6 +39,7 @@ dependencies:
   lottie: ^1.0.1
   flutter_easyloading: ^3.0.0
   carousel_slider: ^3.0.0
+  emoji_picker_flutter: ^1.0.4
 
 dev_dependencies:
   flutter_test:
