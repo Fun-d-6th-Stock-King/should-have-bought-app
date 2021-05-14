@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +7,8 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
-import 'package:should_have_bought_app/screens/drip_room/drip_room_detail_screen.dart';
+import 'file:///D:/git/workspace/fun_d_6/should-have-bought-app/lib/screens/stock/stock_detail_screen.dart';
+import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
 
 class DripRoomScreen extends StatefulWidget {
   @override
@@ -40,7 +42,9 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
                   if(index == 0) {
                     return Column(
                       children: [
-                        DripRoomWidget(),
+                        FlatBackgroundFrame(
+                            child: DripRoomWidget()
+                        ),
                         SizedBox(height: 37),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -75,43 +79,31 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
 }
 
 class DripRoomWidget extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Stack(children: [
-          Container(
-            height: 225,
-            decoration: BoxDecoration(
-              color: mainColor,
-            ),
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          DripRoomAppBar(context),
+          SizedBox(height: 33),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Today's BEST",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                DripRoomAppBar(context),
-                SizedBox(height: 33),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Today's BEST",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 9),
-                BestDripCardWidget(),
-              ],
-            ),
-          )
-        ]),
-      ],
+          SizedBox(height: 9),
+          BestDripCardWidget(),
+        ],
+      ),
     );
   }
 }
@@ -124,7 +116,7 @@ class DripCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DripRoomDetailScreen(evaluationItem)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => StockDetailScreen(evaluationItem,1)));
       },
       child: Container(
           width: MediaQuery.of(context).size.width,
@@ -189,7 +181,6 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     Provider.of<DripRoomProvider>(context, listen: false).getTodayBest();
   }

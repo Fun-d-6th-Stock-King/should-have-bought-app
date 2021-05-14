@@ -4,8 +4,12 @@ const mainColor = Color(0xFFFF9900);
 const defaultBackgroundColor = Color(0xFFFFFFFF);
 const defaultFontColor = Color(0xFFFFFFFF);
 
+const backgroundColor = Color(0xFFF4F4F4);
 const possibleColor = Color(0xFFFF8888);
 const nagativeColor = Color(0xFF5D99F2);
+const likeColor = Color(0xFFFF3948);
+const unlikeColor = Color(0xFF4990FF);
+const disableColor = Color(0xFFBDBDBD);
 
 Map<String, String> dateValue = {
   'DAY1': '어제',
