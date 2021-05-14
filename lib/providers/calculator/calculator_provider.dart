@@ -104,9 +104,9 @@ class CalculatorProvider with ChangeNotifier {
     }
   }
 
-  Future getSectorData(String code, String investDate, int investPrice) async {
-    final result =
-        await CalculatorApi.getSectorInfor(code, investDate, investPrice);
+  Future getSectorData() async {
+    final result = await CalculatorApi.getSectorInfor(latestDto['code'],
+        latestDto['investDate'], int.parse(latestDto['investPrice']));
     sectorData = SectorData.fromJson(result);
     notifyListeners();
   }

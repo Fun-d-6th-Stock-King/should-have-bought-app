@@ -77,6 +77,18 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         isLoading = false;
       });
     });
+    reBuildApi();
+  }
+
+  @override
+  void initState() {
+    reBuildApi();
+    super.initState();
+  }
+
+  void reBuildApi() {
+    Provider.of<CalculatorProvider>(context, listen: false).getSectorData();
+    Provider.of<CalculatorProvider>(context, listen: false).getTenYearHigher();
   }
 
   @override
@@ -245,15 +257,15 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                               .calculationResult
                               .salaryMonth,
                         )
-                      : TenYearWidget(
-                          day: Provider.of<CalculatorProvider>(context)
-                              .calculationResult
-                              .investDate,
-                          money: convertMoney(
-                              Provider.of<CalculatorProvider>(context)
-                                  .calculationResult
-                                  .investPrice),
-                        ),
+                      : null,
+                  // : TenYearWidget(
+                  //     day: Provider.of<CalculatorProvider>(context)
+                  //         .calculationResult
+                  //         .investDate,
+                  //     money: convertMoney(
+                  //         Provider.of<CalculatorProvider>(context)
+                  //             .calculationResult
+                  //             .investPrice)),
                   SizedBox(height: 50),
                   IncreaseRateTabWidget(),
                 ],

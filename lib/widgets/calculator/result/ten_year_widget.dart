@@ -18,14 +18,8 @@ class _TenYearWidgetState extends State<TenYearWidget> {
 
   @override
   void didChangeDependencies() {
-    Provider.of<CalculatorProvider>(context, listen: false)
-        .getTenYearHigher()
-        .then((value) => {
-              _tenYearList =
-                  Provider.of<CalculatorProvider>(context, listen: false)
-                      .tenYearHighList,
-            });
-
+    _tenYearList =
+        Provider.of<CalculatorProvider>(context, listen: false).tenYearHighList;
     super.didChangeDependencies();
   }
 

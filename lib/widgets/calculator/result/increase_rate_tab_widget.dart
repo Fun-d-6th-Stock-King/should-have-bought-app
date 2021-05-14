@@ -8,43 +8,31 @@ class IncreaseRateTabWidget extends StatefulWidget {
 }
 
 class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
-  bool _isLoading = false;
-  bool _isApiCall;
+  Color kospiBoxColor;
+  Color industryBoxColor;
 
-  @override
-  void initState() {
-    _isApiCall = false;
-    print("call");
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() async {
-    if (!_isApiCall) {
-      final _companyCode =
-          Provider.of<CalculatorProvider>(context).latestDto['code'];
-      final _investDate =
-          Provider.of<CalculatorProvider>(context).latestDto['investDate'];
-      final _investPrice = int.parse(
-          Provider.of<CalculatorProvider>(context).latestDto['investPrice']);
-      setState(() {
-        _isLoading = true;
-      });
-      await Provider.of<CalculatorProvider>(context, listen: false)
-          .getSectorData(_companyCode, _investDate, _investPrice)
-          .then((value) => {
-                setState(() {
-                  _isLoading = false;
-                })
-              });
-      _isApiCall = true;
+  void setBoxColor() {
+    if (Provider.of<CalculatorProvider>(context).sectorData.kospiYieldPercent >
+        0) {
+      kospiBoxColor = Color(0xffFFEFF0);
+    } else {
+      kospiBoxColor = Color(0xff4990FF);
     }
-    super.didChangeDependencies();
+
+    if (Provider.of<CalculatorProvider>(context)
+            .sectorData
+            .industrYieldPercent >
+        0) {
+      industryBoxColor = Color(0xffFFEFF0);
+    } else {
+      industryBoxColor = Color(0xff4990FF);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
+    setBoxColor();
+    return Provider.of<CalculatorProvider>(context).sectorData == null
         ? CircularProgressIndicator()
         : DefaultTabController(
             length: 2,
@@ -93,83 +81,85 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                 ),
                 SizedBox(height: 20),
                 Container(
-                  width: double.infinity,
-                  height: 93,
-                  decoration: BoxDecoration(
-                    color: Color(0xffFFEFF0),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '${Provider.of<CalculatorProvider>(context).sectorData.kospiYieldPercent}%',
-                        style: TextStyle(
-                            fontSize: 32,
-                            color: Color(0xffFF6B76),
-                            fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        '👍코스피보다 나은 효자 종목',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
-                Container(
-                  height: 60,
+                  height: 180,
                   child: TabBarView(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  '2011년 03월 11일',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xff828282),
-                                  ),
-                                ),
-                                Text(
-                                  '1995.54',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            width: double.infinity,
+                            height: 93,
+                            decoration: BoxDecoration(
+                              color: kospiBoxColor,
+                              borderRadius: BorderRadius.circular(15.0),
                             ),
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  '2021년 03월 11일',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: Color(0xff828282),
+                            child: KospiPerYield(),
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '2011년 03월 11일',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff828282),
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '2,432.07',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  Text(
+                                    Provider.of<CalculatorProvider>(context)
+                                        .sectorData
+                                        .kospiOldStock
+                                        .toStringAsFixed(2),
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 20),
+                              Column(
+                                children: <Widget>[
+                                  Text(
+                                    '2021년 03월 11일',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff828282),
+                                    ),
+                                  ),
+                                  Text(
+                                    Provider.of<CalculatorProvider>(context)
+                                        .sectorData
+                                        .kospiCurrentStock
+                                        .toStringAsFixed(2),
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       Column(
-                        children: [
+                        children: <Widget>[
+                          Container(
+                            child: Container(
+                              width: double.infinity,
+                              height: 93,
+                              decoration: BoxDecoration(
+                                color: industryBoxColor,
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: IndustryYield(),
+                            ),
+                          ),
+                          SizedBox(height: 20),
                           Container(
                             height: 25,
                             child: ListView.separated(
@@ -180,21 +170,22 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                                       .companies
                                       .length,
                               separatorBuilder: (context, index) {
-                                return SizedBox(width: 25);
+                                return SizedBox(width: 10);
                               },
                               itemBuilder: (context, index) {
                                 return FittedBox(
-                                  fit: BoxFit.fitWidth,
+                                  fit: BoxFit.cover,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0x17939393),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(25.0),
-                                      ),
-                                    ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(25.0),
+                                        ),
+                                        border: Border.all(
+                                          color: Color(0xff26737373),
+                                        )),
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 10.0),
+                                          horizontal: 20.0, vertical: 3.0),
                                       child: Text(
                                         Provider.of<CalculatorProvider>(context)
                                             .sectorData
@@ -202,7 +193,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 15,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -214,15 +205,116 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                           SizedBox(height: 10),
                           Center(
                             child: Text(
-                                '외 ${Provider.of<CalculatorProvider>(context).sectorData.companyCnt}개 코스피 성장 기업 평균'),
-                          )
+                              '외 ${Provider.of<CalculatorProvider>(context).sectorData.companyCnt}개 코스피 성장 기업 평균',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xff828282),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           );
+  }
+}
+
+class IndustryYield extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Provider.of<CalculatorProvider>(context)
+                    .sectorData
+                    .industrYieldPercent >
+                0
+            ? Text(
+                '+ ${Provider.of<CalculatorProvider>(context).sectorData.industrYieldPercent}%',
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w500),
+              )
+            : Text(
+                '${Provider.of<CalculatorProvider>(context).sectorData.industrYieldPercent}%',
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500),
+              ));
+  }
+}
+
+class KospiPerYield extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final kospiPercent =
+        Provider.of<CalculatorProvider>(context).sectorData.kospiYieldPercent;
+    final yieldPercent =
+        Provider.of<CalculatorProvider>(context).calculationResult.yieldPercent;
+
+    return (kospiPercent > yieldPercent)
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '${Provider.of<CalculatorProvider>(context).sectorData.kospiYieldPercent}%',
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w500),
+              ),
+              Text(
+                '👎코스피 오르는 동안 넌 뭐했니?',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          )
+        : (kospiPercent < yieldPercent)
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '+ ${Provider.of<CalculatorProvider>(context).sectorData.kospiYieldPercent}%',
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '👍코스피보다 나은 효자 종목',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '${Provider.of<CalculatorProvider>(context).sectorData.kospiYieldPercent}%',
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '🤔씁... 나쁘진 않은데...',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              );
   }
 }
