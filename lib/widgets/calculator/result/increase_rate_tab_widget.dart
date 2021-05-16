@@ -277,13 +277,21 @@ class KospiPerYield extends StatelessWidget {
   Widget build(BuildContext context) {
     final kospiPercent = sectorData.kospiYieldPercent;
     final yieldPercent = calculationResult.yieldPercent;
+    String percentSymbol;
+    if (kospiPercent > 0) {
+      percentSymbol = '+ ${kospiPercent.abs()}%';
+    } else if (kospiPercent == 0) {
+      percentSymbol = '${kospiPercent.abs()}%';
+    } else {
+      percentSymbol = '- ${kospiPercent.abs()}%';
+    }
 
     return (kospiPercent > yieldPercent)
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                '${sectorData.kospiYieldPercent ?? 0}%',
+                percentSymbol,
                 style: TextStyle(
                     fontSize: 36,
                     color: Colors.red,
@@ -303,7 +311,7 @@ class KospiPerYield extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    '+ ${sectorData.kospiYieldPercent ?? 0}%',
+                    percentSymbol,
                     style: TextStyle(
                         fontSize: 36,
                         color: Colors.red,
@@ -322,7 +330,7 @@ class KospiPerYield extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    '${sectorData.kospiYieldPercent ?? 0}%',
+                    percentSymbol,
                     style: TextStyle(
                         fontSize: 36,
                         color: Colors.red,

@@ -7,6 +7,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
 
 import 'package:should_have_bought_app/widgets/calculator/result/loading_random_widget.dart';
@@ -28,8 +29,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   bool isLoading = false;
 
   void setBackgroundColor() {
-    final percent =
-        Provider.of<CalculatorProvider>(context, listen: false).calculationResult.yieldPercent;
+    final percent = Provider.of<CalculatorProvider>(context, listen: false)
+        .calculationResult
+        .yieldPercent;
     if (percent > 0) {
       setState(() {
         topColor = Color(0xffFF6561);
@@ -40,7 +42,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         topColor = Color(0xff4990FF);
         textColor = Colors.white;
       });
-
     } else {
       setState(() {
         topColor = Color(0xffF2F2F2);
@@ -105,6 +106,12 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                 SalaryYearMonthWidget(),
                 SizedBox(height: 50),
                 IncreaseRateTabWidget(),
+                SizedBox(height: 50),
+                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+                SizedBox(height: 40),
+                CurrentValueWidget(),
+                SizedBox(height: 50),
+                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
               ],
             ),
           )
@@ -112,6 +119,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       ),
     );
   }
+
   Widget CalculatorResultWidget() {
     return Stack(
       children: <Widget>[
@@ -138,7 +146,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             CalculatorResultAppBar(),
             SizedBox(height: 2),
             MainTopText(textColor: textColor),
-            MainMidText(textColor: textColor,),
+            MainMidText(
+              textColor: textColor,
+            ),
             MainBottomText(textColor: textColor),
             SizedBox(height: 75),
             ResultCardWidget(),
@@ -171,58 +181,55 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           ),
           child: Consumer<CalculatorProvider>(
               builder: (context, calculatorProvider, child) {
-                CalculatorStock calculationResult = calculatorProvider.calculationResult;
-                return Column(
-                  children: <Widget>[
-                    EmojiYieldPriceText(calculationResult),
-                    YieldPercentText(calculationResult),
-                    SizedBox(height: 8),
-                    Text(
-                      '${calculationResult.oldCloseDate} 종가 기준',
-                      style: TextStyle(
-                        color: Color(0xff949597),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
+            CalculatorStock calculationResult =
+                calculatorProvider.calculationResult;
+            return Column(
+              children: <Widget>[
+                EmojiYieldPriceText(calculationResult),
+                YieldPercentText(calculationResult),
+                SizedBox(height: 8),
+                Text(
+                  '${calculationResult.oldCloseDate} 종가 기준',
+                  style: TextStyle(
+                    color: Color(0xff949597),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                SizedBox(
+                  height: 31,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+                        '1주당 ${numberWithComma(calculationResult.oldPrice)}원',
+                        style: kOldStockTextStyle,
+                        minFontSize: 15,
+                        maxLines: 1,
                       ),
-                    ),
-                    SizedBox(
-                      height: 31,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 15,
+                      Container(
+                        height: 20,
+                        child: VerticalDivider(
+                          color: Color(0xff979797),
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          AutoSizeText(
-                            '1주당 ${numberWithComma(
-                                calculationResult.oldPrice)}원',
-                            style: kOldStockTextStyle,
-                            minFontSize: 15,
-                            maxLines: 1,
-                          ),
-                          Container(
-                            height: 20,
-                            child: VerticalDivider(
-                              color: Color(0xff979797),
-                            ),
-                          ),
-                          AutoSizeText(
-                            '${calculationResult.holdingStock
-                                .toStringAsFixed(1)}주 보유',
-                            style: kOldStockTextStyle,
-                            minFontSize: 15,
-                            maxLines: 1,
-                          ),
-                        ],
+                      AutoSizeText(
+                        '${calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
+                        style: kOldStockTextStyle,
+                        minFontSize: 15,
+                        maxLines: 1,
                       ),
-                    )
-                  ],
-                );
-              }
-          ),
+                    ],
+                  ),
+                )
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -248,15 +255,14 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             child: isLoading
                 ? LoadingRandomWidget()
                 : RandomWidget(onTap: () {
-              randomValues();
-            }),
+                    randomValues();
+                  }),
           ),
         ],
       ),
     );
   }
 }
-
 
 class YieldPercentText extends StatelessWidget {
   final CalculatorStock calculationResult;
@@ -420,7 +426,8 @@ class MyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()..color = topColor;
     var path = Path();
-    canvas.drawCircle(Offset(size.width*0.5, size.height*0.2), size.height*1, paint);
+    canvas.drawCircle(
+        Offset(size.width * 0.5, size.height * 0.2), size.height * 1, paint);
 
     canvas.drawPath(path, paint);
   }

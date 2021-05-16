@@ -26,9 +26,8 @@ class SectorData {
     industrYieldPercent = map['industryValue']['yieldPercent'].toInt();
     companies = map['industryValue']['companies'];
     companyCnt = map['industryValue']['companyCnt'];
-    currentPricePerStock = map['currentValue']['pricePerStock'];
+    currentPricePerStock = map['currentValue']['pricePerStock'].toInt();
     currentStockPerPrice = map['currentValue']['stockPerPrice'];
-    currentTime =
-        map['currentValue']['currentTime'].split(" ")[0].replaceAll('.', '');
+    currentTime = map['currentValue']['currentTime'];
   }
 }
