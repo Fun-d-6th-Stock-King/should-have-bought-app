@@ -173,8 +173,6 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
   }
 
   Widget BuyOrNotCard(int index) {
-    print('height');
-    print(MediaQuery.of(context).size.height);
     return Container(
       height: MediaQuery.of(context).size.height *0.6,
       child: Card(
@@ -258,9 +256,8 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              MediaQuery.of(context).size.height > 610 ?
+              SizedBox(height: 10) : SizedBox(height: 1),
               Text(
                 '더보기 >',
                 style: TextStyle(fontSize: 16, color: Color(0xFF8C8C8C)),
