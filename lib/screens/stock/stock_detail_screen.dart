@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
-import 'file:///D:/git/workspace/fun_d_6/should-have-bought-app/lib/screens/drip_room/drip_room_tab_screen.dart';
+import 'package:should_have_bought_app/screens/drip_room/drip_room_tab_screen.dart';
 import 'package:should_have_bought_app/screens/buy_or_not/buy_or_not_tab_screen.dart';
 
 class StockDetailScreen extends StatefulWidget {

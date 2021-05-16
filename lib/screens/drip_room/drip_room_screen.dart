@@ -7,7 +7,7 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
-import 'file:///D:/git/workspace/fun_d_6/should-have-bought-app/lib/screens/stock/stock_detail_screen.dart';
+import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
 
 class DripRoomScreen extends StatefulWidget {
