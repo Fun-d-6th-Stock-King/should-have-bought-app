@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
@@ -5,7 +6,7 @@ import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/widgets/chart/buy_or_not_chart_widget.dart';
-import 'package:should_have_bought_app/widgets/chart/current_stock_chart_widget.dart';
+import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
 class BuyorNotTabScreen extends StatelessWidget {
   final EvaluationItem evaluationItem;
@@ -15,13 +16,13 @@ class BuyorNotTabScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left:20, top:20,right: 20),
+      padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
       child: SingleChildScrollView(
         child: Column(
           children: [
             BuyorNotSelectWidget(evaluationItem.code),
             SizedBox(height: 20),
-            HowToBoughtThenWidget(),
+            HowToBoughtThenWidget(evaluationItem.code),
           ],
         ),
       ),
@@ -30,6 +31,8 @@ class BuyorNotTabScreen extends StatelessWidget {
 }
 
 class HowToBoughtThenWidget extends StatelessWidget {
+  final String stockCode;
+  HowToBoughtThenWidget(this.stockCode);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,11 +47,10 @@ class HowToBoughtThenWidget extends StatelessWidget {
           Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top:60),
+                padding: const EdgeInsets.only(top: 60),
                 child: Container(
                     height: MediaQuery.of(context).size.height * 0.35,
-                    child: BuyOrNotChartWidget()
-                ),
+                    child: BuyOrNotChartWidget(stockCode)),
               ),
               Padding(
                 padding: const EdgeInsets.all(29),
@@ -124,9 +126,9 @@ class HowToBoughtThenWidget extends StatelessWidget {
                     onPrimary: mainColor,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0), //side: BorderSide(color: Colors.red)
-                    )
-                ),
+                      borderRadius: BorderRadius.circular(
+                          16.0), //side: BorderSide(color: Colors.red)
+                    )),
                 onPressed: () {},
                 child: SizedBox(
                   height: 50,
@@ -161,6 +163,7 @@ class BuyorNotSelectWidget extends StatefulWidget {
 }
 
 class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
     Provider.of<BuyOrNotProvider>(context, listen: false)
@@ -179,84 +182,111 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
         ),
         height: 82,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: ClipOval(
-                  child: Container(
-                    color: buyOrNotStock.userBuySell == "BUY"
-                        ? likeColor
-                        : disableColor,
-                    padding: EdgeInsets.only(bottom: 5),
-                    child: Image(
-                        image: AssetImage('assets/icons/ico_like_big.png')),
-                  ),
+          InkWell(
+            onTap: () {
+              print('살래');
+              _auth.currentUser == null
+                  ? LoginHandler(context)
+                  : setEvaluation();
+            },
+            child: Wrap(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: ClipOval(
+                        child: Container(
+                          color: buyOrNotStock.userBuySell == "BUY"
+                              ? likeColor
+                              : disableColor,
+                          padding: EdgeInsets.only(bottom: 5),
+                          child: Image(
+                              image: AssetImage('assets/icons/ico_like_big.png')),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(width: 10),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                '살래?',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  height: 20 / 14,
-                  color: likeColor,
+                SizedBox(width: 10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '살래?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        height: 20 / 14,
+                        color: likeColor,
+                      ),
+                    ),
+                    Text("${buyOrNotStock?.buyCount ?? 0}",
+                        style: buyOrNotCountTextStyle),
+                  ],
                 ),
-              ),
-              Text("${buyOrNotStock?.buyCount ?? 0}",
-                  style: buyOrNotCountTextStyle),
-            ],
+              ],
+            ),
           ),
           SizedBox(width: 50),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 50,
-                height: 50,
-                child: ClipOval(
-                  child: Container(
-                    color: buyOrNotStock.userBuySell == "SELL"
-                        ? nagativeColor
-                        : disableColor,
-                    child: Image(
-                        image: AssetImage('assets/icons/ico_unlike_big.png')),
-                  ),
+          InkWell(
+            onTap: () {
+              print('말래');
+              _auth.currentUser == null
+                  ? LoginHandler(context)
+                  : setEvaluation();
+            },
+            child: Wrap(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: ClipOval(
+                        child: Container(
+                          color: buyOrNotStock.userBuySell == "SELL"
+                              ? nagativeColor
+                              : disableColor,
+                          child: Image(
+                              image: AssetImage('assets/icons/ico_unlike_big.png')),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(width: 10),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                '말래?',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  height: 20 / 14,
-                  color: unlikeColor,
+                SizedBox(width: 10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '말래?',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        height: 20 / 14,
+                        color: unlikeColor,
+                      ),
+                    ),
+                    Text("${buyOrNotStock?.sellCount ?? 0}",
+                        style: buyOrNotCountTextStyle),
+                  ],
                 ),
-              ),
-              Text("${buyOrNotStock?.sellCount ?? 0}",
-                  style: buyOrNotCountTextStyle),
-            ],
+              ],
+            ),
           ),
         ]),
       );
     });
   }
+}
+
+void setEvaluation() {
 }
 
 const buyOrNotCountTextStyle = TextStyle(

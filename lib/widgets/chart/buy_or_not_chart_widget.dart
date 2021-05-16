@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BuyOrNotChartWidget extends StatefulWidget {
-
-
+  final String stockCode;
+  BuyOrNotChartWidget(this.stockCode);
   @override
   _BuyOrNotChartWidgetState createState() => _BuyOrNotChartWidgetState();
 }
@@ -16,6 +18,12 @@ class _BuyOrNotChartWidgetState extends State<BuyOrNotChartWidget> {
   void initState() {
    // _tooltipBehavior = TooltipBehavior(enable: true, canShowMarker: false);
     super.initState();
+  }
+  @override
+  void didChangeDependencies() async{
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    await Provider.of<BuyOrNotProvider>(context, listen:false).getBuyOrNotStockChart(widget.stockCode);
   }
 
   @override

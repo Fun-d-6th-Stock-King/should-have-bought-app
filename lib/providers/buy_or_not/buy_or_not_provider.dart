@@ -14,4 +14,13 @@ class BuyOrNotProvider with ChangeNotifier {
     notifyListeners();
     //return addEvaluationItemList;
   }
+
+  Future getBuyOrNotStockChart(String stockCode) async {
+    final result = await BuyOrNotApi.getBuyOrNotStockChart(stockCode);
+    print(result);
+    //_buyOrNotStock = BuyOrNotStock.fromJson(result);
+
+    notifyListeners();
+    //return addEvaluationItemList;
+  }
 }
