@@ -283,7 +283,7 @@ class YieldPercentText extends StatelessWidget {
         ),
         children: [
           TextSpan(
-            text: '(${yieldPercent.abs()}%)',
+            text: '($yieldPercent%)',
           ),
         ],
       ),

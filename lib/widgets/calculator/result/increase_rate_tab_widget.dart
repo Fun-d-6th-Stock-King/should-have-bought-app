@@ -18,23 +18,19 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
     final sectorData =
         Provider.of<CalculatorProvider>(context, listen: false).sectorData;
     if (sectorData.kospiYieldPercent > 0) {
-      setState(() {
-        kospiBoxColor = Color(0xffFFEFF0);
-      });
+      kospiBoxColor = Color(0xffFFEFF0);
+    } else if (sectorData.kospiYieldPercent == 0) {
+      kospiBoxColor = Colors.white;
     } else {
-      setState(() {
-        kospiBoxColor = Color(0xff4990FF);
-      });
+      kospiBoxColor = Color(0xff4990FF).withOpacity(0.16);
     }
 
     if (sectorData.industrYieldPercent > 0) {
-      setState(() {
-        industryBoxColor = Color(0xffFFEFF0);
-      });
+      industryBoxColor = Color(0xffFFEFF0);
+    } else if (sectorData.industrYieldPercent == 0) {
+      industryBoxColor = Colors.white;
     } else {
-      setState(() {
-        industryBoxColor = Color(0xff4990FF);
-      });
+      industryBoxColor = Color(0xff4990FF).withOpacity(0.16);
     }
   }
 
@@ -43,10 +39,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     await Provider.of<CalculatorProvider>(context, listen: false)
-        .getSectorData()
-        .then((value) {
-      setBoxColor();
-    });
+        .getSectorData();
   }
 
   @override
@@ -55,6 +48,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
         builder: (context, calculatorProvider, child) {
       SectorData sectorData = calculatorProvider.sectorData;
       CalculatorStock calculationResult = calculatorProvider.calculationResult;
+      setBoxColor();
       return sectorData == null
           ? Container(child: CircularProgressIndicator())
           : DefaultTabController(
@@ -257,13 +251,21 @@ class IndustryYield extends StatelessWidget {
                     color: Colors.red,
                     fontWeight: FontWeight.w500),
               )
-            : Text(
-                '${sectorData.industrYieldPercent}%',
-                style: TextStyle(
-                    fontSize: 36,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w500),
-              ));
+            : sectorData.industrYieldPercent == 0
+                ? Text(
+                    '${sectorData.industrYieldPercent}%',
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500),
+                  )
+                : Text(
+                    '${sectorData.industrYieldPercent}%',
+                    style: TextStyle(
+                        fontSize: 36,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w500),
+                  ));
   }
 }
 
@@ -278,12 +280,16 @@ class KospiPerYield extends StatelessWidget {
     final kospiPercent = sectorData.kospiYieldPercent;
     final yieldPercent = calculationResult.yieldPercent;
     String percentSymbol;
+    Color percentColor;
     if (kospiPercent > 0) {
       percentSymbol = '+ ${kospiPercent.abs()}%';
+      percentColor = Colors.red;
     } else if (kospiPercent == 0) {
       percentSymbol = '${kospiPercent.abs()}%';
+      percentColor = Colors.black;
     } else {
       percentSymbol = '- ${kospiPercent.abs()}%';
+      percentColor = Colors.blue;
     }
 
     return (kospiPercent > yieldPercent)
@@ -294,7 +300,7 @@ class KospiPerYield extends StatelessWidget {
                 percentSymbol,
                 style: TextStyle(
                     fontSize: 36,
-                    color: Colors.red,
+                    color: percentColor,
                     fontWeight: FontWeight.w500),
               ),
               Text(
@@ -314,7 +320,7 @@ class KospiPerYield extends StatelessWidget {
                     percentSymbol,
                     style: TextStyle(
                         fontSize: 36,
-                        color: Colors.red,
+                        color: percentColor,
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
@@ -333,7 +339,7 @@ class KospiPerYield extends StatelessWidget {
                     percentSymbol,
                     style: TextStyle(
                         fontSize: 36,
-                        color: Colors.red,
+                        color: percentColor,
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
