@@ -213,14 +213,14 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '닉네임',
+                          evaluationItem?.displayName ?? '',
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               height: 17 / 12),
                         ),
                         Text(
-                          '2020-03-04',
+                          evaluationItem?.createdDate ?? '',
                           style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w300,

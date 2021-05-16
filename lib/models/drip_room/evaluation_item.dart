@@ -10,9 +10,10 @@ class EvaluationItem {
   final String cons;
   final String uid;
   final int likeCount;
-
+  final String displayName;
+  final String createdDate;
   EvaluationItem(
-      {@required this.id, @required this.code, @required this.company, @required this.pros, @required this.cons, @required this.uid, @required this.likeCount});
+      {@required this.id, @required this.code, @required this.company, @required this.pros, @required this.cons, @required this.uid, @required this.likeCount, @required this.displayName, @required this.createdDate});
 
   factory EvaluationItem.fromJson(dynamic json) {
     return EvaluationItem(
@@ -22,7 +23,9 @@ class EvaluationItem {
         pros: json['pros'] ?? '',
         cons: json['cons'] ?? '',
         uid: json['uid'] ?? '',
-        likeCount: json['likeCount'] ?? 0
+        likeCount: json['likeCount'] ?? 0,
+        displayName: json['displayName'] ?? '닉네임',
+        createdDate: json['createdDate'] ?? '',
     );
   }
 
@@ -34,7 +37,9 @@ class EvaluationItem {
       'pros': pros,
       'cons': cons,
       'uid': uid,
-      'likeCount': likeCount
+      'likeCount': likeCount,
+      'displayName': displayName,
+      'createdDate': createdDate,
     };
   }
 

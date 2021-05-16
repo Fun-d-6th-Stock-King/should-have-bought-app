@@ -15,13 +15,15 @@ class BuyorNotTabScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          BuyorNotSelectWidget(evaluationItem.code),
-          SizedBox(height: 20),
-          HowToBoughtThenWidget(),
-        ],
+      padding: const EdgeInsets.only(left:20, top:20,right: 20),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            BuyorNotSelectWidget(evaluationItem.code),
+            SizedBox(height: 20),
+            HowToBoughtThenWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -30,9 +32,8 @@ class BuyorNotTabScreen extends StatelessWidget {
 class HowToBoughtThenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(MediaQuery.of(context).size.height);
     return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.7,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         color: Colors.white,
@@ -45,7 +46,7 @@ class HowToBoughtThenWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top:60),
                 child: Container(
-                    height: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.35,
                     child: BuyOrNotChartWidget()
                 ),
               ),
@@ -71,7 +72,6 @@ class HowToBoughtThenWidget extends StatelessWidget {
               ),
             ],
           ),
-          //urrentStockChartWidget(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
