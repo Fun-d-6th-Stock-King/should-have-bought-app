@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
@@ -24,36 +25,27 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color textColor;
   Color topColor;
 
-  final List<String> _randomDates = [
-    'DAY1',
-    'WEEK1',
-    'MONTH1',
-    'MONTH6',
-    'YEAR1',
-    'YEAR5',
-    'YEAR10'
-  ];
-  final List<String> _randomPrices = [
-    '100000',
-    '500000',
-    '1000000',
-    '5000000',
-    '10000000'
-  ];
   bool isLoading = false;
 
   void setBackgroundColor() {
     final percent =
-        Provider.of<CalculatorProvider>(context).calculationResult.yieldPercent;
+        Provider.of<CalculatorProvider>(context, listen: false).calculationResult.yieldPercent;
     if (percent > 0) {
-      topColor = Color(0xffFF6561);
-      textColor = Colors.white;
+      setState(() {
+        topColor = Color(0xffFF6561);
+        textColor = Colors.white;
+      });
     } else if (percent < 0) {
-      topColor = Color(0xff4990FF);
-      textColor = Colors.white;
+      setState(() {
+        topColor = Color(0xff4990FF);
+        textColor = Colors.white;
+      });
+
     } else {
-      topColor = Color(0xffF2F2F2);
-      textColor = Colors.black;
+      setState(() {
+        topColor = Color(0xffF2F2F2);
+        textColor = Colors.black;
+      });
     }
   }
 
@@ -63,20 +55,22 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     });
     final _companyList =
         Provider.of<CalculatorProvider>(context, listen: false).companyList;
-    final _randomDate = Random().nextInt(_randomDates.length);
+    final _randomDate = Random().nextInt(dates.length);
     final _randomCompnay = Random().nextInt(_companyList.length);
-    final _randomPrice = Random().nextInt(_randomPrices.length);
+    final _randomPrice = Random().nextInt(prices.length);
     Provider.of<CalculatorProvider>(context, listen: false)
         .randomResult(CalculatorDto(
       code: _companyList[_randomCompnay].code,
-      investDate: _randomDates[_randomDate],
-      investPrice: intToCurrency(_randomPrices[_randomPrice]),
+      investDate: dates[_randomDate],
+      investPrice: intToCurrency(prices[_randomPrice]),
     ).toMap())
         .then((_) {
+      setBackgroundColor();
       setState(() {
         isLoading = false;
       });
     });
+
     reBuildApi();
   }
 
@@ -92,197 +86,184 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
     setBackgroundColor();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Stack(
-          children: <Widget>[
-            CustomPaint(
-              painter: MyPainter(topColor),
-              size: Size(1200, 1200),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                CalculatorResultWidget(),
+                SizedBox(height: 50),
+                SalaryYearMonthWidget(),
+                SizedBox(height: 50),
+                IncreaseRateTabWidget(),
+              ],
             ),
-            Container(
-              padding: EdgeInsets.only(
-                top: 40,
-                bottom: 30,
-                left: 12,
-                right: 20,
+          )
+        ],
+      ),
+    );
+  }
+  Widget CalculatorResultWidget() {
+    return Stack(
+      children: <Widget>[
+        CustomPaint(
+          painter: MyPainter(topColor),
+          size: Size(516, 316),
+        ),
+        Container(
+          height: 310,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Center(
+                child: Image(
+                  image: AssetImage('assets/images/plus_chick.png'),
+                ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(18),
-                      color: Color(0x80FFFFFF),
-                    ),
-                    child: isLoading
-                        ? LoadingRandomWidget()
-                        : RandomWidget(onTap: () {
-                            randomValues();
-                          }),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 360,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Center(
-                    child: Image(
-                      image: AssetImage('assets/images/plus_chick.png'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 16, right: 16),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 110,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        MainTopText(
-                          textColor: textColor,
-                        ),
-                        MainMidText(
-                          textColor: textColor,
-                        ),
-                        MainBottomText(
-                          textColor: textColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 75),
-                  Container(
-                    height: 209,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.circular(15.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0x1F5A5A5A),
-                            offset: Offset(6.0, 8.0),
-                            blurRadius: 35.0,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 18,
-                          right: 18,
-                          top: 18,
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            EmojiYieldPriceText(),
-                            YieldPercentText(),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              '${Provider.of<CalculatorProvider>(context).calculationResult.oldCloseDate} 종가 기준',
-                              style: TextStyle(
-                                color: Color(0xff949597),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 31,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 15,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AutoSizeText(
-                                    '1주당 ${numberWithComma(Provider.of<CalculatorProvider>(context).calculationResult.oldPrice)}원',
-                                    style: kOldStockTextStyle,
-                                    minFontSize: 15,
-                                    maxLines: 1,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    child: VerticalDivider(
-                                      color: Color(0xff979797),
-                                    ),
-                                  ),
-                                  AutoSizeText(
-                                    '${Provider.of<CalculatorProvider>(context).calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
-                                    style: kOldStockTextStyle,
-                                    minFontSize: 15,
-                                    maxLines: 1,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Provider.of<CalculatorProvider>(context)
-                              .calculationResult
-                              .yieldPercent >
-                          0
-                      ? SalaryYearMonthWidget(
-                          salaryYear: Provider.of<CalculatorProvider>(context)
-                              .calculationResult
-                              .salaryYear,
-                          salaryMonth: Provider.of<CalculatorProvider>(context)
-                              .calculationResult
-                              .salaryMonth,
-                        )
-                      : null,
-                  // : TenYearWidget(
-                  //     day: Provider.of<CalculatorProvider>(context)
-                  //         .calculationResult
-                  //         .investDate,
-                  //     money: convertMoney(
-                  //         Provider.of<CalculatorProvider>(context)
-                  //             .calculationResult
-                  //             .investPrice)),
-                  SizedBox(height: 50),
-                  IncreaseRateTabWidget(),
-                ],
-              ),
+            ],
+          ),
+        ),
+        Column(
+          children: [
+            SizedBox(height: 10),
+            CalculatorResultAppBar(),
+            SizedBox(height: 2),
+            MainTopText(textColor: textColor),
+            MainMidText(textColor: textColor,),
+            MainBottomText(textColor: textColor),
+            SizedBox(height: 75),
+            ResultCardWidget(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget ResultCardWidget() {
+    return Container(
+      height: 209,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFFFFFFFF),
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x1F5A5A5A),
+              offset: Offset(6.0, 8.0),
+              blurRadius: 35.0,
             ),
           ],
         ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 18,
+            right: 18,
+            top: 18,
+          ),
+          child: Consumer<CalculatorProvider>(
+              builder: (context, calculatorProvider, child) {
+                CalculatorStock calculationResult = calculatorProvider.calculationResult;
+                return Column(
+                  children: <Widget>[
+                    EmojiYieldPriceText(calculationResult),
+                    YieldPercentText(calculationResult),
+                    SizedBox(height: 8),
+                    Text(
+                      '${calculationResult.oldCloseDate} 종가 기준',
+                      style: TextStyle(
+                        color: Color(0xff949597),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 31,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText(
+                            '1주당 ${numberWithComma(
+                                calculationResult.oldPrice)}원',
+                            style: kOldStockTextStyle,
+                            minFontSize: 15,
+                            maxLines: 1,
+                          ),
+                          Container(
+                            height: 20,
+                            child: VerticalDivider(
+                              color: Color(0xff979797),
+                            ),
+                          ),
+                          AutoSizeText(
+                            '${calculationResult.holdingStock
+                                .toStringAsFixed(1)}주 보유',
+                            style: kOldStockTextStyle,
+                            minFontSize: 15,
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              }
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget CalculatorResultAppBar() {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          Container(
+            height: 48,
+            width: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: Color(0x80FFFFFF),
+            ),
+            child: isLoading
+                ? LoadingRandomWidget()
+                : RandomWidget(onTap: () {
+              randomValues();
+            }),
+          ),
+        ],
       ),
     );
   }
 }
 
+
 class YieldPercentText extends StatelessWidget {
+  final CalculatorStock calculationResult;
+  YieldPercentText(this.calculationResult);
   @override
   Widget build(BuildContext context) {
-    final yieldPercent =
-        Provider.of<CalculatorProvider>(context).calculationResult.yieldPercent;
+    final yieldPercent = calculationResult.yieldPercent;
     return RichText(
       text: TextSpan(
         style: TextStyle(
@@ -305,12 +286,13 @@ class YieldPercentText extends StatelessWidget {
 }
 
 class EmojiYieldPriceText extends StatelessWidget {
+  final CalculatorStock calculationResult;
+  EmojiYieldPriceText(this.calculationResult);
+
   @override
   Widget build(BuildContext context) {
-    final yieldPercent =
-        Provider.of<CalculatorProvider>(context).calculationResult.yieldPercent;
-    final yieldPrice = numberWithComma(
-        Provider.of<CalculatorProvider>(context).calculationResult.yieldPrice);
+    final yieldPercent = calculationResult.yieldPercent;
+    final yieldPrice = numberWithComma(calculationResult.yieldPrice ?? '0');
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(
@@ -438,12 +420,7 @@ class MyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()..color = topColor;
     var path = Path();
-
-    path.moveTo(0, size.height * 0.3);
-    path.quadraticBezierTo(
-        size.width / 2, size.height / 2.5, size.width, size.height * 0.3);
-    path.lineTo(size.width, 0);
-    path.lineTo(0, 0);
+    canvas.drawCircle(Offset(size.width*0.5, size.height*0.2), size.height*1, paint);
 
     canvas.drawPath(path, paint);
   }

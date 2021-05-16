@@ -26,16 +26,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String _selectedDateValue = 'YEAR10';
   Company _selectedCompany = Company(company: '삼성전자', code: '005930');
   int value = 0;
-  List<String> dates = [
-    'DAY1',
-    'WEEK1',
-    'MONTH1',
-    'MONTH6',
-    'YEAR1',
-    'YEAR5',
-    'YEAR10'
-  ];
-  List<String> prices = ['100000', '500000', '1000000', '5000000', '10000000'];
+
   List<String> company = [
     '삼성전자',
     '삼성SDI',
