@@ -267,7 +267,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                   //             .calculationResult
                   //             .investPrice)),
                   SizedBox(height: 50),
-                  IncreaseRateTabWidget(),
+                  Provider.of<CalculatorProvider>(context).sectorData == null
+                      ? CircularProgressIndicator()
+                      : IncreaseRateTabWidget(),
                 ],
               ),
             ),

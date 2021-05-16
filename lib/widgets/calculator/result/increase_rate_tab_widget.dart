@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 
 class IncreaseRateTabWidget extends StatefulWidget {
   @override
@@ -102,7 +103,10 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                               Column(
                                 children: <Widget>[
                                   Text(
-                                    '2011년 03월 11일',
+                                    convertKorDateFormat(
+                                        Provider.of<CalculatorProvider>(context)
+                                            .sectorData
+                                            .kospiOldDate),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
@@ -124,7 +128,10 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                               Column(
                                 children: <Widget>[
                                   Text(
-                                    '2021년 03월 11일',
+                                    convertKorDateFormat(
+                                        Provider.of<CalculatorProvider>(context)
+                                            .sectorData
+                                            .kospiCurrentTime),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
