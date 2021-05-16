@@ -74,9 +74,9 @@ flutter:
     - assets/icons/ico_card_right.png
     - assets/icons/ico_google.png
     - assets/icons/ico_kakao.png
-    - assets/like-fountain.json
-    - assets/heart-fountain.json
-    - assets/celebaration-fountain.json
+    - assets/lottie/null_animation.json
+    - assets/lottie/o_animation.json
+    - assets/lottie/x_animation.json
     - assets/images/plus_chick.png
     - assets/icons/ico_heart.png
     - assets/icons/ico_check.png
