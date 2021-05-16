@@ -14,6 +14,18 @@ Map<String, String> dateValue = {
   'YEAR10': '10년 전'
 };
 
+List<String> dates = [
+  'DAY1',
+  'WEEK1',
+  'MONTH1',
+  'MONTH6',
+  'YEAR1',
+  'YEAR5',
+  'YEAR10'
+];
+
+List<String> prices = ['100000', '500000', '1000000', '5000000', '10000000'];
+
 const kSalaryTextStyle = TextStyle(
   fontSize: 22,
   fontWeight: FontWeight.w400,
@@ -25,7 +37,6 @@ const kMainBoldTextStyle = TextStyle(
 );
 
 const kOldStockTextStyle = TextStyle(
-  fontSize: 16,
   fontWeight: FontWeight.w700,
 );
 

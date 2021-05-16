@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
-import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
-import 'package:should_have_bought_app/widgets/calculator/loading_random_widget.dart';
-import 'package:should_have_bought_app/widgets/calculator/random_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
+
+import 'package:should_have_bought_app/widgets/calculator/result/loading_random_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/salary_year_month_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/ten_year_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -18,343 +23,253 @@ class CalculatorResultScreen extends StatefulWidget {
 }
 
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
-  List<Color> colorSet;
+  Color textColor;
   Color topColor;
-  final List<String> _randomDates = [
-    'DAY1',
-    'WEEK1',
-    'MONTH1',
-    'MONTH6',
-    'YEAR1',
-    'YEAR5',
-    'YEAR10'
-  ];
-  final List<String> _randomPrices = [
-    '100000',
-    '500000',
-    '1000000',
-    '5000000',
-    '10000000'
-  ];
+
   bool isLoading = false;
 
-
-  void setBackgroundColor(int percent) {
+  void setBackgroundColor() {
+    final percent = Provider.of<CalculatorProvider>(context, listen: false)
+        .calculationResult
+        .yieldPercent;
     if (percent > 0) {
-      colorSet = [
-        Color(0xa0FF6561),
-        Color(0x00FF6561),
-      ];
-      topColor = Color(0xa0FF6561);
+      setState(() {
+        topColor = Color(0xffFF6561);
+        textColor = Colors.white;
+      });
     } else if (percent < 0) {
-      colorSet = [
-        Color(0xa04990FF),
-        Color(0x004990FF),
-      ];
-      topColor = Color(0xa04990FF);
+      setState(() {
+        topColor = Color(0xff4990FF);
+        textColor = Colors.white;
+      });
     } else {
-      colorSet = [
-        defaultBackgroundColor,
-        defaultBackgroundColor,
-      ];
-      topColor = defaultBackgroundColor;
+      setState(() {
+        topColor = Color(0xffF2F2F2);
+        textColor = Colors.black;
+      });
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<CalculatorProvider>(
-      builder: (context, value, child) {
-        setBackgroundColor(value.calculationResult.yieldPercent);
-        return Scaffold(
-          body: SingleChildScrollView(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  height: 360,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: colorSet,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(
-                    top: 40,
-                    bottom: 30,
-                    left: 12,
-                    right: 20,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios),
-                        onPressed: () => Navigator.of(context).pop('update'),
-                      ),
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: Color(0x80FFFFFF),
-                        ),
-                        child: isLoading ? LoadingRandomWidget()
-                        : RandomWidget(onTap: (){
-                          RandomValues(value);
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 110,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: [
-                            MainTopText(
-                              investDate: value.calculationResult.investDate,
-                              companyName: value.calculationResult.name,
-                            ),
-                            MainBottomText(
-                              investPrice: numberWithComma(
-                                  value.calculationResult.investPrice),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 35),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        height: 209,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xFFFFFFFF),
-                            borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xFFF1F1F1),
-                                offset: Offset(2.0, 13.0),
-                                blurRadius: 35.0,
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              left: 18,
-                              right: 18,
-                              top: 18,
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                EmojiYieldPriceText(
-                                  yieldPercent:
-                                      value.calculationResult.yieldPercent,
-                                  yieldPrice: numberWithComma(
-                                      value.calculationResult.yieldPrice),
-                                ),
-                                YieldPercentText(
-                                  yieldPercent:
-                                      value.calculationResult.yieldPercent,
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '${value.calculationResult.oldCloseDate} 종가 기준',
-                                  style: TextStyle(
-                                    color: Color(0xff949597),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 31,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      AutoSizeText(
-                                        '1주당 ${numberWithComma(value.calculationResult.oldPrice)}원',
-                                        style: kOldStockTextStyle,
-                                        maxLines: 1,
-                                      ),
-                                      Container(
-                                        height: 20,
-                                        child: VerticalDivider(
-                                          color: Color(0xff979797),
-                                        ),
-                                      ),
-                                      AutoSizeText(
-                                        '${value.calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
-                                        style: kOldStockTextStyle,
-                                        maxLines: 1,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          '연봉/월급으로 친다면?',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 18,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        height: 86,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xffC2C2C2).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xFFF1F1F1),
-                                offset: Offset(2.0, 13.0),
-                                blurRadius: 35.0,
-                              ),
-                            ],
-                          ),
-                          child: SalaryYearMonthText(
-                            salaryYear: numberWithComma(
-                                value.calculationResult.salaryYear),
-                            salaryMonth: numberWithComma(
-                              value.calculationResult.salaryMonth,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-  void RandomValues(value) {
+  void randomValues() {
     setState(() {
       isLoading = true;
     });
-    final _companyList = value.companyList;
-    final _randomDate =
-    Random().nextInt(_randomDates.length);
-    final _randomCompnay =
-    Random().nextInt(_companyList.length);
-    final _randomPrice =
-    Random().nextInt(_randomPrices.length);
-    value.randomResult(CalculatorDto(
+    final _companyList =
+        Provider.of<CalculatorProvider>(context, listen: false).companyList;
+    final _randomDate = Random().nextInt(dates.length);
+    final _randomCompnay = Random().nextInt(_companyList.length);
+    final _randomPrice = Random().nextInt(prices.length);
+    Provider.of<CalculatorProvider>(context, listen: false)
+        .randomResult(CalculatorDto(
       code: _companyList[_randomCompnay].code,
-      investDate: _randomDates[_randomDate],
-      investPrice:
-      intToCurrency(_randomPrices[_randomPrice]),
-    ).toMap()).then((_){
+      investDate: dates[_randomDate],
+      investPrice: intToCurrency(prices[_randomPrice]),
+    ).toMap())
+        .then((_) {
+      setBackgroundColor();
       setState(() {
         isLoading = false;
       });
     });
+
+    reBuildApi();
   }
-}
 
-class SalaryYearMonthText extends StatelessWidget {
-  final String salaryYear;
-  final String salaryMonth;
+  @override
+  void initState() {
+    reBuildApi();
+    super.initState();
+  }
 
-  SalaryYearMonthText({this.salaryYear, this.salaryMonth});
+  void reBuildApi() {
+    Provider.of<CalculatorProvider>(context, listen: false).getSectorData();
+    Provider.of<CalculatorProvider>(context, listen: false).getTenYearHigher();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    setBackgroundColor();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AutoSizeText(
-              '1년에',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff828282),
-              ),
-              maxLines: 1,
+    return Scaffold(
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                CalculatorResultWidget(),
+                SizedBox(height: 50),
+                SalaryYearMonthWidget(),
+                SizedBox(height: 50),
+                IncreaseRateTabWidget(),
+                SizedBox(height: 50),
+                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+                SizedBox(height: 40),
+                CurrentValueWidget(),
+                SizedBox(height: 50),
+                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+              ],
             ),
-            AutoSizeText(
-              salaryYear,
-              style: kSalaryTextStyle,
-              maxLines: 1,
-              minFontSize: 10,
-            )
-          ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget CalculatorResultWidget() {
+    return Stack(
+      children: <Widget>[
+        CustomPaint(
+          painter: MyPainter(topColor),
+          size: Size(516, 316),
         ),
         Container(
-          height: 57,
-          child: VerticalDivider(
-            color: Color(0xff979797),
+          height: 310,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Center(
+                child: Image(
+                  image: AssetImage('assets/images/plus_chick.png'),
+                ),
+              ),
+            ],
           ),
         ),
         Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              '1달에',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Color(0xff828282),
-              ),
+            SizedBox(height: 10),
+            CalculatorResultAppBar(),
+            SizedBox(height: 2),
+            MainTopText(textColor: textColor),
+            MainMidText(
+              textColor: textColor,
             ),
-            AutoSizeText(
-              salaryMonth,
-              style: kSalaryTextStyle,
-              maxLines: 1,
-              minFontSize: 10,
+            MainBottomText(textColor: textColor),
+            SizedBox(height: 75),
+            ResultCardWidget(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget ResultCardWidget() {
+    return Container(
+      height: 209,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFFFFFFFF),
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x1F5A5A5A),
+              offset: Offset(6.0, 8.0),
+              blurRadius: 35.0,
             ),
           ],
-        )
-      ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 18,
+            right: 18,
+            top: 18,
+          ),
+          child: Consumer<CalculatorProvider>(
+              builder: (context, calculatorProvider, child) {
+            CalculatorStock calculationResult =
+                calculatorProvider.calculationResult;
+            return Column(
+              children: <Widget>[
+                EmojiYieldPriceText(calculationResult),
+                YieldPercentText(calculationResult),
+                SizedBox(height: 8),
+                Text(
+                  '${calculationResult.oldCloseDate} 종가 기준',
+                  style: TextStyle(
+                    color: Color(0xff949597),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                SizedBox(
+                  height: 31,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+                        '1주당 ${numberWithComma(calculationResult.oldPrice)}원',
+                        style: kOldStockTextStyle,
+                        minFontSize: 15,
+                        maxLines: 1,
+                      ),
+                      Container(
+                        height: 20,
+                        child: VerticalDivider(
+                          color: Color(0xff979797),
+                        ),
+                      ),
+                      AutoSizeText(
+                        '${calculationResult.holdingStock.toStringAsFixed(1)}주 보유',
+                        style: kOldStockTextStyle,
+                        minFontSize: 15,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget CalculatorResultAppBar() {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          Container(
+            height: 48,
+            width: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: Color(0x80FFFFFF),
+            ),
+            child: isLoading
+                ? LoadingRandomWidget()
+                : RandomWidget(onTap: () {
+                    randomValues();
+                  }),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class YieldPercentText extends StatelessWidget {
-  final int yieldPercent;
-
-  YieldPercentText({this.yieldPercent});
-
+  final CalculatorStock calculationResult;
+  YieldPercentText(this.calculationResult);
   @override
   Widget build(BuildContext context) {
+    final yieldPercent = calculationResult.yieldPercent;
     return RichText(
       text: TextSpan(
         style: TextStyle(
@@ -367,13 +282,8 @@ class YieldPercentText extends StatelessWidget {
           fontWeight: FontWeight.w300,
         ),
         children: [
-          (yieldPercent > 0)
-              ? TextSpan(text: '+')
-              : (yieldPercent < 0)
-                  ? TextSpan(text: '-')
-                  : TextSpan(),
           TextSpan(
-            text: ' ${yieldPercent.abs()}%',
+            text: '($yieldPercent%)',
           ),
         ],
       ),
@@ -382,13 +292,13 @@ class YieldPercentText extends StatelessWidget {
 }
 
 class EmojiYieldPriceText extends StatelessWidget {
-  final int yieldPercent;
-  final String yieldPrice;
-
-  EmojiYieldPriceText({this.yieldPercent, this.yieldPrice});
+  final CalculatorStock calculationResult;
+  EmojiYieldPriceText(this.calculationResult);
 
   @override
   Widget build(BuildContext context) {
+    final yieldPercent = calculationResult.yieldPercent;
+    final yieldPrice = numberWithComma(calculationResult.yieldPrice ?? '0');
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(
@@ -401,11 +311,7 @@ class EmojiYieldPriceText extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         children: [
-          (yieldPercent > 0)
-              ? TextSpan(text: '😂 ')
-              : (yieldPercent < 0)
-                  ? TextSpan(text: '😱 ')
-                  : TextSpan(text: '🤔 '),
+          (yieldPercent > 0) ? TextSpan(text: '+ ') : TextSpan(text: '- '),
           TextSpan(text: '$yieldPrice원'),
         ],
       ),
@@ -416,17 +322,19 @@ class EmojiYieldPriceText extends StatelessWidget {
 }
 
 class MainBottomText extends StatelessWidget {
-  final String investPrice;
+  final Color textColor;
 
-  MainBottomText({this.investPrice});
+  MainBottomText({this.textColor});
 
   @override
   Widget build(BuildContext context) {
+    final investPrice = numberWithComma(
+        Provider.of<CalculatorProvider>(context).calculationResult.investPrice);
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(
           fontSize: 24,
-          color: Colors.black,
+          color: textColor,
           fontWeight: FontWeight.w300,
         ),
         children: <TextSpan>[
@@ -446,18 +354,19 @@ class MainBottomText extends StatelessWidget {
 }
 
 class MainTopText extends StatelessWidget {
-  final String investDate;
-  final String companyName;
+  final Color textColor;
 
-  MainTopText({this.investDate, this.companyName});
+  MainTopText({this.textColor});
 
   @override
   Widget build(BuildContext context) {
+    final investDate =
+        Provider.of<CalculatorProvider>(context).calculationResult.investDate;
     return AutoSizeText.rich(
       TextSpan(
         style: TextStyle(
           fontSize: 24,
-          color: Colors.black,
+          color: textColor,
           fontWeight: FontWeight.w300,
         ),
         children: <TextSpan>[
@@ -468,6 +377,31 @@ class MainTopText extends StatelessWidget {
           TextSpan(
             text: '에 ',
           ),
+        ],
+      ),
+      maxLines: 1,
+      minFontSize: 10,
+    );
+  }
+}
+
+class MainMidText extends StatelessWidget {
+  final Color textColor;
+
+  MainMidText({this.textColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final companyName =
+        Provider.of<CalculatorProvider>(context).calculationResult.name;
+    return AutoSizeText.rich(
+      TextSpan(
+        style: TextStyle(
+          fontSize: 24,
+          color: textColor,
+          fontWeight: FontWeight.w300,
+        ),
+        children: <TextSpan>[
           TextSpan(
             text: companyName,
             style: kMainBoldTextStyle,
@@ -481,4 +415,23 @@ class MainTopText extends StatelessWidget {
       minFontSize: 10,
     );
   }
+}
+
+// This is the Painter class
+class MyPainter extends CustomPainter {
+  final Color topColor;
+  MyPainter(this.topColor);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = topColor;
+    var path = Path();
+    canvas.drawCircle(
+        Offset(size.width * 0.5, size.height * 0.2), size.height * 1, paint);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

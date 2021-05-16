@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
-import 'package:should_have_bought_app/widgets/calculator/random_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 
 import 'company_item.dart';
 
@@ -20,23 +21,13 @@ class CalculatorWidget extends StatefulWidget {
   _CalculatorWidgetState createState() => _CalculatorWidgetState();
 }
 
-class _CalculatorWidgetState extends State<CalculatorWidget>  {
-
+class _CalculatorWidgetState extends State<CalculatorWidget> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   String _selectedDateValue = 'YEAR10';
   Company _selectedCompany = Company(company: '삼성전자', code: '005930');
   int value = 0;
-  List<String> dates = [
-    'DAY1',
-    'WEEK1',
-    'MONTH1',
-    'MONTH6',
-    'YEAR1',
-    'YEAR5',
-    'YEAR10'
-  ];
-  List<String> prices = ['100000', '500000', '1000000', '5000000', '10000000'];
+
   List<String> company = [
     '삼성전자',
     '삼성SDI',
@@ -54,7 +45,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget>  {
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma('100000');
-
   }
 
   @override
@@ -137,7 +127,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget>  {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [viewSelectedDates(context), randomValuesButton(context)],
+                children: [
+                  viewSelectedDates(context),
+                  randomValuesButton(context)
+                ],
               ),
               viewSelectedCompany(context),
               viewSelectedPrice(context),
@@ -271,13 +264,19 @@ class _CalculatorWidgetState extends State<CalculatorWidget>  {
       ))),
       child: CupertinoButton(
         padding: EdgeInsets.all(0),
-        child: Text(
-          value,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 240,
+          ),
+          child: AutoSizeText(
+            value,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 1,
           ),
         ),
         onPressed: () => showMenu(context),

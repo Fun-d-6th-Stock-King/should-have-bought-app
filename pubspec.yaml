@@ -77,6 +77,8 @@ flutter:
     - assets/heart-fountain.json
     - assets/celebaration-fountain.json
 
+    - assets/images/plus_chick.png
+
   # example:
   # fonts:
   #   - family: Schyler

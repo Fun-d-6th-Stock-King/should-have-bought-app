@@ -53,4 +53,36 @@ class CalculatorApi extends Api {
     throw Exception(
         response.statusCode.toString() + ":" + response.body.toString());
   }
+
+  static Future getTenYearHigher() async {
+    Map<String, String> header = await Api.getHeader();
+
+    final response = await http.get(
+        Uri.parse("$stockApiUrl/api/buythen/high-price-10year"),
+        headers: header);
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
+      return responseBody;
+    }
+    throw Exception(
+        response.statusCode.toString() + ":" + response.body.toString());
+  }
+
+  static Future getSectorInfor(
+      String code, String investDate, int investPrice) async {
+    Map<String, String> header = await Api.getHeader();
+
+    final response = await http.get(
+        Uri.parse(
+            "$stockApiUrl/api/buythen/current-kospi-industry?code=$code&investDate=$investDate&investPrice=$investPrice"),
+        headers: header);
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
+      return responseBody;
+    }
+    throw Exception(
+        response.statusCode.toString() + ":" + response.body.toString());
+  }
 }
