@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 
 class IncreaseRateTabWidget extends StatefulWidget {
   @override
