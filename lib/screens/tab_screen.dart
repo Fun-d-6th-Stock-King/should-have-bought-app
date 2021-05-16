@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens.dart'
-    show MainScreen, BuyOrNotScreen, CardScreen, TodayWordScreen, MyPageScreen;
+    show MainScreen, DripRoomScreen, CardScreen, TodayWordScreen, MyPageScreen;
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 
 class TabScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _TabScreenState extends State<TabScreen> {
     EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.fadingCircle;
     _screens = [
       MainScreen(),
-      BuyOrNotScreen(),
+      DripRoomScreen(),
       CardScreen(),
       TodayWordScreen(),
       MyPageScreen(),

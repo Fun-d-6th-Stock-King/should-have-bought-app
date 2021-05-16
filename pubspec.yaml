@@ -39,6 +39,7 @@ dependencies:
   lottie: ^1.0.1
   flutter_easyloading: ^3.0.0
   carousel_slider: ^3.0.0
+  emoji_picker_flutter: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -71,13 +72,19 @@ flutter:
     - assets/icons/ico_card_up.png
     - assets/icons/ico_card_left.png
     - assets/icons/ico_card_right.png
-    - assets/ico_google.png
-    - assets/ico_kakao.png
-    - assets/like-fountain.json
-    - assets/heart-fountain.json
-    - assets/celebaration-fountain.json
-
+    - assets/icons/ico_google.png
+    - assets/icons/ico_kakao.png
+    - assets/lottie/null_animation.json
+    - assets/lottie/o_animation.json
+    - assets/lottie/x_animation.json
     - assets/images/plus_chick.png
+    - assets/icons/ico_heart.png
+    - assets/icons/ico_check.png
+    - assets/icons/ico_like.png
+    - assets/icons/ico_like_big.png
+    - assets/icons/ico_unlike.png
+    - assets/icons/ico_unlike_big.png
+    - assets/icons/ico_search_white.png
 
   # example:
   # fonts:

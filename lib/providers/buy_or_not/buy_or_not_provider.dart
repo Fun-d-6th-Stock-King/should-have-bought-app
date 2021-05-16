@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/api/buy_or_not/buy_or_not_api.dart';
+import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
 
 class BuyOrNotProvider with ChangeNotifier {
-  List _evaluationList = [];
+  BuyOrNotStock _buyOrNotStock = BuyOrNotStock();
 
-  List get evaluationList => _evaluationList;
+  BuyOrNotStock get buyOrNotStock => _buyOrNotStock;
 
-  Future getEvaluationLists() async {
-    final result = await BuyOrNotApi.getEvaluationLists();
-    print(result);
-    List list = result['evaluationList'];
+  Future getBuyOrNotStock(String stockCode) async {
+    final result = await BuyOrNotApi.getBuyOrNotStock(stockCode);
+    _buyOrNotStock = BuyOrNotStock.fromJson(result);
 
-    //_companyList = list.map((company) => Company.fromJson(company)).toList();
-    //_searchCompanyList = [..._companyList];
-
-    //print(_companyList[1].code);
-    //notifyListeners();
+    notifyListeners();
+    //return addEvaluationItemList;
   }
 }

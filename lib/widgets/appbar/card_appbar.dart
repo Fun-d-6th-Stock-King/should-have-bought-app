@@ -12,8 +12,7 @@ Widget CardAppBar(BuildContext context) {
         color: Colors.black,
         fontSize: 20,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Wrap(
         children :[
           Text('이 종목'),
           Text(' 🅾️ 살래? ❎ 말래?', style: TextStyle(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
-import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/screens/card/card_button.dart';
 import 'package:should_have_bought_app/widgets/appbar/card_appbar.dart';
 import 'package:should_have_bought_app/widgets/card/lib/swipe_cards.dart';
@@ -141,20 +140,20 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
               bottom: MediaQuery.of(context).size.height /4,
               left: 0,
               child: Lottie.asset(
-                'assets/heart-fountain.json',
-                width: 120,
-                height: 100,
+                'assets/lottie/o_animation.json',
+                width: 200,
+                height: 200,
                 controller: _leftAniController,
               ),
             ) : Container(),
             upVisible ?
             Positioned(
               top: 0,
-              left : MediaQuery.of(context).size.width /7,
+              left : MediaQuery.of(context).size.width /4.5,
               child: Lottie.asset(
-                'assets/celebaration-fountain.json',
-                width: 300,
-                height: 300,
+                'assets/lottie/null_animation.json',
+                width: 200,
+                height: 200,
                 controller: _upAniController,
               ),
             ) : Container(),
@@ -163,9 +162,9 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
               bottom: MediaQuery.of(context).size.height /4,
               right: 0,
               child: Lottie.asset(
-                'assets/like-fountain.json',
-                width: 120,
-                height: 100,
+                'assets/lottie/x_animation.json',
+                width: 200,
+                height: 200,
                 controller: _rightAniController,
               ),
             ) : Container(),
@@ -175,7 +174,7 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
 
   Widget BuyOrNotCard(int index) {
     return Container(
-      height: 425,
+      height: MediaQuery.of(context).size.height *0.6,
       child: Card(
         elevation: 0.4,
         shape: RoundedRectangleBorder(
@@ -192,18 +191,12 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
               //     Text('2021.03.10. 13:54')
               //   ],
               // ),
-              Container(height: 250, child: ChartWidget()),
-
+              Container(height: MediaQuery.of(context).size.height*0.35, child: ChartWidget()),
               DefaultTextStyle(
                 style: kCardTitleTextStyle,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // CircleAvatar(
-                    //   // backgroundImage: NetworkImage(
-                    //   //     'https://www.woolha.com/media/2020/03/eevee.png'),
-                    //   backgroundColor: Colors.grey,
-                    // ),
                     Text(_swipeItems[index].content.text),
                     Padding(padding: EdgeInsets.only(left: 7)),
                     Text(
@@ -214,7 +207,7 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
                 ),
               ),
               SizedBox(
-                height: 17,
+                height: 10,
               ),
               DefaultTextStyle(
                 style: kCardContentTextStyle,
@@ -263,9 +256,8 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
                   ],
                 ),
               ),
-              SizedBox(
-                height: 17,
-              ),
+              MediaQuery.of(context).size.height > 610 ?
+              SizedBox(height: 10) : SizedBox(height: 1),
               Text(
                 '더보기 >',
                 style: TextStyle(fontSize: 16, color: Color(0xFF8C8C8C)),

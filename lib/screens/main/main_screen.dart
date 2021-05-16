@@ -5,7 +5,9 @@ import 'package:should_have_bought_app/providers/calculator/calculator_provider.
 import 'package:should_have_bought_app/widgets.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/hey_you_too/hey_you_too.dart';
+import 'package:should_have_bought_app/widgets/main/current_stock_price_widget.dart';
 import 'package:should_have_bought_app/widgets/main/header_widget.dart';
+import 'package:should_have_bought_app/widgets/today_word/today_word_best.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -125,7 +127,7 @@ class _MainScreenState extends State<MainScreen> {
                             borderRadius: BorderRadius.circular(40.0),
                             border: Border.all(
                               width: 1,
-                              color: Colors.grey,
+                              color: Color(0xFF828282),
                             ),
                           ),
                           child: Row(
@@ -145,20 +147,60 @@ class _MainScreenState extends State<MainScreen> {
                       ],
                     ),
                   ),
+                  CurrentStockPriceWidget(),
                   SizedBox(
-                      height: 164,
-                      child: Card(
-                        elevation: 0.4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 18.0),
-                          child: Container(),
-                        ),
-                      )),
+                    height: 50,
+                  ),
+                  Divider(thickness: 7, color:Color(0xFFF2F2F2)),
                   SizedBox(
-                    height: 20,
+                    height: 43,
+                  ),
+                  Frame(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "오늘의 BEST 단어",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 23,
+                  ),
+                  Frame(child: TodayWordBest()),
+                  SizedBox(
+                    height: 51,
+                  ),
+                  Divider(thickness: 7, color:Color(0xFFF2F2F2)),
+                  SizedBox(
+                    height: 43,
+                  ),
+                  Frame(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "이거 살까? 말까?",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text('더보기'),
+                            Icon(Icons.keyboard_arrow_right_outlined),
+                          ],
+                        )
+                        //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
+                      ],
+                    ),
                   ),
                   SizedBox(
                       height: 164,

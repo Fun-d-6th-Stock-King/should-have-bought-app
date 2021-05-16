@@ -68,7 +68,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
         child: CupertinoPicker(
           backgroundColor: Colors.white,
           itemExtent: 30,
-          scrollController: FixedExtentScrollController(initialItem: 1),
+          scrollController: FixedExtentScrollController(initialItem: dates.indexOf(_selectedDateValue)),
           children: [for (String date in dates) Text(dateValue[date])],
           onSelectedItemChanged: (value) {
             setState(() {
