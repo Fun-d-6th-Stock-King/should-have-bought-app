@@ -26,21 +26,34 @@ class HistoryCard extends StatelessWidget {
           children: <Widget>[
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                AutoSizeText(
-                  '${history.company} ',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  maxFontSize: 22,
-                  maxLines: 1,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 30,
+                    maxWidth: 130,
+                    minHeight: 50,
+                  ),
+                  child: AutoSizeText(
+                    '${history.company} ',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    maxFontSize: 22,
+                    maxLines: 2,
+                  ),
                 ),
-                AutoSizeText(
-                  convertMinuteToHours(history.createdDate),
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w300),
-                  maxLines: 1,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: 40,
+                  ),
+                  child: AutoSizeText(
+                    convertMinuteToHours(history.createdDate),
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w300),
+                    maxLines: 1,
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 63),
+            SizedBox(height: 30),
             Text(
               '${history.investDateName}보다',
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
@@ -75,41 +88,47 @@ class HistoryCard extends StatelessWidget {
               maxLines: 1,
             ),
             SizedBox(height: 10),
-            Container(
-              width: 125,
-              height: 24,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(25.0),
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 5,
+                  right: 5,
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    '현재가',
-                    style: TextStyle(
-                      color: Color(0xff6D6D6D),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
+                height: 24,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25.0),
                   ),
-                  Container(
-                    height: 10,
-                    child: VerticalDivider(
-                      width: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      '현재가',
+                      style: TextStyle(
+                        color: Color(0xff6D6D6D),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${numberWithComma(history.price)}원/1주',
-                    style: TextStyle(
-                      color: Color(0xff6D6D6D),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                    Container(
+                      height: 10,
+                      child: VerticalDivider(
+                        width: 10,
+                      ),
                     ),
-                  )
-                ],
+                    Text(
+                      '${numberWithComma(history.price)}원/1주',
+                      style: TextStyle(
+                        color: Color(0xff6D6D6D),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],
