@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -26,16 +27,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   String _selectedDateValue = 'YEAR10';
   Company _selectedCompany = Company(company: '삼성전자', code: '005930');
   int value = 0;
-  List<String> dates = [
-    'DAY1',
-    'WEEK1',
-    'MONTH1',
-    'MONTH6',
-    'YEAR1',
-    'YEAR5',
-    'YEAR10'
-  ];
-  List<String> prices = ['100000', '500000', '1000000', '5000000', '10000000'];
+
   List<String> company = [
     '삼성전자',
     '삼성SDI',
@@ -272,13 +264,19 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
       ))),
       child: CupertinoButton(
         padding: EdgeInsets.all(0),
-        child: Text(
-          value,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 240,
+          ),
+          child: AutoSizeText(
+            value,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 1,
           ),
         ),
         onPressed: () => showMenu(context),

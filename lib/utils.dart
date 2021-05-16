@@ -50,3 +50,7 @@ String convertMinuteToHours(String date) {
     return '$minutes분 전';
   }
 }
+
+String convertKorDateFormat(String date) {
+  return DateFormat('y년 MM월 d일').format(DateTime.parse(date));
+}

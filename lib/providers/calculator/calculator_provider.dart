@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:should_have_bought_app/api/calculator/calculator_api.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
   List _tenYearHighList = [];
   List _calculateHistory = [];
+  Map latestDto;
   CalculatorStock calculationResult;
+  SectorData sectorData;
 
   List get companyList {
     return _companyList;
@@ -48,6 +53,7 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   Future getResult(Map params) async {
+    latestDto = params;
     final result = await CalculatorApi.getResult(params);
     print(result);
     // ToDo: 모델 객체 만들어서 처리 필요.
@@ -56,6 +62,7 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   Future randomResult(Map params) async {
+    latestDto = params;
     final result = await CalculatorApi.getResult(params);
     print(result);
     calculationResult = CalculatorStock.fromJson(result);
@@ -96,5 +103,12 @@ class CalculatorProvider with ChangeNotifier {
           list.map((history) => CalculatorHistory.fromJson(history)).toList();
       notifyListeners();
     }
+  }
+
+  Future getSectorData() async {
+    final result = await CalculatorApi.getSectorInfor(latestDto['code'],
+        latestDto['investDate'], int.parse(latestDto['investPrice']));
+    sectorData = SectorData.fromJson(result);
+    notifyListeners();
   }
 }

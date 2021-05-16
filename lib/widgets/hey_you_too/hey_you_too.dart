@@ -33,7 +33,7 @@ class _HeyYouTooState extends State<HeyYouToo> {
             ))
         : CarouselSlider(
             options: CarouselOptions(
-              height: 220.0,
+              height: 213.0,
               viewportFraction: 0.7,
               enableInfiniteScroll: false,
             ),
