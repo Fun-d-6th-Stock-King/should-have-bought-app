@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 String numberWithComma(String value) {
+  if(value == '') return '0';
   return NumberFormat('###,###,###,###')
       .format(double.parse(value))
       .replaceAll(' ', '');
@@ -53,4 +54,14 @@ String convertMinuteToHours(String date) {
 
 String convertKorDateFormat(String date) {
   return DateFormat('y년 MM월 d일').format(DateTime.parse(date));
+}
+
+String commonDateFormat(String date) {
+  if(date == '') return '';
+  return DateFormat('y.MM.d.h:m').format(DateTime.parse(date));
+}
+
+String commonDayDateFormat(String date) {
+  if(date == '') return '';
+  return DateFormat('y.MM.d.').format(DateTime.parse(date));
 }

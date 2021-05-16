@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/chart/buy_or_not_chart_widget.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
@@ -32,7 +34,9 @@ class BuyorNotTabScreen extends StatelessWidget {
 
 class HowToBoughtThenWidget extends StatelessWidget {
   final String stockCode;
+
   HowToBoughtThenWidget(this.stockCode);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,114 +45,121 @@ class HowToBoughtThenWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         color: Colors.white,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 60),
-                child: Container(
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    child: BuyOrNotChartWidget(stockCode)),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(29),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: Consumer<BuyOrNotProvider>(
+          builder: (context, buyOrNotProvider, child) {
+        final EvaluationItem evaluationItem = buyOrNotProvider.evaluationItem;
+        final StockHist stockHist = buyOrNotProvider.stockHist;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 60),
+                  child: Container(
+                      height: MediaQuery.of(context).size.height * 0.35,
+                      child: BuyOrNotChartWidget(stockCode)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(29),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${commonDateFormat(evaluationItem.createdDate ?? '')}',
+                        style: dateStyle,
+                      ),
+                      Text(evaluationItem.company ?? '',
+                          style: stockTitleStyle),
+                      Text('${numberWithComma(stockHist.price?.toString() ?? '0')}원',
+                          style: stockTitleStyle),
+                      Text("+2,500 (${stockHist.changeInPercent?.toString() ?? '-'}%)",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              height: 16 / 14,
+                              color: Color(0xFF4990FF))),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
                   children: [
-                    Text(
-                      '2021.01.10.13:45',
-                      style: dateStyle,
-                    ),
-                    Text('삼성전자', style: stockTitleStyle),
-                    Text('395,820원', style: stockTitleStyle),
-                    Text('+2,500 (295%)',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                    Row(
+                      children: [
+                        Text('최근 10년간', style: stockBodyStyle),
+                        Text(
+                          ' 최고가',
+                          style: TextStyle(
                             fontSize: 14,
-                            height: 16 / 14,
-                            color: Color(0xFF4990FF))),
+                            height: 20 / 14,
+                            color: likeColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    Text('${numberWithComma(stockHist.maxQuote?.high?.toString() ?? '0')}원', style: stockBodyNumberStyle),
+                    Text('${commonDayDateFormat(stockHist.maxQuote?.date ?? '')} 종가 기준', style: stockDateStyle),
                   ],
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Text('최근 10년간', style: stockBodyStyle),
-                      Text(
-                        ' 최고가',
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 20 / 14,
-                          color: likeColor,
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('최근 10년간', style: stockBodyStyle),
+                        Text(
+                          ' 최저가',
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 20 / 14,
+                            color: unlikeColor,
+                          ),
+                        )
+                      ],
+                    ),
+                    Text('${numberWithComma(stockHist.minQuote?.low?.toString() ?? '0')}원', style: stockBodyNumberStyle),
+                    Text('${commonDayDateFormat(stockHist.minQuote?.date ?? '')} 종가 기준', style: stockDateStyle),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: mainColor,
+                      onPrimary: mainColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            16.0), //side: BorderSide(color: Colors.red)
+                      )),
+                  onPressed: () {},
+                  child: SizedBox(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '그때 샀으면 지금 얼마게?',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.white),
                         ),
-                      )
-                    ],
-                  ),
-                  Text('96,800원', style: stockBodyNumberStyle),
-                  Text('2021-01-11 종가 기준', style: stockDateStyle),
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Text('최근 10년간', style: stockBodyStyle),
-                      Text(
-                        ' 최저가',
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 20 / 14,
-                          color: unlikeColor,
-                        ),
-                      )
-                    ],
-                  ),
-                  Text('21,160원', style: stockBodyNumberStyle),
-                  Text('2011-12-29 종가 기준', style: stockDateStyle),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: mainColor,
-                    onPrimary: mainColor,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          16.0), //side: BorderSide(color: Colors.red)
-                    )),
-                onPressed: () {},
-                child: SizedBox(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '그때 샀으면 지금 얼마게?',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
-                )),
-          )
-        ],
-      ),
+                      ],
+                    ),
+                  )),
+            )
+          ],
+        );
+      }),
     );
   }
 }
@@ -164,6 +175,7 @@ class BuyorNotSelectWidget extends StatefulWidget {
 
 class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     Provider.of<BuyOrNotProvider>(context, listen: false)
@@ -204,7 +216,8 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
                               : disableColor,
                           padding: EdgeInsets.only(bottom: 5),
                           child: Image(
-                              image: AssetImage('assets/icons/ico_like_big.png')),
+                              image:
+                                  AssetImage('assets/icons/ico_like_big.png')),
                         ),
                       ),
                     ),
@@ -253,7 +266,8 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
                               ? nagativeColor
                               : disableColor,
                           child: Image(
-                              image: AssetImage('assets/icons/ico_unlike_big.png')),
+                              image: AssetImage(
+                                  'assets/icons/ico_unlike_big.png')),
                         ),
                       ),
                     ),
@@ -286,8 +300,7 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
   }
 }
 
-void setEvaluation() {
-}
+void setEvaluation() {}
 
 const buyOrNotCountTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
