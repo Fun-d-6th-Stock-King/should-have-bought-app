@@ -125,7 +125,8 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                                 Column(
                                   children: <Widget>[
                                     Text(
-                                      '2011년 03월 11일',
+                                      convertKorDateFormat(
+                                          sectorData.kospiOldDate),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,
@@ -145,7 +146,8 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
                                 Column(
                                   children: <Widget>[
                                     Text(
-                                      '2021년 03월 11일',
+                                      convertKorDateFormat(
+                                          sectorData.kospiCurrentTime),
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,

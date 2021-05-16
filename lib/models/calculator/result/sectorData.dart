@@ -9,6 +9,9 @@ class SectorData {
   int industrYieldPercent;
   List companies;
   int companyCnt;
+  int currentPricePerStock;
+  double currentStockPerPrice;
+  String currentTime;
 
   SectorData.fromJson(Map<dynamic, dynamic> map) {
     kospiYieldPercent = map['kospiValue']['yieldPercent'].toInt();
@@ -23,5 +26,9 @@ class SectorData {
     industrYieldPercent = map['industryValue']['yieldPercent'].toInt();
     companies = map['industryValue']['companies'];
     companyCnt = map['industryValue']['companyCnt'];
+    currentPricePerStock = map['currentValue']['pricePerStock'];
+    currentStockPerPrice = map['currentValue']['stockPerPrice'];
+    currentTime =
+        map['currentValue']['currentTime'].split(" ")[0].replaceAll('.', '');
   }
 }
