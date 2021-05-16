@@ -173,8 +173,10 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
   }
 
   Widget BuyOrNotCard(int index) {
+    print('height');
+    print(MediaQuery.of(context).size.height);
     return Container(
-      height: 425,
+      height: MediaQuery.of(context).size.height *0.6,
       child: Card(
         elevation: 0.4,
         shape: RoundedRectangleBorder(
@@ -191,18 +193,12 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
               //     Text('2021.03.10. 13:54')
               //   ],
               // ),
-              Container(height: 250, child: ChartWidget()),
-
+              Container(height: MediaQuery.of(context).size.height*0.35, child: ChartWidget()),
               DefaultTextStyle(
                 style: kCardTitleTextStyle,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    // CircleAvatar(
-                    //   // backgroundImage: NetworkImage(
-                    //   //     'https://www.woolha.com/media/2020/03/eevee.png'),
-                    //   backgroundColor: Colors.grey,
-                    // ),
                     Text(_swipeItems[index].content.text),
                     Padding(padding: EdgeInsets.only(left: 7)),
                     Text(
@@ -213,7 +209,7 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
                 ),
               ),
               SizedBox(
-                height: 17,
+                height: 10,
               ),
               DefaultTextStyle(
                 style: kCardContentTextStyle,
@@ -263,7 +259,7 @@ class _CreateCardScreen extends State<CardScreen> with TickerProviderStateMixin 
                 ),
               ),
               SizedBox(
-                height: 17,
+                height: 10,
               ),
               Text(
                 '더보기 >',
