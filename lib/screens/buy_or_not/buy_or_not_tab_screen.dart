@@ -6,6 +6,7 @@ import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
 import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
+import 'package:should_have_bought_app/screens/tab_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/chart/buy_or_not_chart_widget.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
@@ -71,9 +72,11 @@ class HowToBoughtThenWidget extends StatelessWidget {
                       ),
                       Text(evaluationItem.company ?? '',
                           style: stockTitleStyle),
-                      Text('${numberWithComma(stockHist.price?.toString() ?? '0')}원',
+                      Text(
+                          '${numberWithComma(stockHist.price?.toString() ?? '0')}원',
                           style: stockTitleStyle),
-                      Text("+2,500 (${stockHist.changeInPercent?.toString() ?? '-'}%)",
+                      Text(
+                          "+2,500 (${stockHist.changeInPercent?.toString() ?? '-'}%)",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
@@ -102,8 +105,12 @@ class HowToBoughtThenWidget extends StatelessWidget {
                         )
                       ],
                     ),
-                    Text('${numberWithComma(stockHist.maxQuote?.high?.toString() ?? '0')}원', style: stockBodyNumberStyle),
-                    Text('${commonDayDateFormat(stockHist.maxQuote?.date ?? '')} 종가 기준', style: stockDateStyle),
+                    Text(
+                        '${numberWithComma(stockHist.maxQuote?.high?.toString() ?? '0')}원',
+                        style: stockBodyNumberStyle),
+                    Text(
+                        '${commonDayDateFormat(stockHist.maxQuote?.date ?? '')} 종가 기준',
+                        style: stockDateStyle),
                   ],
                 ),
                 Column(
@@ -121,8 +128,12 @@ class HowToBoughtThenWidget extends StatelessWidget {
                         )
                       ],
                     ),
-                    Text('${numberWithComma(stockHist.minQuote?.low?.toString() ?? '0')}원', style: stockBodyNumberStyle),
-                    Text('${commonDayDateFormat(stockHist.minQuote?.date ?? '')} 종가 기준', style: stockDateStyle),
+                    Text(
+                        '${numberWithComma(stockHist.minQuote?.low?.toString() ?? '0')}원',
+                        style: stockBodyNumberStyle),
+                    Text(
+                        '${commonDayDateFormat(stockHist.minQuote?.date ?? '')} 종가 기준',
+                        style: stockDateStyle),
                   ],
                 ),
               ],
@@ -139,7 +150,9 @@ class HowToBoughtThenWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(
                             16.0), //side: BorderSide(color: Colors.red)
                       )),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TabScreen()));
+                  },
                   child: SizedBox(
                     height: 50,
                     width: MediaQuery.of(context).size.width,
@@ -182,6 +195,25 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
         .getBuyOrNotStock(widget.stockCode);
   }
 
+  void setEvaluation(String stockCode, String buySell) async {
+    await Provider.of<BuyOrNotProvider>(context, listen: false)
+        .setBuyOrNotStock(stockCode, buySell);
+  }
+
+  String parseWasEvaluation(BuyOrNotStock buyOrNotStock, String buySell) {
+    return buyOrNotStock.userBuySell == buySell ? 'NULL' : buySell;
+  }
+
+  void actionEvaluation(
+      BuildContext context, BuyOrNotStock buyOrNotStock, String buySell) async{
+    if (isNotLogin(_auth.currentUser)) {
+      LoginHandler(context, buyOrNotStockCode:buyOrNotStock.code);
+      return;
+    }
+    String _buySell = parseWasEvaluation(buyOrNotStock, buySell);
+    setEvaluation(buyOrNotStock.code, _buySell);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<BuyOrNotProvider>(
@@ -197,9 +229,7 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
           InkWell(
             onTap: () {
               print('살래');
-              _auth.currentUser == null
-                  ? LoginHandler(context)
-                  : setEvaluation();
+              actionEvaluation(context, buyOrNotStock, 'BUY');
             },
             child: Wrap(
               children: [
@@ -215,9 +245,7 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
                               ? likeColor
                               : disableColor,
                           padding: EdgeInsets.only(bottom: 5),
-                          child: Image(
-                              image:
-                                  AssetImage('assets/icons/ico_like_big.png')),
+                          child: Image(image: AssetImage('assets/icons/ico_like_big.png')),
                         ),
                       ),
                     ),
@@ -248,9 +276,7 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
           InkWell(
             onTap: () {
               print('말래');
-              _auth.currentUser == null
-                  ? LoginHandler(context)
-                  : setEvaluation();
+              actionEvaluation(context, buyOrNotStock, 'SELL');
             },
             child: Wrap(
               children: [
@@ -299,8 +325,6 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
     });
   }
 }
-
-void setEvaluation() {}
 
 const buyOrNotCountTextStyle = TextStyle(
   fontWeight: FontWeight.w500,

@@ -6,8 +6,6 @@ import 'package:should_have_bought_app/widgets/login/google_login_button.dart';
 import 'package:should_have_bought_app/widgets/login/kakao_login_button.dart';
 
 class LoginWidget extends StatefulWidget {
-  LoginWidget();
-
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -55,7 +53,7 @@ class _LoginScreenState extends State<LoginWidget> {
                 decoration: TextDecoration.underline,
               ),),
             ),
-            onTap: () =>Navigator.pop(context),
+            onTap: () => {Navigator.pop(context)},
           )
         ],
       ),

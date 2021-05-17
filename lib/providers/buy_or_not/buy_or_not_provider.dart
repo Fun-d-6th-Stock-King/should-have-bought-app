@@ -29,4 +29,18 @@ class BuyOrNotProvider with ChangeNotifier {
      _stockHist = StockHist.fromJson(result['stockHist']);
     notifyListeners();
   }
+
+  Future setBuyOrNotStock(String stockCode, String buySell) async {
+    Map<String, dynamic> params = {
+      'buySell':buySell == 'NULL' ? null : buySell,
+    };
+    _buyOrNotStock = BuyOrNotStock.fromJson(_buyOrNotStock.toMap()
+      ..addAll({'userBuySell':buySell})
+      ..addAll({'buyCount': buySell == 'BUY' ? _buyOrNotStock.buyCount+1 : _buyOrNotStock.userBuySell == 'BUY' ? _buyOrNotStock.buyCount-1 : _buyOrNotStock.buyCount})
+      ..addAll({'sellCount': buySell == 'SELL' ? _buyOrNotStock.sellCount+1 : _buyOrNotStock.userBuySell == 'SELL' ? _buyOrNotStock.sellCount-1 : _buyOrNotStock.sellCount})
+    );
+    notifyListeners();
+    final result = await BuyOrNotApi.setBuyOrNotStock(stockCode, params);
+    print(result);
+  }
 }

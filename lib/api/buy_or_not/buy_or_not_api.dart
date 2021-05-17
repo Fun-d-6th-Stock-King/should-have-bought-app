@@ -36,4 +36,21 @@ class BuyOrNotApi extends Api{
     throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
   }
 
+  static Future setBuyOrNotStock(String stockCode, Map data) async {
+
+    Map<String, String> header = await Api.getHeader();
+
+    final response = await http.post(
+      Uri.parse("$stockApiUrl/api/buyornot/$stockCode")
+          .replace(queryParameters: data),
+      headers: header,
+    );
+    print('[POST]] /api/buyornot/:stockCode');
+    print(response.statusCode);
+    if(response.statusCode == 200) {
+      final resposeBody = json.decode(utf8.decode(response.bodyBytes));
+      return resposeBody;
+    }
+    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
+  }
 }

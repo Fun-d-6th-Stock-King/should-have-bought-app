@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 String numberWithComma(String value) {
@@ -64,4 +65,8 @@ String commonDateFormat(String date) {
 String commonDayDateFormat(String date) {
   if(date == '') return '';
   return DateFormat('y.MM.d.').format(DateTime.parse(date));
+}
+
+bool isNotLogin(User currentUser) {
+  return currentUser == null ? true : false;
 }
