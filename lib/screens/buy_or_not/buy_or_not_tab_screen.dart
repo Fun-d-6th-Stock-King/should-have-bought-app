@@ -4,17 +4,19 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
 import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_widget_provider.dart';
 import 'package:should_have_bought_app/screens/tab_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/chart/buy_or_not_chart_widget.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
 class BuyorNotTabScreen extends StatelessWidget {
-  final EvaluationItem evaluationItem;
+  final Company company;
 
-  BuyorNotTabScreen(this.evaluationItem);
+  BuyorNotTabScreen(this.company);
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +25,9 @@ class BuyorNotTabScreen extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            BuyorNotSelectWidget(evaluationItem.code),
+            BuyorNotSelectWidget(company.code),
             SizedBox(height: 20),
-            HowToBoughtThenWidget(evaluationItem.code),
+            HowToBoughtThenWidget(company),
           ],
         ),
       ),
@@ -34,9 +36,9 @@ class BuyorNotTabScreen extends StatelessWidget {
 }
 
 class HowToBoughtThenWidget extends StatelessWidget {
-  final String stockCode;
+  final Company company;
 
-  HowToBoughtThenWidget(this.stockCode);
+  HowToBoughtThenWidget(this.company);
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +50,8 @@ class HowToBoughtThenWidget extends StatelessWidget {
       ),
       child: Consumer<BuyOrNotProvider>(
           builder: (context, buyOrNotProvider, child) {
-        final EvaluationItem evaluationItem = buyOrNotProvider.evaluationItem;
         final StockHist stockHist = buyOrNotProvider.stockHist;
+        final EvaluationItem evaluationItem = buyOrNotProvider.evaluationItem;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,7 +61,7 @@ class HowToBoughtThenWidget extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 60),
                   child: Container(
                       height: MediaQuery.of(context).size.height * 0.35,
-                      child: BuyOrNotChartWidget(stockCode)),
+                      child: BuyOrNotChartWidget(company.code)),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(29),
@@ -70,7 +72,7 @@ class HowToBoughtThenWidget extends StatelessWidget {
                         '${commonDateFormat(evaluationItem.createdDate ?? '')}',
                         style: dateStyle,
                       ),
-                      Text(evaluationItem.company ?? '',
+                      Text(company.company ?? '',
                           style: stockTitleStyle),
                       Text(
                           '${numberWithComma(stockHist.price?.toString() ?? '0')}원',
@@ -151,7 +153,11 @@ class HowToBoughtThenWidget extends StatelessWidget {
                             16.0), //side: BorderSide(color: Colors.red)
                       )),
                   onPressed: () {
-                    Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TabScreen()));
+                    print(company);
+                    Provider.of<CalculatorWidgetProvider>(context, listen: false)
+                        .setCompanyAndDateValue(Company(company: company.company, code: company.code), 'YEAR10');
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TabScreen(selectIndex: 0)));
                   },
                   child: SizedBox(
                     height: 50,

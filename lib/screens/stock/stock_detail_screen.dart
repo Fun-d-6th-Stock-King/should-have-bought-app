@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/screens/drip_room/drip_room_tab_screen.dart';
 import 'package:should_have_bought_app/screens/buy_or_not/buy_or_not_tab_screen.dart';
 
 class StockDetailScreen extends StatefulWidget {
-  final EvaluationItem evaluationItem;
+  final Company company;
   final int initialIndex;
 
-  StockDetailScreen(this.evaluationItem, this.initialIndex);
+  StockDetailScreen(this.company, this.initialIndex);
 
   @override
   _StockDetailScreenState createState() => _StockDetailScreenState();
@@ -30,7 +31,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
               onTap: () => Navigator.pop(context)),
           elevation: 0,
           centerTitle: true,
-          title: Text(widget.evaluationItem.company, style: tabStyle),
+          title: Text(widget.company.company, style: tabStyle),
           bottom: TabBar(
             tabs: [
               Tab(child: Text('살래말래', style: tabStyle)),
@@ -40,7 +41,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
         ),
         body: TabBarView(
           children: [
-            BuyorNotTabScreen(widget.evaluationItem),
+            BuyorNotTabScreen(widget.company),
             DripRoomTabScreen(),
           ],
         ),

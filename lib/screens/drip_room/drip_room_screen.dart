@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
@@ -116,7 +117,9 @@ class DripCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => StockDetailScreen(evaluationItem,1)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => StockDetailScreen(
+        Company(company:evaluationItem.company, code: evaluationItem.code),1)
+        ));
       },
       child: Container(
           width: MediaQuery.of(context).size.width,

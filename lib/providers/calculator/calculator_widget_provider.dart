@@ -1,0 +1,35 @@
+import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
+
+class CalculatorWidgetProvider with ChangeNotifier {
+  String _selectedDateValue = 'YEAR10';
+  Company _selectedCompany = Company(company: '삼성전자', code: '005930');
+  String _price = '100000';
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+  String get selectedDateValue => _selectedDateValue;
+  Company get selectedCompany => _selectedCompany;
+  String get price => _price;
+
+  void setSelectedDateValue(String selectedDateValue) {
+    _selectedDateValue = selectedDateValue;
+    notifyListeners();
+  }
+
+  void setCompanyValue(Company company) {
+    _selectedCompany = company;
+    notifyListeners();
+  }
+
+  void setCompanyAndDateValue(Company company, String selectedDateValue) {
+    _selectedDateValue = selectedDateValue;
+    _selectedCompany = company;
+    notifyListeners();
+  }
+
+  void setLoading(bool isloading) {
+    _isLoading = isloading;
+    notifyListeners();
+  }
+}
