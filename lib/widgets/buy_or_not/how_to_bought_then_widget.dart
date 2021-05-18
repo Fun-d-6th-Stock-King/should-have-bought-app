@@ -39,7 +39,6 @@ class _CreateHowToBoughtThenWidgetState extends State<HowToBoughtThenWidget> {
       child: Consumer<BuyOrNotProvider>(
           builder: (context, buyOrNotProvider, child) {
             final StockHist stockHist = buyOrNotProvider.stockHist;
-            final EvaluationItem evaluationItem = buyOrNotProvider.evaluationItem;
             final bool isLoading = buyOrNotProvider.isLoadingChart;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +46,7 @@ class _CreateHowToBoughtThenWidgetState extends State<HowToBoughtThenWidget> {
                 Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 50),
+                      padding: const EdgeInsets.only(top: 40),
                       child: Container(
                           height: MediaQuery.of(context).size.height * 0.4,
                           child: isLoading ? LoadingScreen() : BuyOrNotChartWidget(widget.company.code)),
@@ -59,7 +58,7 @@ class _CreateHowToBoughtThenWidgetState extends State<HowToBoughtThenWidget> {
                         children: [
                           isLoading ? skeletonText(90, 15) :
                           Text(
-                            '${commonDateFormat(evaluationItem.createdDate ?? '')}',
+                            '${stockHist.lastTradeTime ?? ''}',
                             style: dateStyle,
                           ),
                           isLoading ? skeletonText(90, 20) :
@@ -70,13 +69,24 @@ class _CreateHowToBoughtThenWidgetState extends State<HowToBoughtThenWidget> {
                               '${numberWithComma(stockHist.price?.toString() ?? '0')}원',
                               style: stockTitleStyle),
                           isLoading ? skeletonText(100, 20) :
-                          Text(
-                              "+2,500 (${stockHist.changeInPercent?.toString() ?? '-'}%)",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  height: 16 / 14,
-                                  color: Color(0xFF4990FF))),
+                          Row(
+                            children: [
+                              Text(
+                                  "${checkIncreaseOrDecrease(stockHist.changeInPercent)}",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      height: 16 / 14,
+                                      color: colorIncreaseOrDecrease(stockHist.changeInPercent))),
+                              Text(
+                                  "${numberWithComma(stockHist.change?.toString() ?? '0')} (${stockHist.changeInPercent?.toString() ?? '-'}%)",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      height: 16 / 14,
+                                      color: colorIncreaseOrDecrease(stockHist.changeInPercent))),
+                            ],
+                          ),
                         ],
                       ),
                     ),

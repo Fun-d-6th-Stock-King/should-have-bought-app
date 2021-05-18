@@ -7,10 +7,12 @@ class DripRoomProvider with ChangeNotifier {
   List _evaluationItemList = [];
   PageInfo _pageInfo = PageInfo();
   EvaluationItem _todayBest = EvaluationItem();
+  bool _isLoading = false;
 
   List get evaluationItemList => _evaluationItemList;
   PageInfo get pageInfo => _pageInfo;
   EvaluationItem get todayBest => _todayBest;
+  bool get isLoading => _isLoading;
 
   Future getEvaluationList(Map<String, dynamic> params) async {
     final result = await DripRoomApi.getEvaluationList(params);
@@ -31,5 +33,9 @@ class DripRoomProvider with ChangeNotifier {
     _todayBest = EvaluationItem.fromJson(result);
     print(result);
     notifyListeners();
+  }
+
+  void setIsLoading(bool isLoading) {
+    _isLoading = isLoading;
   }
 }

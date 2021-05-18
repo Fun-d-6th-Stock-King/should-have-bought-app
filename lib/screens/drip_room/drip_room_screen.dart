@@ -212,15 +212,14 @@ class BestDripCardWidget extends StatefulWidget {
 }
 
 class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
-  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    setState(() => _isLoading = true);
+    Provider.of<DripRoomProvider>(context,listen: false).setIsLoading(true);
     Provider.of<DripRoomProvider>(context, listen: false)
         .getTodayBest()
-        .then((value) => setState(() => _isLoading = false));
+        .then((value) => setState(() => Provider.of<DripRoomProvider>(context,listen: false).setIsLoading(false)));
   }
 
   @override
@@ -235,6 +234,7 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
       child: Consumer<DripRoomProvider>(
           builder: (context, dripRoomProvider, child) {
         EvaluationItem evaluationItem = dripRoomProvider.todayBest;
+        bool isLoadihg = dripRoomProvider.isLoading;
         return Column(
           children: [
             Padding(
@@ -245,7 +245,7 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _isLoading
+                  isLoadihg
                       ? skeletonText(100, 25)
                       : Text(
                           evaluationItem?.company ?? '',
@@ -255,7 +255,7 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      _isLoading
+                      isLoadihg
                           ? skeletonText(40, 15)
                           : Text(
                               evaluationItem?.displayName ?? '',
@@ -264,7 +264,7 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
                                   fontWeight: FontWeight.w500,
                                   height: 17 / 12),
                             ),
-                      _isLoading
+                      isLoadihg
                           ? skeletonText(100, 15)
                           : Text(
                               evaluationItem?.createdDate ?? '',
@@ -289,7 +289,7 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
               child: ProsAndConsWidget(
                 pros: evaluationItem?.pros ?? '',
                 cons: evaluationItem?.cons ?? '',
-                isLoading: _isLoading,
+                isLoading: isLoadihg,
               ),
             )
           ],
