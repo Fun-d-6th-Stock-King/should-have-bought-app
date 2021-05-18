@@ -20,12 +20,6 @@ class _BuyOrNotChartWidgetState extends State<BuyOrNotChartWidget> {
    // _tooltipBehavior = TooltipBehavior(enable: true, canShowMarker: false);
     super.initState();
   }
-  @override
-  void didChangeDependencies() async{
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    await Provider.of<BuyOrNotProvider>(context, listen:false).getBuyOrNotStockChart(widget.stockCode);
-  }
 
   @override
   Widget build(BuildContext context) {

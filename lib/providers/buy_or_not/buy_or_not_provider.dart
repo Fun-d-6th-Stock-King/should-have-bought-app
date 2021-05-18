@@ -9,11 +9,15 @@ class BuyOrNotProvider with ChangeNotifier {
   BuyOrNotStock _buyOrNotStock = BuyOrNotStock();
   StockHist _stockHist = StockHist();
   EvaluationItem _evaluationItem = EvaluationItem();
-  
+  bool _isLoadingBuyOrNot = false;
+  bool _isLoadingChart = false;
+
   BuyOrNotStock get buyOrNotStock => _buyOrNotStock;
   StockHist get stockHist => _stockHist;
   EvaluationItem get evaluationItem => _evaluationItem;
-  
+  bool get isLoadingBuyOrNot => _isLoadingBuyOrNot;
+  bool get isLoadingChart => _isLoadingChart;
+
   Future getBuyOrNotStock(String stockCode) async {
     final result = await BuyOrNotApi.getBuyOrNotStock(stockCode);
     _buyOrNotStock = BuyOrNotStock.fromJson(result);
@@ -42,5 +46,12 @@ class BuyOrNotProvider with ChangeNotifier {
     notifyListeners();
     final result = await BuyOrNotApi.setBuyOrNotStock(stockCode, params);
     print(result);
+  }
+
+  void setBuyOrNotLoading(bool isLoading) {
+    _isLoadingBuyOrNot = isLoading;
+  }
+  void setChartLoading(bool isLoading) {
+    _isLoadingChart = isLoading;
   }
 }
