@@ -161,7 +161,8 @@ class _CreateHowToBoughtThenWidgetState extends State<HowToBoughtThenWidget> {
                           children: [
                             Text(
                               '그때 샀으면 지금 얼마게?',
-                              style: TextStyle(
+                              style: TextStyle
+                                (
                                   fontWeight: FontWeight.w500,
                                   fontSize: 15,
                                   color: Colors.white),
