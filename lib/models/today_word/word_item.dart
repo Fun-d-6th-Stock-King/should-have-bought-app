@@ -13,14 +13,14 @@ class WordItem {
 
   WordItem(
       {@required this.id,
-      @required this.wordName,
-      @required this.mean,
-      this.createdUid,
-      this.createdDate,
-      this.likeCount,
-      this.userlike,
-      this.displayName,
-      this.createdDateText});
+        this.wordName = '',
+      this.mean = '',
+      this.createdUid = '',
+      this.createdDate = '',
+      this.likeCount = 0,
+      this.userlike = false,
+      this.displayName = '',
+      this.createdDateText = ''});
 
   factory WordItem.fromJson(dynamic json) {
     return WordItem(
