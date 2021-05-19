@@ -128,16 +128,10 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           size: Size(516, 316),
         ),
         Container(
-          height: 310,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Center(
-                child: Image(
-                  image: AssetImage('assets/images/plus_chick.png'),
-                ),
-              ),
-            ],
+          padding: EdgeInsets.only(top:180),
+          alignment: Alignment.center,
+          child: Image(
+            image: AssetImage('assets/images/plus_chick.png'),
           ),
         ),
         Column(
@@ -145,12 +139,18 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             SizedBox(height: 10),
             CalculatorResultAppBar(),
             SizedBox(height: 2),
-            MainTopText(textColor: textColor),
-            MainMidText(
-              textColor: textColor,
+            Container(
+              height: 175,
+              child: Column(
+                children: [
+                  MainTopText(textColor: textColor),
+                  MainMidText(
+                    textColor: textColor,
+                  ),
+                  MainBottomText(textColor: textColor),
+                ],
+              ),
             ),
-            MainBottomText(textColor: textColor),
-            SizedBox(height: 75),
             ResultCardWidget(),
           ],
         ),
