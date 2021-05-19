@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_chart.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
+import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BuyOrNotChartWidget extends StatefulWidget {
+  final String stockCode;
 
+  BuyOrNotChartWidget(this.stockCode);
 
   @override
   _BuyOrNotChartWidgetState createState() => _BuyOrNotChartWidgetState();
@@ -11,16 +17,28 @@ class BuyOrNotChartWidget extends StatefulWidget {
 
 /// State class of horizontal gradient.
 class _BuyOrNotChartWidgetState extends State<BuyOrNotChartWidget> {
+  List<BuyOrNotChart> chartData = [];
+
+  StockHist stockHist = StockHist();
 
   @override
   void initState() {
-   // _tooltipBehavior = TooltipBehavior(enable: true, canShowMarker: false);
+    // _tooltipBehavior = TooltipBehavior(enable: true, canShowMarker: false);
     super.initState();
   }
-
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    chartData = Provider.of<BuyOrNotProvider>(context, listen: false)
+        .stockHist
+        .quoteList;
+    stockHist = Provider.of<BuyOrNotProvider>(context, listen: false).stockHist;
+  }
   @override
   Widget build(BuildContext context) {
     return _buildHorizantalGradientAreaChart();
+
   }
 
   /// Return the circular chart with horizontal gradient.
@@ -28,65 +46,42 @@ class _BuyOrNotChartWidgetState extends State<BuyOrNotChartWidget> {
     return SfCartesianChart(
       plotAreaBorderWidth: 0,
       primaryXAxis: CategoryAxis(
-        isVisible: false,
+          isVisible: false,
           labelPlacement: LabelPlacement.onTicks,
           interval: null,
           labelRotation: -45,
           majorGridLines: MajorGridLines(width: 0)),
       tooltipBehavior: null,
+      onMarkerRender: (args) {
+        if(chartData[args.pointIndex].high == stockHist.maxQuote.high) {
+          args.color  =Color(0x66FF8888);
+          args.shape = DataMarkerType.circle;
+        }
+        else {
+          if(chartData[args.pointIndex].low == stockHist.minQuote.low) {
+            args.color = Color(0x665D99F2);
+            args.shape = DataMarkerType.circle;
+          }
+        }
+      },
       primaryYAxis: NumericAxis(
           isVisible: false,
           interval: null,
-          minimum: 14,
-          maximum: 20,
-          labelFormat: '{value}%',
+          labelFormat: '{value}',
           axisLine: AxisLine(width: 0),
           majorTickLines: MajorTickLines(size: 0)),
       series: _getGradientAreaSeries(),
-      onMarkerRender: (MarkerRenderArgs args) {
-        if (args.pointIndex == 0) {
-          args.color = const Color.fromRGBO(207, 124, 168, 1);
-        } else if (args.pointIndex == 1) {
-          args.color = const Color.fromRGBO(210, 133, 167, 1);
-        } else if (args.pointIndex == 2) {
-          args.color = const Color.fromRGBO(219, 128, 161, 1);
-        } else if (args.pointIndex == 3) {
-          args.color = const Color.fromRGBO(213, 143, 151, 1);
-        } else if (args.pointIndex == 4) {
-          args.color = const Color.fromRGBO(226, 157, 126, 1);
-        } else if (args.pointIndex == 5) {
-          args.color = const Color.fromRGBO(220, 169, 122, 1);
-        } else if (args.pointIndex == 6) {
-          args.color = const Color.fromRGBO(221, 176, 108, 1);
-        } else if (args.pointIndex == 7) {
-          args.color = const Color.fromRGBO(222, 187, 97, 1);
-        }
-      },
     );
   }
 
   /// Returns the list of spline area series with horizontal gradient.
-  List<ChartSeries<_ChartData, String>> _getGradientAreaSeries() {
-    final List<_ChartData> chartData = <_ChartData>[
-      _ChartData(x: '1997', y: 17.70),
-      _ChartData(x: '1998', y: 18.20),
-      _ChartData(x: '1999', y: 18),
-      _ChartData(x: '2000', y: 19),
-      _ChartData(x: '2001', y: 18.5),
-      _ChartData(x: '2002', y: 18),
-      _ChartData(x: '2003', y: 18.80),
-      _ChartData(x: '2004', y: 17.90)
-    ];
-    final List<Color> color = <Color>[];
-    color.add(Colors.blue[200]);
-    color.add(Colors.orange[200]);
-
+  List<ChartSeries<BuyOrNotChart, String>> _getGradientAreaSeries() {
     final List<double> stops = <double>[];
     stops.add(0.2);
     stops.add(0.7);
 
-    return <ChartSeries<_ChartData, String>>[
-      SplineAreaSeries<_ChartData, String>(
+    return <ChartSeries<BuyOrNotChart, String>>[
+      SplineAreaSeries<BuyOrNotChart, String>(
           gradient: const LinearGradient(colors: <Color>[
             Color.fromRGBO(255, 184, 0, 0.468),
             Color.fromRGBO(255, 184, 0, 0)
@@ -98,15 +93,18 @@ class _BuyOrNotChartWidgetState extends State<BuyOrNotChartWidget> {
           borderColor: mainColor,
           borderDrawMode: BorderDrawMode.top,
           dataSource: chartData,
-          name: 'Country 1',
-          xValueMapper: (_ChartData sales, _) => sales.x,
-          yValueMapper: (_ChartData sales, _) => sales.y),
+          name: 'buy_or_not_chart_widget',
+          markerSettings: MarkerSettings(
+              isVisible: true,
+              height: 11,
+              width: 11,
+              shape: DataMarkerType.circle,
+              borderColor: Colors.red,
+              color: Colors.transparent,
+              borderWidth: 0
+          ),
+          xValueMapper: (BuyOrNotChart buyOrNotChart, _) => buyOrNotChart.date,
+          yValueMapper: (BuyOrNotChart buyOrNotChart, _) => buyOrNotChart.close),
     ];
   }
-}
-
-class _ChartData {
-  _ChartData({this.x, this.y});
-  final String x;
-  final double y;
 }

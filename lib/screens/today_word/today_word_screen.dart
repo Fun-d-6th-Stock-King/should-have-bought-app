@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/models/today_word/word_item.dart';
 import 'package:should_have_bought_app/providers/today_word/today_word_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/today_word_appbar.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
 
@@ -236,7 +237,7 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(wordItem.createdDate?.substring(0, 10)),
+                Text(commonDayDateFormat(wordItem.createdDate)),
               ],
             )
           ],

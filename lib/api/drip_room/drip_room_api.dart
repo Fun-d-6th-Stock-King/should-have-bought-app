@@ -21,24 +21,6 @@ class DripRoomApi extends Api{
     throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
   }
 
-  static Future setEvaluation(Map data) async {
-
-    Map<String, String> header = await Api.getHeader();
-
-    final response = await http.post(
-      Uri.parse("$stockApiUrl/api/buyornot"),
-      headers: header,
-      body: jsonEncode(data),
-    );
-    print('[POST]] /api/buyornot');
-    print(response.statusCode);
-    if(response.statusCode == 200) {
-      final resposeBody = json.decode(utf8.decode(response.bodyBytes));
-      return resposeBody;
-    }
-    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
-  }
-
   static Future getEvaluationList(Map<String, dynamic> params) async {
     print(params);
     Map<String, String> header = await Api.getHeader();

@@ -34,8 +34,7 @@ class CalculatorApi extends Api {
       final resposeBody = json.decode(utf8.decode(response.bodyBytes));
       return resposeBody;
     }
-    throw Exception(
-        response.statusCode.toString() + ":" + response.body.toString());
+    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
   }
 
   static Future getHistoryList(int pageNo, int pageSize) async {
@@ -50,8 +49,7 @@ class CalculatorApi extends Api {
       final responseBody = json.decode(utf8.decode(response.bodyBytes));
       return responseBody;
     }
-    throw Exception(
-        response.statusCode.toString() + ":" + response.body.toString());
+    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
   }
 
   static Future getTenYearHigher() async {
@@ -65,8 +63,7 @@ class CalculatorApi extends Api {
       final responseBody = json.decode(utf8.decode(response.bodyBytes));
       return responseBody;
     }
-    throw Exception(
-        response.statusCode.toString() + ":" + response.body.toString());
+    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
   }
 
   static Future getSectorInfor(
@@ -82,7 +79,6 @@ class CalculatorApi extends Api {
       final responseBody = json.decode(utf8.decode(response.bodyBytes));
       return responseBody;
     }
-    throw Exception(
-        response.statusCode.toString() + ":" + response.body.toString());
+    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
   }
 }

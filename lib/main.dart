@@ -1,16 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:kakao_flutter_sdk/common.dart';
 import 'package:provider/provider.dart';
-import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/providers/provider_list.dart';
 import 'package:should_have_bought_app/routes.dart';
 import 'package:should_have_bought_app/screens.dart' show TabScreen;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
-import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 
 Future main() async {
   // TODO : .env.prod 사용시 file not found 에러, 확인 필요

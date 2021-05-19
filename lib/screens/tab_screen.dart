@@ -6,6 +6,9 @@ import 'package:should_have_bought_app/screens.dart'
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 
 class TabScreen extends StatefulWidget {
+
+  final int selectIndex;
+  TabScreen({@required this.selectIndex});
   @override
   _TabScreenState createState() => _TabScreenState();
 }
@@ -17,6 +20,7 @@ class _TabScreenState extends State<TabScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.selectIndex ?? 0;
     EasyLoading.instance.animationStyle = EasyLoadingAnimationStyle.scale;
     EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.fadingCircle;
     _screens = [
