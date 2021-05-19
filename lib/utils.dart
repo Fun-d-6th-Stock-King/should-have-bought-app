@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:should_have_bought_app/constant.dart';
 
 String numberWithComma(String value) {
   if(value == '') return '0';
@@ -69,4 +71,16 @@ String commonDayDateFormat(String date) {
 
 bool isNotLogin(User currentUser) {
   return currentUser == null ? true : false;
+}
+
+String checkIncreaseOrDecrease(double percent) {
+  if(percent > 0) return '+';
+  if(percent < 0) return '-';
+  return '';
+}
+
+Color colorIncreaseOrDecrease(double percent) {
+  if(percent > 0) return possibleColor;
+  if(percent < 0) return nagativeColor;
+  return Colors.black;
 }

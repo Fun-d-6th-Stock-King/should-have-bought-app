@@ -29,7 +29,8 @@ class BuyOrNotProvider with ChangeNotifier {
   Future getBuyOrNotStockChart(String stockCode) async {
     final result = await BuyOrNotApi.getBuyOrNotStockChart(stockCode);
     print(result);
-     _evaluationItem = EvaluationItem.fromJson(result['evaluation']);
+    final responseEvaluation = result['evaluation'] ?? EvaluationItem().toMap();
+     _evaluationItem = EvaluationItem.fromJson(responseEvaluation);
      _stockHist = StockHist.fromJson(result['stockHist']);
     notifyListeners();
   }
