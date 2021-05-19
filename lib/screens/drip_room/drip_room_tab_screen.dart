@@ -167,7 +167,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                   keyboardType: TextInputType.text,
                                   maxLength: 20,
                                   textAlignVertical: TextAlignVertical.center,
-                                  decoration: new InputDecoration(
+                                  decoration: InputDecoration(
                                       border: InputBorder.none,
                                       focusedBorder: InputBorder.none,
                                       enabledBorder: InputBorder.none,

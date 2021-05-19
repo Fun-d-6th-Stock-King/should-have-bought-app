@@ -7,7 +7,7 @@ Widget TodayWordAppBar(BuildContext context) {
     leading: null,
     centerTitle: true,
     title: Text(
-      '드립방',
+      '오늘의 단어',
       style: TextStyle(color: Colors.white),
     ),
     elevation: 0,

@@ -19,8 +19,9 @@ class TodayWordProvider with ChangeNotifier {
     print(result);
     List list = result['todayWordResList'];
     _pageInfo = PageInfo.fromJson(result['pageInfo']);
-    // print(_WordItemList.length);
-    var addWordItemList = list.map((wordItem) => WordItem.fromJson(wordItem)).toList();
+    print(_wordItemList.length);
+    var addWordItemList =
+        list.map((wordItem) => WordItem.fromJson(wordItem)).toList();
     _wordItemList = [..._wordItemList, ...addWordItemList];
 
     notifyListeners();
