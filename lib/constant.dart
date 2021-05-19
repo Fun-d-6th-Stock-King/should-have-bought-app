@@ -10,6 +10,8 @@ const nagativeColor = Color(0xFF5D99F2);
 const likeColor = Color(0xFFFF3948);
 const unlikeColor = Color(0xFF4990FF);
 const disableColor = Color(0xFFBDBDBD);
+const kDateColor = Color(0xFF828282);
+const kGreyColor = Color(0xFFE0E0E0);
 
 Map<String, String> dateValue = {
   'DAY1': '어제',
@@ -49,7 +51,7 @@ const kOldStockTextStyle = TextStyle(
 
 const kCardTitleTextStyle = TextStyle(
   fontSize: 24,
-  height: 35/24,
+  height: 35 / 24,
   fontWeight: FontWeight.bold,
   color: Colors.black,
 );
