@@ -17,20 +17,22 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
   void setBoxColor() {
     final sectorData =
         Provider.of<CalculatorProvider>(context, listen: false).sectorData;
-    if (sectorData.kospiYieldPercent > 0) {
-      kospiBoxColor = Color(0xffFFEFF0);
-    } else if (sectorData.kospiYieldPercent == 0) {
-      kospiBoxColor = Colors.white;
-    } else {
-      kospiBoxColor = Color(0xff4990FF).withOpacity(0.16);
-    }
+    if (sectorData != null) {
+      if (sectorData.kospiYieldPercent > 0) {
+        kospiBoxColor = Color(0xffFFEFF0);
+      } else if (sectorData.kospiYieldPercent == 0) {
+        kospiBoxColor = Colors.white;
+      } else {
+        kospiBoxColor = Color(0xff4990FF).withOpacity(0.16);
+      }
 
-    if (sectorData.industrYieldPercent > 0) {
-      industryBoxColor = Color(0xffFFEFF0);
-    } else if (sectorData.industrYieldPercent == 0) {
-      industryBoxColor = Colors.white;
-    } else {
-      industryBoxColor = Color(0xff4990FF).withOpacity(0.16);
+      if (sectorData.industrYieldPercent > 0) {
+        industryBoxColor = Color(0xffFFEFF0);
+      } else if (sectorData.industrYieldPercent == 0) {
+        industryBoxColor = Colors.white;
+      } else {
+        industryBoxColor = Color(0xff4990FF).withOpacity(0.16);
+      }
     }
   }
 
