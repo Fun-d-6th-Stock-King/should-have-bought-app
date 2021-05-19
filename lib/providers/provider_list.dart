@@ -4,6 +4,7 @@ import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
 import 'package:should_have_bought_app/providers/dummy.dart';
+import 'package:should_have_bought_app/providers/today_word/today_word_provider.dart';
 
 List<SingleChildWidget> kProviders = [
   // Example
@@ -18,5 +19,8 @@ List<SingleChildWidget> kProviders = [
   ),
   ChangeNotifierProvider<BuyOrNotProvider>(
       create: (context) => BuyOrNotProvider()
+  ),
+  ChangeNotifierProvider<TodayWordProvider>(
+      create: (context) => TodayWordProvider()
   ),
 ];

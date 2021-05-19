@@ -85,6 +85,7 @@ flutter:
     - assets/icons/ico_unlike.png
     - assets/icons/ico_unlike_big.png
     - assets/icons/ico_search_white.png
+    - assets/icons/ico_write.png
 
   # example:
   # fonts:
