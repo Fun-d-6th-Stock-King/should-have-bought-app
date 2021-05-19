@@ -8,6 +8,8 @@ class WordItem {
   final String createdDate;
   final int likeCount;
   final bool userlike;
+  final String displayName;
+  final String createdDateText;
 
   WordItem(
       {@required this.id,
@@ -16,7 +18,9 @@ class WordItem {
       this.createdUid,
       this.createdDate,
       this.likeCount,
-      this.userlike});
+      this.userlike,
+      this.displayName,
+      this.createdDateText});
 
   factory WordItem.fromJson(dynamic json) {
     return WordItem(
@@ -27,6 +31,8 @@ class WordItem {
       createdDate: json['createdDate'] ?? '',
       likeCount: json['likeCount'] ?? false,
       userlike: json['userlike'] ?? 0,
+      displayName: json['displayName'] ?? '',
+      createdDateText: json['createdDateText'] ?? '',
     );
   }
 
@@ -38,15 +44,16 @@ class WordItem {
       'createdUid': createdUid,
       'createdDate': createdDate,
       'likeCount': likeCount,
-      'userlike': userlike
+      'userlike': userlike,
+      'displayName': displayName,
+      'createdDateText': createdDateText
     };
   }
 
   @override
-  int get hashCode => wordName.hashCode ;
+  int get hashCode => wordName.hashCode;
 
   @override
   bool operator ==(dynamic other) =>
-      identical(this, other) ||
-      other is WordItem && wordName == other.wordName;
+      identical(this, other) || other is WordItem && id == other.id;
 }

@@ -170,7 +170,7 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
                     Row(
                       children: [
                         Text(
-                          '닉네임123',
+                          wordItem.displayName,
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w800,
@@ -190,7 +190,7 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
                           width: 2,
                         ),
                         Text(
-                          '2일전',
+                          wordItem.createdDateText,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -279,7 +279,7 @@ class WordCardWidget extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            '닉네임',
+                            wordItem.displayName,
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w800,
@@ -299,7 +299,7 @@ class WordCardWidget extends StatelessWidget {
                             width: 2,
                           ),
                           Text(
-                            '2일전',
+                            wordItem.createdDateText,
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
