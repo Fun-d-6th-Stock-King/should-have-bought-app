@@ -347,10 +347,7 @@ class WordCardWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                      wordItem.createdDate.isNotEmpty
-                          ? wordItem.createdDate.substring(0, 10)
-                          : '',
+                  Text(commonDayDateFormat(wordItem.createdDate),
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

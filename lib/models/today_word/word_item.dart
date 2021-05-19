@@ -13,7 +13,7 @@ class WordItem {
 
   WordItem(
       {@required this.id,
-        this.wordName = '',
+      this.wordName = '',
       this.mean = '',
       this.createdUid = '',
       this.createdDate = '',
