@@ -97,24 +97,16 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     return Scaffold(
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                CalculatorResultWidget(),
-                SizedBox(height: 50),
-                SalaryYearMonthWidget(),
-                SizedBox(height: 50),
-                IncreaseRateTabWidget(),
-                SizedBox(height: 50),
-                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-                SizedBox(height: 40),
-                CurrentValueWidget(),
-                SizedBox(height: 50),
-                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-              ],
-            ),
-          )
+          Frame(child: CalculatorResultWidget()),
+          SizedBox(height: 50),
+          Frame(child: SalaryYearMonthWidget()),
+          SizedBox(height: 50),
+          Frame(child: IncreaseRateTabWidget()),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 40),
+          Frame(child: CurrentValueWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
         ],
       ),
     );
@@ -128,7 +120,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           size: Size(516, 316),
         ),
         Container(
-          padding: EdgeInsets.only(top:180),
+          padding: EdgeInsets.only(top: 180),
           alignment: Alignment.center,
           child: Image(
             image: AssetImage('assets/images/plus_chick.png'),

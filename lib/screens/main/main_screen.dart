@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/widgets.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
@@ -77,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                     height: 50,
                   ),
-                  Divider(thickness: 7, color:Color(0xFFF2F2F2)),
+                  Divider(thickness: 7, color: Color(0xFFF2F2F2)),
                   SizedBox(
                     height: 43,
                   ),
@@ -107,7 +108,7 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                     height: 50,
                   ),
-                  Divider(thickness: 7, color:Color(0xFFF2F2F2)),
+                  Divider(thickness: 7, color: Color(0xFFF2F2F2)),
                   SizedBox(
                     height: 43,
                   ),
@@ -122,7 +123,8 @@ class _MainScreenState extends State<MainScreen> {
                               height: 1.5,
                             )),
                         Container(
-                          padding: EdgeInsets.only(left:11,bottom: 2,top: 2,right: 3),
+                          padding: EdgeInsets.only(
+                              left: 11, bottom: 2, top: 2, right: 3),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(40.0),
                             border: Border.all(
@@ -151,7 +153,7 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                     height: 50,
                   ),
-                  Divider(thickness: 7, color:Color(0xFFF2F2F2)),
+                  Divider(thickness: 7, color: Color(0xFFF2F2F2)),
                   SizedBox(
                     height: 43,
                   ),
@@ -177,7 +179,7 @@ class _MainScreenState extends State<MainScreen> {
                   SizedBox(
                     height: 51,
                   ),
-                  Divider(thickness: 7, color:Color(0xFFF2F2F2)),
+                  Divider(thickness: 7, color: Color(0xFFF2F2F2)),
                   SizedBox(
                     height: 43,
                   ),
@@ -227,18 +229,5 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
     );
-  }
-}
-
-class Frame extends StatelessWidget {
-  final Widget child;
-  Frame({@required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-   return Padding(
-       padding: const EdgeInsets.only(left: 16, right: 16),
-       child: child
-   );
   }
 }
