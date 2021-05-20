@@ -13,7 +13,7 @@ import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_t
 import 'package:should_have_bought_app/widgets/calculator/result/loading_random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/salary_year_month_widget.dart';
-import 'package:should_have_bought_app/widgets/calculator/result/ten_year_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/ten_year_invest_chart_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -107,6 +107,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           Frame(child: CurrentValueWidget()),
           SizedBox(height: 50),
           Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: TenYearChartWidget()),
+          SizedBox(height: 50),
         ],
       ),
     );

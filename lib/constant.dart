@@ -56,11 +56,10 @@ const kCardTitleTextStyle = TextStyle(
   color: Colors.black,
 );
 const kCardContentTextStyle = TextStyle(
-  fontSize: 16,
-  height: 20/16,
-  fontWeight: FontWeight.w400,
-  color: Colors.black
-);
+    fontSize: 16,
+    height: 20 / 16,
+    fontWeight: FontWeight.w400,
+    color: Colors.black);
 
 const buyOrNotCountTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
@@ -82,7 +81,7 @@ const stockDateStyle = TextStyle(
 );
 
 const stockTitleStyle =
-TextStyle(fontWeight: FontWeight.bold, fontSize: 22, height: 32 / 22);
+    TextStyle(fontWeight: FontWeight.bold, fontSize: 22, height: 32 / 22);
 
 const stockBodyStyle = TextStyle(
   fontSize: 14,
