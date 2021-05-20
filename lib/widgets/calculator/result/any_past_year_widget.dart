@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 
-class TenYearWidget extends StatefulWidget {
+class AnyPastYearWidget extends StatefulWidget {
   final String day;
   final String money;
 
-  TenYearWidget({this.day, this.money});
+  AnyPastYearWidget({this.day, this.money});
 
   @override
-  _TenYearWidgetState createState() => _TenYearWidgetState();
+  _AnyPastYearWidgetState createState() => _AnyPastYearWidgetState();
 }
 
-class _TenYearWidgetState extends State<TenYearWidget> {
+class _AnyPastYearWidgetState extends State<AnyPastYearWidget> {
   List _tenYearList;
 
   @override
