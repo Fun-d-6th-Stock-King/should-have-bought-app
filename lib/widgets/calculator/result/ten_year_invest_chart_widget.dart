@@ -41,13 +41,15 @@ class _TenYearChartWidgetState extends State<TenYearChartWidget> {
           children: <Widget>[
             Container(
               alignment: Alignment.centerLeft,
-              child: Text(
-                '지금까지 ${stockHist.company}는?',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              child: isLoading
+                  ? skeletonText(90, 15)
+                  : Text(
+                      '지금까지 ${stockHist.company}는?',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
