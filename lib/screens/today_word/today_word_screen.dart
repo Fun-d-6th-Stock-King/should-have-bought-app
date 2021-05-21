@@ -47,39 +47,35 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
           builder: (context, todayWordProvider, child) {
         var wordItemList = todayWordProvider.wordItemList;
         return Container(
-          margin: EdgeInsets.only(bottom: 100),
-          child: ListView.builder(
-              itemCount: wordItemList.length,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Column(
-                    children: [
-                      FlatBackgroundFrame(child: HeaderWidget()),
-                      SizedBox(height: 37),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text('최신순'),
-                                Icon(Icons.keyboard_arrow_down_outlined)
-                              ],
-                            ),
-                            SizedBox(height: 11),
-                            WordCardWidget(wordItemList[index])
-                          ],
-                        ),
-                      )
-                    ],
-                  );
-                }
-                return Container(
+          // padding: EdgeInsets.only(bottom: 50),
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: [
+                FlatBackgroundFrame(child: HeaderWidget()),
+                SizedBox(height: 20),
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: WordCardWidget(wordItemList[index]),
-                );
-              }),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text('최신순'),
+                      Icon(Icons.keyboard_arrow_down_outlined)
+                    ],
+                  ),
+                ),
+                ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: wordItemList.length,
+                    itemBuilder: (context, index) {
+                      return WordCardWidget(wordItemList[index]);
+                    }),
+                SizedBox(height: 80)
+              ],
+            ),
+          ),
         );
       }),
       floatingActionButton: Padding(
@@ -153,7 +149,7 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
       padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Consumer<TodayWordProvider>(
           builder: (context, todayWordProvider, child) {
@@ -262,10 +258,11 @@ class WordCardWidget extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           padding:
               const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 26),
-          margin: const EdgeInsets.only(bottom: 15),
+          margin:
+              const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
