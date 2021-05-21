@@ -128,6 +128,9 @@ class _MainScreenState extends State<MainScreen> {
                   Frame(child: MainTitle(title: "이거 살까? 말까?",more: (){})),
                   SizedBox(height: 23),
                   ThisBuyOrNotWidget(),
+                  Divider(thickness: 7, color:Color(0xFFF2F2F2)),
+                  SizedBox(height: 43),
+                  Frame(child: MainTitle(title: "이때 팔걸")),
                   SizedBox(
                       height: 164,
                       child: Card(
