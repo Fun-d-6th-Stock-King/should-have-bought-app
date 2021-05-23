@@ -52,7 +52,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
       CalculatorStock calculationResult = calculatorProvider.calculationResult;
       setBoxColor();
       return sectorData == null
-          ? Container(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator())
           : DefaultTabController(
               length: 2,
               initialIndex: 0,

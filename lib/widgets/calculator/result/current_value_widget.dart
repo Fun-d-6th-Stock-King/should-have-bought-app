@@ -18,7 +18,7 @@ class _CurrentValueWidgetState extends State<CurrentValueWidget> {
       SectorData sectorData = calculatorProvider.sectorData;
       Map<String, dynamic> lastDto = calculatorProvider.latestDto;
       return sectorData == null
-          ? Container(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator())
           : Container(
               child: Column(
                 children: <Widget>[
