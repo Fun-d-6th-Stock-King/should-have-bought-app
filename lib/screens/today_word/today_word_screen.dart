@@ -9,6 +9,7 @@ import 'package:should_have_bought_app/providers/today_word/today_word_provider.
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/today_word_appbar.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
+import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
 import '../../constant.dart';
 
@@ -46,35 +47,32 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
       body: Consumer<TodayWordProvider>(
           builder: (context, todayWordProvider, child) {
         var wordItemList = todayWordProvider.wordItemList;
-        return Container(
-          // padding: EdgeInsets.only(bottom: 50),
-          child: SingleChildScrollView(
-            physics: ScrollPhysics(),
-            child: Column(
-              children: [
-                FlatBackgroundFrame(child: HeaderWidget()),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('최신순'),
-                      Icon(Icons.keyboard_arrow_down_outlined)
-                    ],
-                  ),
+        return SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              FlatBackgroundFrame(child: HeaderWidget()),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text('최신순'),
+                    Icon(Icons.keyboard_arrow_down_outlined)
+                  ],
                 ),
-                ListView.builder(
-                    padding: EdgeInsets.zero,
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: wordItemList.length,
-                    itemBuilder: (context, index) {
-                      return WordCardWidget(wordItemList[index]);
-                    }),
-                SizedBox(height: 80)
-              ],
-            ),
+              ),
+              ListView.builder(
+                  padding: EdgeInsets.zero,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: wordItemList.length,
+                  itemBuilder: (context, index) {
+                    return WordCardWidget(wordItemList[index]);
+                  }),
+              SizedBox(height: 80)
+            ],
           ),
         );
       }),
@@ -82,6 +80,9 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
         padding: const EdgeInsets.only(bottom: 100.0),
         child: FloatingActionButton(
           backgroundColor: mainColor,
+          onPressed: () => _auth.currentUser == null
+              ? LoginHandler(context)
+              : _writeWord(context),
           // onPressed: () => _showCreateWordBottomSheet(context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -96,6 +97,21 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
         ),
       ),
     );
+  }
+
+  _writeWord(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        )),
+        builder: (ctx) {
+          return Text("zxczxcxc");
+        });
   }
 }
 
@@ -211,10 +227,13 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
                       width: 36,
                       height: 36,
                       child: ClipOval(
-                        child: Container(
-                          color: mainColor,
-                          child: Image(
-                              image: AssetImage('assets/icons/ico_heart.png')),
+                        child: InkWell(
+                          onTap: () => _likeWord(wordItem.id),
+                          child: Container(
+                            color: wordItem.userlike ? mainColor : kGreyColor,
+                            child: Image(
+                                image: AssetImage('assets/icons/ico_heart.png')),
+                          ),
                         ),
                       ),
                     ),
@@ -241,17 +260,23 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
       }),
     );
   }
+
+  _likeWord(int id) {
+    Provider.of<TodayWordProvider>(context, listen: false).likeWord(id);
+  }
 }
 
 /// 단어 카드 위젯
 class WordCardWidget extends StatelessWidget {
   final WordItem wordItem;
+
   WordCardWidget(this.wordItem);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        print("단어 카드 위젯");
         // Navigator.push(context, MaterialPageRoute(builder: (context) => StockDetailScreen(wordItem,1)));
       },
       child: Container(
@@ -322,7 +347,7 @@ class WordCardWidget extends StatelessWidget {
                         height: 36,
                         child: ClipOval(
                           child: Container(
-                            color: mainColor,
+                            color: wordItem.userlike ? mainColor : kGreyColor,
                             child: Image(
                                 image:
                                     AssetImage('assets/icons/ico_heart.png')),

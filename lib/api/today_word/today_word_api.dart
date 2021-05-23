@@ -62,14 +62,13 @@ class TodayWordApi extends Api {
   }
 
   /// 단어 좋아요 선택
-  static Future saveWordLike(String id, Map params) async {
+  static Future saveWordLike(int id) async {
     var header = await Api.getHeader();
-    final response = await http.get(
-      Uri.parse("$stockApiUrl/api/todayWord/$id/like")
-          .replace(queryParameters: params),
+    final response = await http.post(
+      Uri.parse("$stockApiUrl/api/todayWord/$id/like"),
       headers: header,
     );
-    print('[GET] /api/todayWord/$id/like');
+    print('[POST] /api/todayWord/$id/like');
     print(response.statusCode);
     if (response.statusCode == 200) {
       final responseBody = json.decode(utf8.decode(response.bodyBytes));

@@ -25,7 +25,6 @@ class TodayWordProvider with ChangeNotifier {
     _wordItemList = [..._wordItemList, ...addWordItemList];
 
     notifyListeners();
-
     return addWordItemList;
   }
 
@@ -33,6 +32,11 @@ class TodayWordProvider with ChangeNotifier {
     final result = await TodayWordApi.getBestWord();
     _todayBest = WordItem.fromJson(result);
     print(result);
+    notifyListeners();
+  }
+
+  Future likeWord(int id) async {
+    final result = await TodayWordApi.saveWordLike(id);
     notifyListeners();
   }
 }
