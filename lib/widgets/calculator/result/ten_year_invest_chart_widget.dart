@@ -20,14 +20,14 @@ class TenYearChartWidget extends StatefulWidget {
 class _TenYearChartWidgetState extends State<TenYearChartWidget> {
   @override
   void didChangeDependencies() async {
-    super.didChangeDependencies();
     final code = Provider.of<CalculatorProvider>(context, listen: false)
         .latestDto['code'];
     Provider.of<BuyOrNotProvider>(context, listen: false).setChartLoading(true);
-    await Provider.of<BuyOrNotProvider>(context, listen: false)
+    Provider.of<BuyOrNotProvider>(context, listen: false)
         .getBuyOrNotStockChart(code)
         .then((value) => Provider.of<BuyOrNotProvider>(context, listen: false)
             .setChartLoading(false));
+    super.didChangeDependencies();
   }
 
   @override
@@ -44,7 +44,7 @@ class _TenYearChartWidgetState extends State<TenYearChartWidget> {
               child: isLoading
                   ? skeletonText(90, 15)
                   : Text(
-                      '지금까지 ${stockHist.company}는?',
+                      '10년간 ${stockHist.company}는?',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
