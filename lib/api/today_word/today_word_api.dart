@@ -43,7 +43,7 @@ class TodayWordApi extends Api {
 
   /// 단어 목록 조회 api
   static Future getWordList(Map<String, dynamic> params) async {
-    print(params);
+    // print(params);
     var header = await Api.getHeader();
     final response = await http.get(
       Uri.parse("$stockApiUrl/api/todayWord/list")
@@ -68,7 +68,7 @@ class TodayWordApi extends Api {
       Uri.parse("$stockApiUrl/api/todayWord/$id/like"),
       headers: header,
     );
-    print('[POST] /api/todayWord/$id/like');
+    print('[POST] /api/todayWord/$id/like, header: $header');
     print(response.statusCode);
     if (response.statusCode == 200) {
       final responseBody = json.decode(utf8.decode(response.bodyBytes));

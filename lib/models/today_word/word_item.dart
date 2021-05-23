@@ -6,8 +6,8 @@ class WordItem {
   final String mean;
   final String createdUid;
   final String createdDate;
-  final int likeCount;
-  final bool userlike;
+  int likeCount;
+  bool userlike;
   final String displayName;
   final String createdDateText;
 
