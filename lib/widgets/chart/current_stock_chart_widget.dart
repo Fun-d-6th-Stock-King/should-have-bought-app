@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
 
 class CurrentStockChartWidget extends StatefulWidget {
   final String type;
-
-  CurrentStockChartWidget({@required this.type});
+  final CurrentStockPrice value;
+  CurrentStockChartWidget({@required this.type, @required this.value});
 
   @override
   _CurrentStockChartWidgetState createState() =>
@@ -23,31 +24,32 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildVerticalGradientAreaChart();
+    return _buildVerticalGradientAreaChart(widget.value);
   }
 
   /// Returns the list of spline area series with vertical gradient.
-  List<LineSeries<_ChartData, num>> _getDataLabelDefaultSeries() {
-    final List<_ChartData> chartData = <_ChartData>[
+  List<LineSeries<_ChartData, num>> _getDataLabelDefaultSeries(CurrentStockPrice value) {
+    final List<_ChartData> dayData = <_ChartData>[
     ];
-    final List<_ChartData> chartData1 = <_ChartData>[
+    final List<_ChartData> weekData = <_ChartData>[
     ];
-    final List<_ChartData> chartData2 = <_ChartData>[
+    final List<_ChartData> yearData = <_ChartData>[
     ];
     final List<Color> color = <Color>[];
 
     color.add(const Color(0xFFFF6258));
-    chartData.add(_ChartData(1, 50, 28));
-    chartData.add(_ChartData(9, 55, 84));
-    chartData1.add(_ChartData(1, 100, 100));
-    chartData1.add( _ChartData(9, 30, 30));
-    chartData2.add(_ChartData(1, 0, 70));
-    chartData2.add( _ChartData(9, 70, 84));
+
+    dayData.add(_ChartData(1, value.dayLow));
+    dayData.add(_ChartData(9, value.dayHigh));
+    weekData.add(_ChartData(1, value.weekHigh));
+    weekData.add( _ChartData(9, value.weekLow));
+    yearData.add(_ChartData(1, value.yearLow));
+    yearData.add( _ChartData(9, value.yearHigh));
     LineSeries<_ChartData, num> daliy() {
       return LineSeries<_ChartData, num>(
           animationDuration: 2500,
           legendIconType: LegendIconType.circle,
-          dataSource: chartData,
+          dataSource: dayData,
           color: const Color(0xFF4990FF),
           width: 2,
           name: '장중',
@@ -72,7 +74,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
       return LineSeries<_ChartData, num>(
           animationDuration: 2500,
           legendIconType: LegendIconType.circle,
-          dataSource: chartData1,
+          dataSource: weekData,
           color: Color(0xFFFF6258),
           width: 2,
           name: '주간',
@@ -97,7 +99,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
       return LineSeries<_ChartData, num>(
           animationDuration: 2500,
           legendIconType: LegendIconType.circle,
-          dataSource: chartData2,
+          dataSource: yearData,
           color: Color(0xFFFF9900),
           width: 2,
           name: '연간',
@@ -129,7 +131,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
   }
 
   /// Return the circular chart with vertical gradient.
-  SfCartesianChart _buildVerticalGradientAreaChart() {
+  SfCartesianChart _buildVerticalGradientAreaChart(CurrentStockPrice value) {
     return SfCartesianChart(
       plotAreaBorderWidth: 0,
       primaryXAxis: CategoryAxis(
@@ -140,8 +142,6 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
       primaryYAxis: NumericAxis(
         isVisible: false,
         interval: null,
-        minimum: 0,
-        maximum: 100,
         labelFormat: '{value}',
         axisLine: AxisLine(width: 0),
       ),
@@ -161,7 +161,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
       //   dataLabel(args);
       // },
       //trackballBehavior: _trackballBehavior,
-      series: _getDataLabelDefaultSeries(),
+      series: _getDataLabelDefaultSeries(value),
     );
   }
 }
@@ -181,10 +181,9 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
 //   }
 // }
 class _ChartData {
-  _ChartData(this.x, this.y, this.y2);
+  _ChartData(this.x, this.y);
 
   final double x;
   final double y;
-  final double y2;
 }
 

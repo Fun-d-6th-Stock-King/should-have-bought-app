@@ -35,4 +35,5 @@ class TodayWordProvider with ChangeNotifier {
     print(result);
     notifyListeners();
   }
+
 }

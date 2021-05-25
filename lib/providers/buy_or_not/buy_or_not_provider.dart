@@ -55,4 +55,9 @@ class BuyOrNotProvider with ChangeNotifier {
   void setChartLoading(bool isLoading) {
     _isLoadingChart = isLoading;
   }
+
+  Future getBuyRankList(String buySell, String rankListType) async{
+    final result = await BuyOrNotApi.getBuyRankList(buySell, rankListType);
+    print(result);
+  }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/widgets/button/buy_or_not_button_widget.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 
@@ -52,8 +54,16 @@ const tabTitleStyle = TextStyle(
   fontSize: 17,
   height: 25 / 17,
 );
-
-class BuyRanking extends StatelessWidget {
+class BuyRanking extends StatefulWidget {
+  @override
+  _CreateBuyRankingState createState() => _CreateBuyRankingState();
+}
+class _CreateBuyRankingState extends State<BuyRanking> {
+  @override
+  void didChangeDependencies() async {
+    await Provider.of<BuyOrNotProvider>(context,listen:false).getBuyRankList('BUY', 'SIMPLE');
+  }
+  //getBuyRankList
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -71,7 +81,17 @@ class BuyRanking extends StatelessWidget {
   }
 }
 
-class NotRanking extends StatelessWidget {
+class NotRanking extends StatefulWidget {
+  @override
+  _CreateNotRankingState createState() => _CreateNotRankingState();
+}
+
+class _CreateNotRankingState extends State<NotRanking> {
+  @override
+  void didChangeDependencies() async {
+    await Provider.of<BuyOrNotProvider>(context,listen:false).getBuyRankList('SELL', 'DETAIL');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
