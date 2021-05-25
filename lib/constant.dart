@@ -10,6 +10,7 @@ const nagativeColor = Color(0xFF5D99F2);
 const likeColor = Color(0xFFFF3948);
 const unlikeColor = Color(0xFF4990FF);
 const disableColor = Color(0xFFBDBDBD);
+const unSelectedColor = Color(0x15939393);
 const kDateColor = Color(0xFF828282);
 const kGreyColor = Color(0xFFE0E0E0);
 
