@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/chart/current_stock_chart_widget.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
 
@@ -30,7 +31,7 @@ class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
                   fontSize: 18, height: 26 / 18, fontWeight: FontWeight.w500),
             ),
             Text(
-              '${widget.currentStockPrice.price.toStringAsFixed(0)}원',
+              '${numberWithComma(widget.currentStockPrice.price.toStringAsFixed(0))}원',
               style: TextStyle(
                   fontSize: 34,
                   height: 49 / 34,
