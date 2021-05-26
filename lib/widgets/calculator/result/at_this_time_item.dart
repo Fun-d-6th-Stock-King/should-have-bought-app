@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/utils.dart';
 
 class AtThisTimeItem extends StatefulWidget {
+  final String date;
+  final Map calculatorResult;
+
+  const AtThisTimeItem({this.date, this.calculatorResult});
+
   @override
   _AtThisTimeItemState createState() => _AtThisTimeItemState();
 }
 
 class _AtThisTimeItemState extends State<AtThisTimeItem> {
+  final _dateTable = {
+    'DAY1': '어제',
+    'WEEK1': '저번 주에',
+    'YEAR1': '작년에',
+    'YEAR10': '10년전에'
+  };
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,7 +31,7 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '어제 10만원 샀으면 지금',
+            '${_dateTable[widget.date]} ${convertMoney('100000')}원 샀으면 지금',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,

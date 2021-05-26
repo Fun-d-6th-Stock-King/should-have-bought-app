@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_item.dart';
 
 class AtThisTimeWidget extends StatefulWidget {
@@ -25,46 +29,42 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
   double _aniValue = 0.0;
   double _prevAniValue = 0.0;
 
-  List _icons = [
-    Icons.star,
-    Icons.whatshot,
-    Icons.call,
-    Icons.contacts,
-    Icons.email,
-    Icons.donut_large
+  final List<String> _yearsText = [
+    'DAY1',
+    'WEEK1',
+    'YEAR1',
+    'YEAR10',
   ];
 
-  List _texts = [
+  final List<String> _texts = [
     '어제 살걸',
     '저번주에 살걸',
     '작년에 살걸',
     '10년전에 살걸',
   ];
 
-  Color _foregroundOn = Colors.white;
-  Color _foregroundOff = Colors.black;
+  final List _fourDto = [];
 
-  Color _backgroundOn = mainColor;
-  Color _backgroundOff = Colors.grey[200];
+  final Color _foregroundOn = Colors.white;
+  final Color _foregroundOff = Colors.black;
 
-  ScrollController _scrollController = ScrollController();
+  final Color _backgroundOn = mainColor;
+  final Color _backgroundOff = Colors.grey[200];
 
-  List _keys = [];
+  final ScrollController _scrollController = ScrollController();
+
+  final List _keys = [];
 
   bool _buttonTap = false;
 
   @override
   void initState() {
     super.initState();
-    for (int index = 0; index < _texts.length; index++) {
-      // create a GlobalKey for each Tab
+    for (var index = 0; index < _texts.length; index++) {
       _keys.add(GlobalKey());
     }
-    // this creates the controller with 6 tabs (in our case)
     _controller = TabController(vsync: this, length: _texts.length);
-    // this will execute the function every time there's a swipe animation
     _controller.animation.addListener(_handleTabAnimation);
-    // this will execute the function every time the _controller.index value changes
     _controller.addListener(_handleTabChange);
 
     _animationControllerOff =
@@ -80,7 +80,6 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
 
     _animationControllerOn =
         AnimationController(vsync: this, duration: Duration(milliseconds: 150));
-    // so the inactive buttons start in their "final" state (color)
     _animationControllerOn.value = 1.0;
 
     _colorTweenBackgroundOn =
@@ -98,98 +97,129 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
   }
 
   @override
+  void didChangeDependencies() async {
+    final _currentLastDto = Provider.of<CalculatorProvider>(context).latestDto;
+    for (var index = 0; index < _yearsText.length; index++) {
+      _fourDto.add(
+        {
+          'code': _currentLastDto['code'],
+          'investDate': _yearsText[index],
+          'investPrice': int.parse(_currentLastDto['investPrice'])
+        },
+      );
+    }
+    await Provider.of<CalculatorProvider>(context).getFourResult(_fourDto);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                '이때 살걸',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+    return Consumer<CalculatorProvider>(
+        builder: (context, calculatorProvider, child) {
+      List<CalculatorStock> _fourResult =
+          calculatorProvider.calculationResultFourList;
+      return Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '이때 살걸',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              Text(
-                '2021-01-11 종가 기준',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
+                Text(
+                  '2021-01-11 종가 기준',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          height: 49.0,
-          child: ListView.builder(
-            physics: BouncingScrollPhysics(),
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: _texts.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                key: _keys[index],
-                padding: EdgeInsets.all(6.0),
-                child: ButtonTheme(
-                  child: AnimatedBuilder(
-                    animation: _colorTweenBackgroundOn,
-                    builder: (context, child) => ElevatedButton(
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0.0),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(62.0),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 49.0,
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              itemCount: _texts.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  key: _keys[index],
+                  padding: EdgeInsets.all(6.0),
+                  child: ButtonTheme(
+                    child: AnimatedBuilder(
+                      animation: _colorTweenBackgroundOn,
+                      builder: (context, child) => ElevatedButton(
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(0.0),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(62.0),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(
+                            _getBackgroundColor(index),
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all(
-                          _getBackgroundColor(index),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _buttonTap = true;
-                          _controller.animateTo(index);
-                          _setCurrentIndex(index);
-                          _scrollTo(index);
-                        });
-                      },
-                      child: Text(
-                        _texts[index],
-                        style: TextStyle(
-                          color: _getForegroundColor(index),
-                          fontSize: 15,
-                          fontWeight: _getForegroundFontWeight(index),
+                        onPressed: () {
+                          setState(() {
+                            _buttonTap = true;
+                            _controller.animateTo(index);
+                            _setCurrentIndex(index);
+                            _scrollTo(index);
+                          });
+                        },
+                        child: Text(
+                          _texts[index],
+                          style: TextStyle(
+                            color: _getForegroundColor(index),
+                            fontSize: 15,
+                            fontWeight: _getForegroundFontWeight(index),
+                          ),
                         ),
                       ),
                     ),
                   ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 30),
+          _fourResult == null
+              ? Center(child: CircularProgressIndicator())
+              : Container(
+                  height: 100,
+                  child: TabBarView(
+                    controller: _controller,
+                    children: <Widget>[
+                      AtThisTimeItem(
+                        date: _yearsText[0],
+                      ),
+                      AtThisTimeItem(
+                        date: _yearsText[1],
+                      ),
+                      AtThisTimeItem(
+                        date: _yearsText[2],
+                      ),
+                      AtThisTimeItem(
+                        date: _yearsText[3],
+                      ),
+                    ],
+                  ),
                 ),
-              );
-            },
-          ),
-        ),
-        SizedBox(height: 30),
-        Container(
-          height: 100,
-          child: TabBarView(
-            controller: _controller,
-            children: <Widget>[
-              AtThisTimeItem(),
-              AtThisTimeItem(),
-              AtThisTimeItem(),
-              AtThisTimeItem(),
-            ],
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   _handleTabAnimation() {
@@ -269,7 +299,6 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
       if (position > offset) offset = position;
     } else {
       // if the button is to the right of the middle
-
       // get the last button
       renderBox = _keys[_texts.length - 1].currentContext.findRenderObject();
       // get its position

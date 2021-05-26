@@ -13,6 +13,7 @@ class CalculatorProvider with ChangeNotifier {
   List _tenYearHighList = [];
   List _calculateHistory = [];
   Map latestDto;
+  List<CalculatorStock> calculationResultFourList;
   CalculatorStock calculationResult;
   SectorData sectorData;
 
@@ -109,6 +110,16 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getSectorInfor(latestDto['code'],
         latestDto['investDate'], int.parse(latestDto['investPrice']));
     sectorData = SectorData.fromJson(result);
+    notifyListeners();
+  }
+
+  Future getFourResult(List paramsList) async {
+    for (var i = 0; i < paramsList.length; i++) {
+      // print(paramsList[i]);
+      final result = await CalculatorApi.getResult(paramsList[i]);
+      // final calculatorResult = CalculatorStock.fromJson(result);
+      // calculationResultFourList.add(calculatorResult);
+    }
     notifyListeners();
   }
 }
