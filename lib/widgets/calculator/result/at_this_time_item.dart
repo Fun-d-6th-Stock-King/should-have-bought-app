@@ -1,9 +1,11 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/utils.dart';
 
 class AtThisTimeItem extends StatefulWidget {
   final String date;
-  final Map calculatorResult;
+  final CalculatorStock calculatorResult;
 
   const AtThisTimeItem({this.date, this.calculatorResult});
 
@@ -26,12 +28,16 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.calculatorResult == null) {
+      return Center(child: Text('${_dateTable[widget.date]} 데이터가 없어요!'));
+    }
+
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '${_dateTable[widget.date]} ${convertMoney('100000')}원 샀으면 지금',
+            '${_dateTable[widget.date]} ${convertMoney(widget.calculatorResult.investPrice)}원 샀으면 지금',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -41,7 +47,7 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                '1,840,412원',
+                '${numberWithComma(widget.calculatorResult.yieldPrice.toString())}원',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
@@ -54,14 +60,16 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(7.0),
-                    color: Color(0xFF0055FF).withOpacity(0.07),
+                    color:
+                        getYieldBoxColor(widget.calculatorResult.yieldPercent),
                   ),
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      '- 4,123,180원(-145%)',
+                      '${getYieldMoney()} (${getYieldPercent(widget.calculatorResult.yieldPercent)})',
                       style: TextStyle(
-                        color: Color(0XFF0055FF),
+                        color: getYieldTextColor(
+                            widget.calculatorResult.yieldPercent),
                       ),
                     ),
                   ),
@@ -70,7 +78,7 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
             ],
           ),
           Text(
-            '18,380원/1주',
+            '${numberWithComma(widget.calculatorResult.oldPrice.toString())}/1주',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w400,
@@ -80,5 +88,47 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
         ],
       ),
     );
+  }
+
+  String getYieldMoney() {
+    final yieldPrice = (double.parse(widget.calculatorResult.yieldPrice) -
+        double.parse(widget.calculatorResult.investPrice));
+    if (yieldPrice > 0) {
+      return '+ ${numberWithComma(yieldPrice.toStringAsFixed(0))}';
+    } else if (yieldPrice < 0) {
+      return '- ${numberWithComma(yieldPrice.abs().toStringAsFixed(0))}';
+    } else {
+      return '${numberWithComma(yieldPrice.abs().toStringAsFixed(0))}';
+    }
+  }
+
+  String getYieldPercent(int percent) {
+    if (percent > 0) {
+      return '+ $percent%';
+    } else if (percent < 0) {
+      return '- $percent%';
+    } else {
+      return '$percent%';
+    }
+  }
+
+  Color getYieldBoxColor(int percent) {
+    if (percent > 0) {
+      return Color(0xffFFEFF0);
+    } else if (percent < 0) {
+      return Color(0xFF0055FF).withOpacity(0.07);
+    } else {
+      return Colors.white;
+    }
+  }
+
+  Color getYieldTextColor(int percent) {
+    if (percent > 0) {
+      return Colors.red;
+    } else if (percent < 0) {
+      return Color(0XFF0055FF);
+    } else {
+      return Colors.black;
+    }
   }
 }

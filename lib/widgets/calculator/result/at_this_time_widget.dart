@@ -98,17 +98,19 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
 
   @override
   void didChangeDependencies() async {
-    final _currentLastDto = Provider.of<CalculatorProvider>(context).latestDto;
+    final _currentLastDto =
+        Provider.of<CalculatorProvider>(context, listen: false).latestDto;
     for (var index = 0; index < _yearsText.length; index++) {
       _fourDto.add(
         {
           'code': _currentLastDto['code'],
           'investDate': _yearsText[index],
-          'investPrice': int.parse(_currentLastDto['investPrice'])
+          'investPrice': _currentLastDto['investPrice']
         },
       );
     }
-    await Provider.of<CalculatorProvider>(context).getFourResult(_fourDto);
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getFourResult(_fourDto);
     super.didChangeDependencies();
   }
 
@@ -116,8 +118,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
         builder: (context, calculatorProvider, child) {
-      List<CalculatorStock> _fourResult =
-          calculatorProvider.calculationResultFourList;
+      List _fourResult = calculatorProvider.calculationResultFourList;
       return Column(
         children: <Widget>[
           Container(
@@ -195,7 +196,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
             ),
           ),
           SizedBox(height: 30),
-          _fourResult == null
+          _fourResult.length != _texts.length
               ? Center(child: CircularProgressIndicator())
               : Container(
                   height: 100,
@@ -204,15 +205,19 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
                     children: <Widget>[
                       AtThisTimeItem(
                         date: _yearsText[0],
+                        calculatorResult: _fourResult[0],
                       ),
                       AtThisTimeItem(
                         date: _yearsText[1],
+                        calculatorResult: _fourResult[1],
                       ),
                       AtThisTimeItem(
                         date: _yearsText[2],
+                        calculatorResult: _fourResult[2],
                       ),
                       AtThisTimeItem(
                         date: _yearsText[3],
+                        calculatorResult: _fourResult[3],
                       ),
                     ],
                   ),

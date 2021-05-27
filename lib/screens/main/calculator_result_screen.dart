@@ -311,7 +311,11 @@ class EmojiYieldPriceText extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         children: [
-          (yieldPercent > 0) ? TextSpan(text: '+ ') : TextSpan(text: '- '),
+          yieldPercent > 0
+              ? TextSpan(text: '+ ')
+              : yieldPercent == 0
+                  ? TextSpan(text: '')
+                  : TextSpan(text: '- '),
           TextSpan(text: '$yieldPrice원'),
         ],
       ),
