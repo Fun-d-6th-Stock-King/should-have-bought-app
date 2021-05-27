@@ -133,13 +133,6 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Text(
-                  '2021-01-11 종가 기준',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
               ],
             ),
           ),
@@ -152,7 +145,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
               physics: BouncingScrollPhysics(),
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
-              itemCount: _texts.length,
+              itemCount: _yearsText.length,
               itemBuilder: (context, index) {
                 return Padding(
                   key: _keys[index],
@@ -196,10 +189,10 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
             ),
           ),
           SizedBox(height: 30),
-          _fourResult.length != _texts.length
+          _fourResult.length != _yearsText.length
               ? Center(child: CircularProgressIndicator())
               : Container(
-                  height: 100,
+                  height: 120,
                   child: TabBarView(
                     controller: _controller,
                     children: <Widget>[

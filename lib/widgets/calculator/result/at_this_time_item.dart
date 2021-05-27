@@ -37,6 +37,13 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
+            '${widget.calculatorResult.oldCloseDate} 종가 기준',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          Text(
             '${_dateTable[widget.date]} ${convertMoney(widget.calculatorResult.investPrice)}원 샀으면 지금',
             style: TextStyle(
               fontSize: 16,
