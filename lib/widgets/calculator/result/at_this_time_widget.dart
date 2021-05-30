@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
+import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_item.dart';
 
@@ -98,19 +99,8 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
 
   @override
   void didChangeDependencies() async {
-    final _currentLastDto =
-        Provider.of<CalculatorProvider>(context, listen: false).latestDto;
-    for (var index = 0; index < _yearsText.length; index++) {
-      _fourDto.add(
-        {
-          'code': _currentLastDto['code'],
-          'investDate': _yearsText[index],
-          'investPrice': _currentLastDto['investPrice']
-        },
-      );
-    }
     await Provider.of<CalculatorProvider>(context, listen: false)
-        .getFourResult(_fourDto);
+        .getFourResult();
     super.didChangeDependencies();
   }
 
@@ -118,7 +108,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
         builder: (context, calculatorProvider, child) {
-      List _fourResult = calculatorProvider.calculationResultFourList;
+      var _fourResult = calculatorProvider.calculationResultAll;
       return Column(
         children: <Widget>[
           Container(
@@ -189,7 +179,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
             ),
           ),
           SizedBox(height: 30),
-          _fourResult.length != _yearsText.length
+          _fourResult == null
               ? Center(child: CircularProgressIndicator())
               : Container(
                   height: 120,
@@ -198,19 +188,19 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
                     children: <Widget>[
                       AtThisTimeItem(
                         date: _yearsText[0],
-                        calculatorResult: _fourResult[0],
+                        calculatorResult: _fourResult.dateToStock['day1'],
                       ),
                       AtThisTimeItem(
                         date: _yearsText[1],
-                        calculatorResult: _fourResult[1],
+                        calculatorResult: _fourResult.dateToStock['week1'],
                       ),
                       AtThisTimeItem(
                         date: _yearsText[2],
-                        calculatorResult: _fourResult[2],
+                        calculatorResult: _fourResult.dateToStock['year1'],
                       ),
                       AtThisTimeItem(
                         date: _yearsText[3],
-                        calculatorResult: _fourResult[3],
+                        calculatorResult: _fourResult.dateToStock['year10'],
                       ),
                     ],
                   ),

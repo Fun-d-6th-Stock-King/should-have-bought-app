@@ -1,11 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
+import 'package:should_have_bought_app/models/calculator/result/calculator_date_stock.dart';
 import 'package:should_have_bought_app/utils.dart';
 
 class AtThisTimeItem extends StatefulWidget {
   final String date;
-  final CalculatorStock calculatorResult;
+  final CalculatorDateStock calculatorResult;
 
   const AtThisTimeItem({this.date, this.calculatorResult});
 

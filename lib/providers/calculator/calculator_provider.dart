@@ -5,6 +5,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 
 class CalculatorProvider with ChangeNotifier {
@@ -13,13 +14,9 @@ class CalculatorProvider with ChangeNotifier {
   List _tenYearHighList = [];
   List _calculateHistory = [];
   Map latestDto;
-  List _calculationResultFourList = [];
+  ClaculatorStockAll calculationResultAll;
   CalculatorStock calculationResult;
   SectorData sectorData;
-
-  List get calculationResultFourList {
-    return _calculationResultFourList;
-  }
 
   List get companyList {
     return _companyList;
@@ -117,20 +114,11 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future getFourResult(List paramsList) async {
-    var _tempResult;
-    _calculationResultFourList.clear();
-    for (var i = 0; i < paramsList.length; i++) {
-      try {
-        _tempResult = await CalculatorApi.getResult(paramsList[i]);
-        final stock = CalculatorStock.fromJson(_tempResult);
-        _calculationResultFourList.add(stock);
-      } on Exception catch (e) {
-        print(e);
-        _calculationResultFourList.add(null);
-      }
-
-      notifyListeners();
-    }
+  Future getFourResult() async {
+    final result = await CalculatorApi.getAllResult(
+        latestDto['code'], int.parse(latestDto['investPrice']));
+    calculationResultAll = ClaculatorStockAll.fromJson(result);
+    print(calculationResultAll);
+    notifyListeners();
   }
 }
