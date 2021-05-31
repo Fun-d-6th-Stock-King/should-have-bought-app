@@ -7,6 +7,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
+import 'package:should_have_bought_app/models/calculator/result/best_price.dart';
 
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
@@ -16,6 +17,7 @@ class CalculatorProvider with ChangeNotifier {
   Map latestDto;
   CalculatorStockAll calculationResultAll;
   CalculatorStock calculationResult;
+  BestPrice bestPriceResult;
   SectorData sectorData;
 
   List get companyList {
@@ -118,6 +120,13 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getAllResult(
         latestDto['code'], int.parse(latestDto['investPrice']));
     calculationResultAll = CalculatorStockAll.fromJson(result);
+    notifyListeners();
+  }
+
+  Future getBestPrice() async {
+    final result = await CalculatorApi.getBestPrice(latestDto['code'],
+        latestDto['investDate'], int.parse(latestDto['investPrice']));
+    bestPriceResult = BestPrice.fromJson(result);
     notifyListeners();
   }
 }

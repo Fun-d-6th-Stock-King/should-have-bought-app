@@ -69,6 +69,11 @@ String commonDayDateFormat(String date) {
   return DateFormat('y.MM.d.').format(DateTime.parse(date));
 }
 
+String commonTwoDayDateFormat(String date) {
+  if (date == '') return '';
+  return DateFormat('y.MM.dd').format(DateTime.parse(date));
+}
+
 bool isNotLogin(User currentUser) {
   return currentUser == null ? true : false;
 }

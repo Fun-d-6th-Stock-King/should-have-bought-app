@@ -20,7 +20,7 @@ class CalculatorApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + response.body.toString());
+        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
   }
 
   static Future getCompanies() async {
@@ -92,6 +92,23 @@ class CalculatorApi extends Api {
     final response = await http.get(
         Uri.parse(
             "$stockApiUrl/api/buythen/calc-all-date?code=$code&investPrice=$investPrice"),
+        headers: header);
+
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
+      return responseBody;
+    }
+    throw Exception(
+        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+  }
+
+  static Future getBestPrice(
+      String code, String investDate, int investPrice) async {
+    Map<String, String> header = await Api.getHeader();
+
+    final response = await http.get(
+        Uri.parse(
+            "$stockApiUrl/api/buythen/calc-highest?code=$code&investDate=$investDate&investPrice=$investPrice"),
         headers: header);
 
     if (response.statusCode == 200) {
