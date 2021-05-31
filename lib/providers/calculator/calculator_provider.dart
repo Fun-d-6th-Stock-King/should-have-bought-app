@@ -14,7 +14,7 @@ class CalculatorProvider with ChangeNotifier {
   List _tenYearHighList = [];
   List _calculateHistory = [];
   Map latestDto;
-  ClaculatorStockAll calculationResultAll;
+  CalculatorStockAll calculationResultAll;
   CalculatorStock calculationResult;
   SectorData sectorData;
 
@@ -117,8 +117,7 @@ class CalculatorProvider with ChangeNotifier {
   Future getFourResult() async {
     final result = await CalculatorApi.getAllResult(
         latestDto['code'], int.parse(latestDto['investPrice']));
-    calculationResultAll = ClaculatorStockAll.fromJson(result);
-    print(calculationResultAll);
+    calculationResultAll = CalculatorStockAll.fromJson(result);
     notifyListeners();
   }
 }
