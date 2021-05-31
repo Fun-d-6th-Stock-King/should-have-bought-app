@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class BestPriceWidget extends StatefulWidget {
@@ -46,17 +47,33 @@ class _BestPriceWidgetState extends State<BestPriceWidget> {
                   color: Color(0xFFAEAEAE).withOpacity(0.10),
                 ),
                 child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('10만원 샀으면'),
-                ),
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '10만원',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(text: ' 샀으면')
+                        ],
+                      ),
+                    )),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    RichText(
-                      text: TextSpan(
+                    AutoSizeText.rich(
+                      TextSpan(
                         style: TextStyle(
                           fontSize: 30,
                           color: Color(0xFFFF6B76),
@@ -71,6 +88,8 @@ class _BestPriceWidgetState extends State<BestPriceWidget> {
                           TextSpan(text: '(+357%)'),
                         ],
                       ),
+                      maxLines: 1,
+                      minFontSize: 10,
                     ),
                     SizedBox(height: 5),
                     Row(
@@ -100,6 +119,7 @@ class _BestPriceWidgetState extends State<BestPriceWidget> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 5),
                     Text(
                       '2011.03.10~2021.01.11',
                       style: TextStyle(
