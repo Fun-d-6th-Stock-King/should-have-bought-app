@@ -75,7 +75,6 @@ bool isNotLogin(User currentUser) {
 
 String checkIncreaseOrDecrease(double percent) {
   if(percent > 0) return '+';
-  if(percent < 0) return '-';
   return '';
 }
 
@@ -83,4 +82,10 @@ Color colorIncreaseOrDecrease(double percent) {
   if(percent > 0) return possibleColor;
   if(percent < 0) return nagativeColor;
   return Colors.black;
+}
+
+String emojiIncreaseOrDecrease(double percent) {
+  if(percent > 0) return "▲ ";
+  if(percent < 0) return "▼ ";
+  return "- ";
 }

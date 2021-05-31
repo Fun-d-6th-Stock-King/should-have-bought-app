@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/buy_or_not/top_rank.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/button/buy_or_not_button_widget.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 
@@ -42,9 +44,10 @@ class _CreateThisBuyOrNotWidgetState extends State<ThisBuyOrNotWidget> {
           Container(
               height: 660,
               child: TabBarView(children: <Widget>[
-                BuyRanking(),
-                NotRanking()
-              ]))
+                    BuyRanking(),
+                    NotRanking()
+                  ])
+               )
         ]));
   }
 }
@@ -68,14 +71,19 @@ class _CreateBuyRankingState extends State<BuyRanking> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          NumberOneRankWidget(),
-          SizedBox(height: 16),
-          OtherRankWidget(),
-          SizedBox(height: 16),
-          OtherRankWidget(),
-        ],
+      child: Consumer<BuyOrNotProvider>(
+          builder: (context, buyOrNotProvider, child) {
+            TopRank topRank = buyOrNotProvider.topRank;
+          return Column(
+            children: [
+              NumberOneRankWidget(topRank),
+              SizedBox(height: 16),
+              OtherRankWidget(1, topRank),
+              SizedBox(height: 16),
+              OtherRankWidget(2, topRank),
+            ],
+          );
+        }
       ),
     );
   }
@@ -96,20 +104,29 @@ class _CreateNotRankingState extends State<NotRanking> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: [
-          NumberOneRankWidget(),
-          SizedBox(height: 16),
-          OtherRankWidget(),
-          SizedBox(height: 16),
-          OtherRankWidget(),
-        ],
+      child: Consumer<BuyOrNotProvider>(
+          builder: (context, buyOrNotProvider, child) {
+            TopRank topRank = buyOrNotProvider.topRank;
+          return Column(
+            children: [
+              NumberOneRankWidget(topRank),
+              SizedBox(height: 16),
+              OtherRankWidget(1, topRank),
+              SizedBox(height: 16),
+              OtherRankWidget(2, topRank),
+            ]
+          );
+        }
       ),
     );
   }
 }
 
 class OtherRankWidget extends StatelessWidget {
+  final TopRank topRank;
+  final int ranking;
+  OtherRankWidget(this.ranking, this.topRank);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -124,21 +141,37 @@ class OtherRankWidget extends StatelessWidget {
                 Row(
                   children: [
                     SizedBox(width: 15),
-                    Text('2', style: rankingNumberStyle),
+                    Text("${ranking+1}", style: rankingNumberStyle),
                     SizedBox(width: 20),
-                    Text('한국타이어앤테크놀로지',style: thisBuyOrNotWidgetTitleStyle),
+                    Text(topRank.topRankList[ranking]?.company ?? '',style: thisBuyOrNotWidgetTitleStyle),
                   ],
                 ),
                 SizedBox(height: 3),
                 Row(
                   children: [
                     SizedBox(width: 45),
-                    Text("^1,395,820원 (+295%)", style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        height: 16/14,
-                        color: possibleColor
-                    ),),
+                    Row(
+                      children: [
+                        Text(emojiIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0), style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            height: 16/14,
+                            color: colorIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0)
+                        )),
+                        Text(numberWithComma(topRank.topRankList[ranking]?.currentPrice.toString() ?? ''), style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            height: 16/14,
+                            color: colorIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0)
+                        )),
+                        Text("원 (${checkIncreaseOrDecrease(topRank.topRankList[ranking]?.changeInPercent)}${topRank.topRankList[ranking]?.changeInPercent}%)", style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            height: 16/14,
+                            color: colorIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0)
+                        )),
+                      ],
+                    ),
                   ],
                 ),
                 SizedBox(height: 15),
@@ -155,7 +188,7 @@ class OtherRankWidget extends StatelessWidget {
                       SizedBox(width: 1),
                       Text('살?', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15,color: likeColor),),
                       SizedBox(width: 5),
-                      Text('32,547', style: valueNumberStyle),
+                      Text("${numberWithComma(topRank.topRankList[ranking]?.buyCnt.toString() ?? '')}", style: valueNumberStyle),
                       SizedBox(width: 23),
                       Container(
                           height: 20,
@@ -165,7 +198,7 @@ class OtherRankWidget extends StatelessWidget {
                       SizedBox(width: 1),
                       Text('말?', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15,color: unlikeColor)),
                       SizedBox(width: 5),
-                      Text('1,2347', style: valueNumberStyle),
+                      Text("${numberWithComma(topRank.topRankList[ranking]?.sellCnt.toString() ?? '')}", style: valueNumberStyle),
                     ],
                   ),
                 )
@@ -175,6 +208,9 @@ class OtherRankWidget extends StatelessWidget {
 }
 
 class NumberOneRankWidget extends StatelessWidget {
+  final TopRank topRank;
+  NumberOneRankWidget(this.topRank);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -191,19 +227,31 @@ class NumberOneRankWidget extends StatelessWidget {
                   SizedBox(width: 15),
                   Text('1', style: rankingNumberStyle),
                   SizedBox(width: 20),
-                  Text('한국타이어앤테크놀로지', style: thisBuyOrNotWidgetTitleStyle),
+                  Text(topRank.topRankList[0]?.company ?? '', style: thisBuyOrNotWidgetTitleStyle),
                 ],
               ),
               SizedBox(height: 3),
               Row(
                 children: [
                   SizedBox(width: 45),
-                  Text("^1,395,820원 (+295%)", style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    height: 16/14,
-                    color: possibleColor
-                  ),),
+                  Text(emojiIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0), style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      height: 16/14,
+                      color: colorIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0)
+                  )),
+                  Text(numberWithComma(topRank.topRankList[0]?.currentPrice.toString() ?? ''), style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      height: 16/14,
+                      color: colorIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0)
+                  )),
+                  Text("원 (${checkIncreaseOrDecrease(topRank.topRankList[0]?.changeInPercent)}${topRank.topRankList[0]?.changeInPercent}%)", style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      height: 16/14,
+                      color: colorIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0)
+                  )),
                 ],
               ),
               SizedBox(height: 15),
@@ -218,7 +266,7 @@ class NumberOneRankWidget extends StatelessWidget {
                   children: [
                     BuyOrNotButtonWidget(
                       type: "BUY",
-                      value: 0, //buyOrNotStock?.buyCount ?? 0,
+                      value: topRank.topRankList[0]?.buyCnt ?? 0, //buyOrNotStock?.buyCount ?? 0,
                       onTap: () {
                         //actionEvaluation(context, buyOrNotStock, 'BUY');
                       },
@@ -231,7 +279,7 @@ class NumberOneRankWidget extends StatelessWidget {
                     SizedBox(width: 23),
                     BuyOrNotButtonWidget(
                       type: "SELL",
-                      value: 0, //buyOrNotStock?.buyCount ?? 0,
+                      value: topRank.topRankList[0]?.sellCnt ?? 0, //buyOrNotStock?.buyCount ?? 0,
                       onTap: () {
                         //actionEvaluation(context, buyOrNotStock, 'BUY');
                       },
@@ -252,16 +300,16 @@ class NumberOneRankWidget extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text('닉네임', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, height: 20/14)),
+                        Text(topRank.topRankEvaluation?.displayName ?? '', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, height: 20/14)),
                         SizedBox(width: 10),
-                        Text('2일전', style:dateNumberStyle)
+                        Text(topRank.topRankEvaluation?.createdDateText ?? '', style:dateNumberStyle)
                       ],
                     ),
                     SizedBox(height: 10),
                     ProsAndConsWidget(
-                      pros: '망해도 국가가 살려줄 국민주',
+                      pros: topRank.topRankEvaluation?.pros ?? '',
                       //evaluationItem?.pros ?? '',
-                      cons: '내가 벌때 쟤도 범',
+                      cons: topRank.topRankEvaluation?.cons ?? '',
                       //evaluationItem?.cons ?? '',
                       isLoading: false, //isLoadihg,
                     ),
@@ -292,4 +340,11 @@ const dateNumberStyle = TextStyle(
   fontWeight: FontWeight.w400,
   fontSize: 12,
   color: Color(0xFF8C8C8C)
+);
+
+const possibleStyle = TextStyle(
+    fontWeight: FontWeight.w500,
+    fontSize: 14,
+    height: 16/14,
+    color: possibleColor
 );
