@@ -15,7 +15,7 @@ class CurrentStockContentWidget extends StatefulWidget {
 }
 
 class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
-  String _currentButton = '전체';
+  String _currentButton = '최고가';
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +70,8 @@ class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                currentStockPriceContentButton('전체'),
-                currentStockPriceContentButton('장중'),
-                currentStockPriceContentButton('주간'),
-                currentStockPriceContentButton('연간')
+                currentStockPriceContentButton('최고가'),
+                currentStockPriceContentButton('최저가'),
               ],
             ),
             SizedBox(
@@ -81,7 +79,7 @@ class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
             ),
             Container(
               height: 128,
-              padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: EdgeInsets.only(left: 20, right: 20, top: 10),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18.0),
                   color: Color.fromRGBO(245, 245, 245, 0.98)),

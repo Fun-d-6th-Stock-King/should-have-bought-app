@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
 
@@ -29,27 +30,37 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
 
   /// Returns the list of spline area series with vertical gradient.
   List<LineSeries<_ChartData, num>> _getDataLabelDefaultSeries(CurrentStockPrice value) {
-    final List<_ChartData> dayData = <_ChartData>[
-    ];
-    final List<_ChartData> weekData = <_ChartData>[
-    ];
-    final List<_ChartData> yearData = <_ChartData>[
-    ];
+
+    final List<_ChartData> dayHighData = <_ChartData>[];
+    final List<_ChartData> weekHighData = <_ChartData>[];
+    final List<_ChartData> yearHighData = <_ChartData>[];
+    final List<_ChartData> defaltHighData = <_ChartData>[];
+    final List<_ChartData> dayLowData = <_ChartData>[];
+    final List<_ChartData> weekLowData = <_ChartData>[];
+    final List<_ChartData> yearLowData = <_ChartData>[];
+    final List<_ChartData> defaltLowData = <_ChartData>[];
     final List<Color> color = <Color>[];
 
     color.add(const Color(0xFFFF6258));
 
-    dayData.add(_ChartData(1, value.dayLow));
-    dayData.add(_ChartData(9, value.dayHigh));
-    weekData.add(_ChartData(1, value.weekHigh));
-    weekData.add( _ChartData(9, value.weekLow));
-    yearData.add(_ChartData(1, value.yearLow));
-    yearData.add( _ChartData(9, value.yearHigh));
-    LineSeries<_ChartData, num> daliy() {
+    dayHighData.add(_ChartData(1, value.dayHigh));
+    weekHighData.add( _ChartData(5, value.weekHigh));
+    yearHighData.add( _ChartData(9, value.yearHigh));
+    defaltHighData.add(_ChartData(1, value.dayHigh));
+    defaltHighData.add( _ChartData(5, value.weekHigh));
+    defaltHighData.add( _ChartData(9, value.yearHigh));
+    dayLowData.add(_ChartData(1, value.dayLow));
+    weekLowData.add(_ChartData(5, value.weekLow));
+    yearLowData.add(_ChartData(9, value.yearLow));
+    defaltLowData.add(_ChartData(1, value.dayLow));
+    defaltLowData.add(_ChartData(5, value.weekLow));
+    defaltLowData.add(_ChartData(9, value.yearLow));
+
+    LineSeries<_ChartData, num> daliyChart(String type) {
       return LineSeries<_ChartData, num>(
           animationDuration: 2500,
           legendIconType: LegendIconType.circle,
-          dataSource: dayData,
+          dataSource: type == "high" ? dayHighData : dayLowData,
           color: const Color(0xFF4990FF),
           width: 2,
           name: '장중',
@@ -69,13 +80,12 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
             offset: Offset(0, 0),
           ));
     }
-    LineSeries<_ChartData, num> weekly() {
-
+    LineSeries<_ChartData, num> weeklyChart(String type) {
       return LineSeries<_ChartData, num>(
           animationDuration: 2500,
           legendIconType: LegendIconType.circle,
-          dataSource: weekData,
-          color: Color(0xFFFF6258),
+          dataSource: type == "high" ? weekHighData : weekLowData,
+          color: const Color(0xFFFF6258),
           width: 2,
           name: '주간',
           xValueMapper: (_ChartData sales, _) => sales.x,
@@ -94,13 +104,12 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
             offset: Offset(0, 0),
           ));
     }
-    LineSeries<_ChartData, num> yearly() {
-
+    LineSeries<_ChartData, num> yearlyChart(String type) {
       return LineSeries<_ChartData, num>(
           animationDuration: 2500,
           legendIconType: LegendIconType.circle,
-          dataSource: yearData,
-          color: Color(0xFFFF9900),
+          dataSource: type == "high" ? yearHighData : yearLowData,
+          color: const Color(0xFFFF9900),
           width: 2,
           name: '연간',
           xValueMapper: (_ChartData sales, _) => sales.x,
@@ -119,14 +128,44 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
             offset: Offset(0, 0),
           ));
     }
-    if (widget.type == '장중') {return <LineSeries<_ChartData, num>> [daliy()];}
-    if (widget.type == '주간') {return <LineSeries<_ChartData, num>> [weekly()];}
-    if (widget.type == '연간') {return <LineSeries<_ChartData, num>> [yearly()];}
+    LineSeries<_ChartData, num> defaultChart(String type) {
+      return LineSeries<_ChartData, num>(
+          animationDuration: 2500,
+          legendIconType: LegendIconType.circle,
+          dataSource: type == "high" ? defaltHighData : defaltLowData,
+          color: Colors.blueGrey,
+          width: 2,
+          name: '',
+          xValueMapper: (_ChartData sales, _) => sales.x,
+          yValueMapper: (_ChartData sales, _) => sales.y,
+          markerSettings: MarkerSettings(
+            isVisible: false,
+            width: 6,
+            height: 6,
+            color: Colors.blueGrey,
+          ),
+          dataLabelSettings: DataLabelSettings(
+            isVisible: true,
+            useSeriesColor: false,
+            alignment: ChartAlignment.center,
+            labelAlignment: ChartDataLabelAlignment.top,
+            offset: Offset(0, 0),
+          ));
+    }
+    if (widget.type == '최고가') {
+      return <LineSeries<_ChartData, num>> [
+        defaultChart('high'),
+        daliyChart('high'),
+        weeklyChart('high'),
+        yearlyChart('high'),
+      ];
+    }
 
     return <LineSeries<_ChartData, num>>[
-      daliy(),
-      weekly(),
-      yearly()
+      defaultChart('low'),
+      daliyChart('low'),
+      weeklyChart('low'),
+      yearlyChart('low'),
     ];
   }
 
@@ -157,29 +196,25 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
           padding: 3,
           textStyle: TextStyle(color: Color(0xFF979797), fontSize: 10,)
       ),
-      // onDataLabelRender: (DataLabelRenderArgs args) {
-      //   dataLabel(args);
-      // },
+      onDataLabelRender: (DataLabelRenderArgs args) {
+        dataLabel(args);
+      },
+      onLegendItemRender: (args) {
+        if(args.seriesIndex == 0) {
+          args.text = "";
+          args.legendIconType = LegendIconType.image;
+        }
+      },
       //trackballBehavior: _trackballBehavior,
       series: _getDataLabelDefaultSeries(value),
     );
   }
 }
 
-// void dataLabel(DataLabelRenderArgs args) {
-//   if(args.pointIndex == 0) {
-//     args.textStyle = TextStyle(color:Color(0xFF5D99F2), fontWeight: FontWeight.bold);
-//     args.offset = Offset(0,-30);
-//     args.text = "최저 ${args.text}";
-//   }
-//   else if (args.pointIndex == args.dataPoints.length-1) {
-//     args.textStyle = TextStyle(color:Color(0xFFFF6258), fontWeight: FontWeight.bold);
-//     args.offset = Offset(0,30);
-//     args.text = "최고 ${args.text}";
-//   } else {
-//     args.text = "";
-//   }
-// }
+void dataLabel(DataLabelRenderArgs args) {
+  args.text = "${numberWithComma(args.text)}";
+}
+
 class _ChartData {
   _ChartData(this.x, this.y);
 
