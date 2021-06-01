@@ -3,14 +3,11 @@ import 'package:should_have_bought_app/models/calculator/result/calculator_date_
 class CalculatorStockAll {
   String code;
   String name;
-  int currentPrice;
   final Map<String, CalculatorDateStock> dateToStock = {};
 
   CalculatorStockAll.fromJson(Map<dynamic, dynamic> map) {
-    // print(map['day1']);
     code = map['code'];
     name = map['company'];
-    currentPrice = map['currentPrice'].toInt();
     dateToStock['day1'] = toStock(map['day1']);
     dateToStock['week1'] = toStock(map['week1']);
     dateToStock['month1'] = toStock(map['month1']);

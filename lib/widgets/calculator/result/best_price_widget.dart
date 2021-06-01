@@ -44,7 +44,7 @@ class _BestPriceWidgetState extends State<BestPriceWidget> {
         builder: (context, calculatorProvider, child) {
       final _bestPrice = calculatorProvider.bestPriceResult;
       if (_bestPrice == null) {
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       }
       setYieldTextColor(_bestPrice.yieldPercent);
       return Column(
