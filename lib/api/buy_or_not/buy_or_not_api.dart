@@ -45,8 +45,24 @@ class BuyOrNotApi extends Api{
           .replace(queryParameters: data),
       headers: header,
     );
-    print('[POST]] /api/buyornot/:stockCode');
+    print('[POST] /api/buyornot/:stockCode');
     print(response.statusCode);
+    if(response.statusCode == 200) {
+      final resposeBody = json.decode(utf8.decode(response.bodyBytes));
+      return resposeBody;
+    }
+    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
+  }
+  
+  static Future getBuyRankList(String buySell, String rankListType) async {
+    Map<String, String> header = await Api.getHeader();
+    final response = await http.get(
+      Uri.parse("$stockApiUrl/api/buyornot/getBuyRankList/$buySell/$rankListType"),
+      headers: header,
+    );
+    print('[GET] /api/buyornot/getBuyRankList/:buySell/:rankListType');
+    print(response.statusCode);
+
     if(response.statusCode == 200) {
       final resposeBody = json.decode(utf8.decode(response.bodyBytes));
       return resposeBody;
