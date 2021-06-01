@@ -118,4 +118,21 @@ class CalculatorApi extends Api {
     throw Exception(
         response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
   }
+
+  static Future getCurrentStockPrice() async {
+    Map<String, String> header = await Api.getHeader();
+    final response = await http.get(
+      Uri.parse("$stockApiUrl/api/buythen/high-row"),
+      headers: header,
+    );
+    print('[GET] /api/buythen/high-row');
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      final resposeBody = json.decode(utf8.decode(response.bodyBytes));
+      return resposeBody;
+    }
+    throw Exception(
+        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+  }
 }

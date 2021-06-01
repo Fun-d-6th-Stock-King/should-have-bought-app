@@ -1,14 +1,18 @@
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/models/today_word/word_item.dart';
 import 'package:should_have_bought_app/providers/today_word/today_word_provider.dart';
+import 'package:should_have_bought_app/screens.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/today_word_appbar.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
+import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
 import '../../constant.dart';
 
@@ -28,15 +32,9 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
       'pageNo': '1',
       'pageSize': '100'
     };
-    var isEmpty = Provider.of<TodayWordProvider>(context, listen: false)
-            .wordItemList
-            .isEmpty
-        ? true
-        : false;
-    if (isEmpty) {
-      Provider.of<TodayWordProvider>(context, listen: false)
-          .getWordList(parmeters);
-    }
+
+    Provider.of<TodayWordProvider>(context, listen: false)
+        .getWordList(parmeters);
   }
 
   @override
@@ -46,46 +44,43 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
       body: Consumer<TodayWordProvider>(
           builder: (context, todayWordProvider, child) {
         var wordItemList = todayWordProvider.wordItemList;
-        return Container(
-          margin: EdgeInsets.only(bottom: 100),
-          child: ListView.builder(
-              itemCount: wordItemList.length,
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return Column(
-                    children: [
-                      FlatBackgroundFrame(child: HeaderWidget()),
-                      SizedBox(height: 37),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text('최신순'),
-                                Icon(Icons.keyboard_arrow_down_outlined)
-                              ],
-                            ),
-                            SizedBox(height: 11),
-                            WordCardWidget(wordItemList[index])
-                          ],
-                        ),
-                      )
-                    ],
-                  );
-                }
-                return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: WordCardWidget(wordItemList[index]),
-                );
-              }),
+        var isLoading = todayWordProvider.isLoading;
+        return SingleChildScrollView(
+          physics: ScrollPhysics(),
+          child: Column(
+            children: [
+              FlatBackgroundFrame(child: HeaderWidget()),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text('최신순'),
+                    Icon(Icons.keyboard_arrow_down_outlined)
+                  ],
+                ),
+              ),
+              ListView.builder(
+                  padding: EdgeInsets.zero,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: wordItemList.length,
+                  itemBuilder: (context, index) {
+                    return WordCardWidget(wordItemList[index], _auth);
+                  }),
+              SizedBox(height: 80)
+            ],
+          ),
         );
       }),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100.0),
         child: FloatingActionButton(
           backgroundColor: mainColor,
+          onPressed: () => _auth.currentUser == null
+              ? LoginHandler(context)
+              : _writeWord(context),
           // onPressed: () => _showCreateWordBottomSheet(context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -100,6 +95,28 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
         ),
       ),
     );
+  }
+
+  _writeWord(BuildContext context) {
+    // showModalBottomSheet(
+    //     context: context,
+    //     isScrollControlled: true,
+    //     backgroundColor: Colors.white,
+    //     shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.only(
+    //       topLeft: Radius.circular(8.0),
+    //       topRight: Radius.circular(8.0),
+    //     )),
+    //     builder: (ctx) {
+    //       return Text("zxczxcxc");
+    //     });
+    // var parmeters = <String, dynamic>{
+    //   'order': 'LATELY',
+    //   'pageNo': '1',
+    //   'pageSize': '100'
+    // };
+    //     .getWordList(parmeters);
+    // Provider.of<TodayWordProvider>(context, listen: false).getMore();
   }
 }
 
@@ -140,6 +157,8 @@ class BestWordWidget extends StatefulWidget {
 }
 
 class _CreateBestWordWidgetState extends State<BestWordWidget> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -153,11 +172,12 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
       padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Consumer<TodayWordProvider>(
           builder: (context, todayWordProvider, child) {
         var wordItem = todayWordProvider.todayBest;
+        var isLoading = todayWordProvider.isLoading;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -211,14 +231,22 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
                 ),
                 Column(
                   children: [
-                    SizedBox(
-                      width: 36,
-                      height: 36,
-                      child: ClipOval(
-                        child: Container(
-                          color: mainColor,
-                          child: Image(
-                              image: AssetImage('assets/icons/ico_heart.png')),
+                    InkWell(
+                      onTap: () => _auth.currentUser == null
+                          ? LoginHandler(context)
+                          : Provider.of<TodayWordProvider>(context,
+                                  listen: false)
+                              .likeWord(wordItem),
+                      child: SizedBox(
+                        width: 36,
+                        height: 36,
+                        child: ClipOval(
+                          child: Container(
+                            color: wordItem.userlike ? mainColor : kGreyColor,
+                            child: Image(
+                                image:
+                                    AssetImage('assets/icons/ico_heart.png')),
+                          ),
                         ),
                       ),
                     ),
@@ -245,27 +273,49 @@ class _CreateBestWordWidgetState extends State<BestWordWidget> {
       }),
     );
   }
+
+// _likeWord(WordItem wordItem) {
+//   EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
+//   Provider.of<TodayWordProvider>(context, listen: false)
+//       .likeWord(wordItem.id)
+//       .then((value) {
+//     wordItem.userlike = !wordItem.userlike;
+//     if (wordItem.userlike) {
+//       wordItem.likeCount += 1;
+//     } else {
+//       wordItem.likeCount -= 1;
+//     }
+//     EasyLoading.dismiss();
+//   });
+// }
 }
 
 /// 단어 카드 위젯
 class WordCardWidget extends StatelessWidget {
   final WordItem wordItem;
-  WordCardWidget(this.wordItem);
+  final FirebaseAuth _auth;
+  bool isMine;
+
+  WordCardWidget(this.wordItem, this._auth) {
+    isMine = _auth?.currentUser?.uid == wordItem.createdUid;
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        print("단어 카드 위젯");
         // Navigator.push(context, MaterialPageRoute(builder: (context) => StockDetailScreen(wordItem,1)));
       },
       child: Container(
           width: MediaQuery.of(context).size.width,
           padding:
               const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 26),
-          margin: const EdgeInsets.only(bottom: 15),
+          margin:
+              const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,12 +330,12 @@ class WordCardWidget extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            wordItem.displayName,
+                            '${wordItem.displayName}${isMine ? '(나)' : ''}',
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w800,
                                 height: 20 / 14,
-                                color: Color(0xFF333333)),
+                                color: isMine ? mainColor : Color(0xFF333333)),
                           ),
                           SizedBox(width: 2),
                           Text(
@@ -320,15 +370,22 @@ class WordCardWidget extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      SizedBox(
-                        width: 36,
-                        height: 36,
-                        child: ClipOval(
-                          child: Container(
-                            color: mainColor,
-                            child: Image(
-                                image:
-                                    AssetImage('assets/icons/ico_heart.png')),
+                      InkWell(
+                        onTap: () => _auth.currentUser == null
+                            ? LoginHandler(context)
+                            : Provider.of<TodayWordProvider>(context,
+                                    listen: false)
+                                .likeWord(wordItem),
+                        child: SizedBox(
+                          width: 36,
+                          height: 36,
+                          child: ClipOval(
+                            child: Container(
+                              color: wordItem.userlike ? mainColor : kGreyColor,
+                              child: Image(
+                                  image:
+                                      AssetImage('assets/icons/ico_heart.png')),
+                            ),
                           ),
                         ),
                       ),
@@ -347,10 +404,7 @@ class WordCardWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                      wordItem.createdDate.isNotEmpty
-                          ? wordItem.createdDate.substring(0, 10)
-                          : '',
+                  Text(commonDayDateFormat(wordItem.createdDate),
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

@@ -8,6 +8,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 import 'package:should_have_bought_app/models/calculator/result/best_price.dart';
+import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
 
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
@@ -19,6 +20,7 @@ class CalculatorProvider with ChangeNotifier {
   CalculatorStock calculationResult;
   BestPrice bestPriceResult;
   SectorData sectorData;
+  List<CurrentStockPrice> _currentStockPriceList = <CurrentStockPrice>[];
 
   List get companyList {
     return _companyList;
@@ -35,6 +37,8 @@ class CalculatorProvider with ChangeNotifier {
   List get calculateHistory {
     return _calculateHistory;
   }
+
+  List<CurrentStockPrice> get currentStockPriceList => _currentStockPriceList;
 
   void filterSearchResults(String query) {
     List<Company> dummySearchList = [];
@@ -127,6 +131,16 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getBestPrice(latestDto['code'],
         latestDto['investDate'], int.parse(latestDto['investPrice']));
     bestPriceResult = BestPrice.fromJson(result);
+    calculationResultAll = CalculatorStockAll.fromJson(result);
+  }
+
+  Future getCurrentStockPrice() async {
+    final result = await CalculatorApi.getCurrentStockPrice();
+    print(result);
+    _currentStockPriceList = result
+        .map<CurrentStockPrice>(
+            (currentStock) => CurrentStockPrice.fromJson(currentStock))
+        .toList();
     notifyListeners();
   }
 }

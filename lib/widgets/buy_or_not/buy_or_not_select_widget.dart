@@ -7,6 +7,7 @@ import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.
 import 'package:should_have_bought_app/screens/util/loading_screen.dart';
 import 'package:should_have_bought_app/screens/util/skeleton_widget.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/button/buy_or_not_button_widget.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
 class BuyorNotSelectWidget extends StatefulWidget {
@@ -62,102 +63,26 @@ class _CreateBuyorNotSelectWidgetState extends State<BuyorNotSelectWidget> {
             ),
             height: 82,
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              InkWell(
+              BuyOrNotButtonWidget(
+                 type: "BUY",
+                value: buyOrNotStock?.buyCount ?? 0,
                 onTap: () {
-                  print('살래');
-                  isLoading ? null :actionEvaluation(context, buyOrNotStock, 'BUY');
+                  actionEvaluation(context, buyOrNotStock, 'BUY');
                 },
-                child:Wrap(
-                  children: [
-                    isLoading ? LoadingScreen() : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: ClipOval(
-                            child: Container(
-                              color: buyOrNotStock.userBuySell == "BUY"
-                                  ? likeColor
-                                  : disableColor,
-                              padding: EdgeInsets.only(bottom: 5),
-                              child: Image(image: AssetImage('assets/icons/ico_like_big.png')),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '살래?',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            height: 20 / 14,
-                            color: likeColor,
-                          ),
-                        ),
-                        isLoading ? skeletonText(30, 15) : Text("${buyOrNotStock?.buyCount ?? 0}",
-                            style: buyOrNotCountTextStyle),
-                      ],
-                    ),
-                  ],
-                ),
+                isChecked: buyOrNotStock.userBuySell == "BUY" ? true : false,
               ),
               SizedBox(width: 50),
-              InkWell(
+              BuyOrNotButtonWidget(
+                type: "SELL",
+                value: buyOrNotStock?.sellCount ?? 0,
                 onTap: () {
-                  print('말래');
-                  isLoading ? null : actionEvaluation(context, buyOrNotStock, 'SELL');
+                  actionEvaluation(context, buyOrNotStock, 'SELL');
                 },
-                child: Wrap(
-                  children: [
-                    isLoading ? LoadingScreen() : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: ClipOval(
-                            child: Container(
-                              color: buyOrNotStock.userBuySell == "SELL"
-                                  ? nagativeColor
-                                  : disableColor,
-                              child: Image(
-                                  image: AssetImage(
-                                      'assets/icons/ico_unlike_big.png')),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '말래?',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            height: 20 / 14,
-                            color: unlikeColor,
-                          ),
-                        ),
-                        isLoading ? skeletonText(30, 15) : Text("${buyOrNotStock?.sellCount ?? 0}",
-                            style: buyOrNotCountTextStyle),
-                      ],
-                    ),
-                  ],
-                ),
+                isChecked: buyOrNotStock.userBuySell == "SELL" ? true : false,
               ),
             ]),
           );
         });
   }
 }
+

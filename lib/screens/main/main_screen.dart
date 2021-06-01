@@ -8,6 +8,7 @@ import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/hey_you_too/hey_you_too.dart';
 import 'package:should_have_bought_app/widgets/main/current_stock_price_widget.dart';
 import 'package:should_have_bought_app/widgets/main/header_widget.dart';
+import 'package:should_have_bought_app/widgets/main/this_buy_or_not_widget.dart';
 import 'package:should_have_bought_app/widgets/today_word/today_word_best.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,11 +17,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<dynamic> historyList;
-
   @override
   void initState() {
-    Provider.of<CalculatorProvider>(context, listen: false).getHistory();
     super.initState();
   }
 
@@ -36,15 +34,8 @@ class _MainScreenState extends State<MainScreen> {
       appBar: DefaultAppBar(context),
       body: RefreshIndicator(
         onRefresh: () async {
-          Provider.of<CalculatorProvider>(context, listen: false)
-              .getHistory()
-              .then(
-                (value) => {
-                  historyList =
-                      Provider.of<CalculatorProvider>(context, listen: false)
-                          .calculateHistory
-                },
-              );
+          await Provider.of<CalculatorProvider>(context, listen: false)
+              .getHistory();
         },
         child: SingleChildScrollView(
           child: Column(
@@ -53,10 +44,7 @@ class _MainScreenState extends State<MainScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Frame(child: HeaderWidget()),
-                  SizedBox(
-                    height: 21,
-                  ),
-                  // add 계산기
+                  SizedBox(height: 21), // add 계산기
                   Frame(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -75,43 +63,17 @@ class _MainScreenState extends State<MainScreen> {
                     height: 7,
                   ),
                   Frame(child: CalculatorWidget()),
-                  SizedBox(
-                    height: 50,
-                  ),
+                  SizedBox(height: 50),
                   Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-                  SizedBox(
-                    height: 43,
-                  ),
+                  SizedBox(height: 43),
                   Frame(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "그때 살걸... 야, 너두?",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text('더보기'),
-                            Icon(Icons.keyboard_arrow_right_outlined),
-                          ],
-                        )
-                        //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
-                      ],
-                    ),
+                    child: MainTitle(title: "그때 살걸... 야, 너두?", more: () {}),
                   ),
                   SizedBox(height: 16),
                   HeyYouToo(),
-                  SizedBox(
-                    height: 50,
-                  ),
+                  SizedBox(height: 50),
                   Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-                  SizedBox(
-                    height: 43,
-                  ),
+                  SizedBox(height: 43),
                   Frame(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,60 +112,21 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ),
                   CurrentStockPriceWidget(),
-                  SizedBox(
-                    height: 50,
-                  ),
+                  SizedBox(height: 50),
                   Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-                  SizedBox(
-                    height: 43,
-                  ),
-                  Frame(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "오늘의 BEST 단어",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 23,
-                  ),
+                  SizedBox(height: 43),
+                  Frame(child: MainTitle(title: "오늘의 BEST 단어")),
+                  SizedBox(height: 23),
                   Frame(child: TodayWordBest()),
-                  SizedBox(
-                    height: 51,
-                  ),
+                  SizedBox(height: 51),
                   Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-                  SizedBox(
-                    height: 43,
-                  ),
-                  Frame(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "이거 살까? 말까?",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text('더보기'),
-                            Icon(Icons.keyboard_arrow_right_outlined),
-                          ],
-                        )
-                        //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
-                      ],
-                    ),
-                  ),
+                  SizedBox(height: 43),
+                  Frame(child: MainTitle(title: "이거 살까? 말까?", more: () {})),
+                  SizedBox(height: 23),
+                  ThisBuyOrNotWidget(),
+                  Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+                  SizedBox(height: 43),
+                  Frame(child: MainTitle(title: "이때 팔걸")),
                   SizedBox(
                       height: 164,
                       child: Card(
@@ -228,6 +151,36 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class MainTitle extends StatelessWidget {
+  final String title;
+  final VoidCallback more;
+  MainTitle({@required this.title, this.more});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title ?? '',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        more == null
+            ? Row()
+            : Row(
+                children: <Widget>[
+                  Text('더보기'),
+                  Icon(Icons.keyboard_arrow_right_outlined),
+                ],
+              )
+        //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
+      ],
     );
   }
 }

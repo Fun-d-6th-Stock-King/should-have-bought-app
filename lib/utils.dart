@@ -80,7 +80,6 @@ bool isNotLogin(User currentUser) {
 
 String checkIncreaseOrDecrease(double percent) {
   if (percent > 0) return '+';
-  if (percent < 0) return '-';
   return '';
 }
 
@@ -99,4 +98,10 @@ class Frame extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.only(left: 16, right: 16), child: child);
   }
+}
+
+String emojiIncreaseOrDecrease(double percent) {
+  if (percent > 0) return "▲ ";
+  if (percent < 0) return "▼ ";
+  return "- ";
 }
