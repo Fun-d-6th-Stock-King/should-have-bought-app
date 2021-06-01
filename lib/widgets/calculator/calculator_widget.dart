@@ -31,7 +31,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   @override
   void initState() {
     super.initState();
-    String price = Provider.of<CalculatorWidgetProvider>(context, listen: false).price;
+    String price =
+        Provider.of<CalculatorWidgetProvider>(context, listen: false).price;
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma(price);
@@ -50,12 +51,15 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   }
 
   void setCompanyValue(Company company) {
-    Provider.of<CalculatorWidgetProvider>(context,listen:false).setCompanyValue(company);
+    Provider.of<CalculatorWidgetProvider>(context, listen: false)
+        .setCompanyValue(company);
   }
 
   void _showDatePicker(BuildContext context) {
     final _screenSize = MediaQuery.of(context).size;
-    final _selectedDateValue = Provider.of<CalculatorWidgetProvider>(context,listen:false).selectedDateValue;
+    final _selectedDateValue =
+        Provider.of<CalculatorWidgetProvider>(context, listen: false)
+            .selectedDateValue;
 
     showCupertinoModalPopup(
       context: context,
@@ -65,10 +69,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
         child: CupertinoPicker(
           backgroundColor: Colors.white,
           itemExtent: 30,
-          scrollController: FixedExtentScrollController(initialItem: dates.indexOf(_selectedDateValue)),
+          scrollController: FixedExtentScrollController(
+              initialItem: dates.indexOf(_selectedDateValue)),
           children: [for (String date in dates) Text(dateValue[date])],
           onSelectedItemChanged: (value) {
-            Provider.of<CalculatorWidgetProvider>(context,listen:false).setSelectedDateValue(dates[value]);
+            Provider.of<CalculatorWidgetProvider>(context, listen: false)
+                .setSelectedDateValue(dates[value]);
           },
         ),
       ),
@@ -94,95 +100,98 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
           padding:
               const EdgeInsets.only(left: 25, right: 25, top: 12, bottom: 12),
           child: Consumer<CalculatorWidgetProvider>(
-            builder: (context, calculatorWidgetProvider, child)  {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      viewSelectedDates(context, calculatorWidgetProvider.selectedDateValue),
-                      randomValuesButton(context)
-                    ],
-                  ),
-                  viewSelectedCompany(context, calculatorWidgetProvider.selectedCompany),
-                  viewSelectedPrice(context),
-                  // ToDo: 한글 금액
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        child: Text(
-                          '샀었더라면..?',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w100,
-                          ),
+              builder: (context, calculatorWidgetProvider, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    viewSelectedDates(
+                        context, calculatorWidgetProvider.selectedDateValue),
+                    randomValuesButton(context)
+                  ],
+                ),
+                viewSelectedCompany(
+                    context, calculatorWidgetProvider.selectedCompany),
+                viewSelectedPrice(context),
+                // ToDo: 한글 금액
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      child: Text(
+                        '샀었더라면..?',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w100,
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    child: CupertinoButton(
-                      color: mainColor,
-                      padding: EdgeInsets.all(0),
-                      child: calculatorWidgetProvider.isLoading
-                          ? FittedBox(
-                              fit: BoxFit.cover,
-                              child: Theme(
-                                  data: Theme.of(context)
-                                      .copyWith(accentColor: defaultFontColor),
-                                  child: CircularProgressIndicator()),
-                            )
-                          : Text(
-                              '지금 얼마?',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: defaultFontColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                      onPressed: () async {
-                        calculatorWidgetProvider.setLoading(true);
-                        await Provider.of<CalculatorProvider>(context,
-                                listen: false)
-                            .getResult(CalculatorDto(
-                                    code: calculatorWidgetProvider.selectedCompany.code,
-                                    investDate: calculatorWidgetProvider.selectedDateValue,
-                                    investPrice:
-                                        intToCurrency(_priceController.text))
-                                .toMap())
-                            .then((value) {
-                          Navigator.of(context)
-                              .pushNamed(CalculatorResultScreen.routeId)
-                              .then((value) => {
-                                    if (value == 'update')
-                                      {
-                                        Provider.of<CalculatorProvider>(context,
-                                                listen: false)
-                                            .getHistory()
-                                      }
-                                  });
-                        });
-                        calculatorWidgetProvider.setLoading(false);
-                      },
                     ),
-                  )
-                ],
-              );
-            }
-          ),
+                  ],
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                Container(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  child: CupertinoButton(
+                    color: mainColor,
+                    padding: EdgeInsets.all(0),
+                    child: calculatorWidgetProvider.isLoading
+                        ? FittedBox(
+                            fit: BoxFit.cover,
+                            child: Theme(
+                                data: Theme.of(context)
+                                    .copyWith(accentColor: defaultFontColor),
+                                child: CircularProgressIndicator()),
+                          )
+                        : Text(
+                            '지금 얼마?',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: defaultFontColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                    onPressed: () async {
+                      calculatorWidgetProvider.setLoading(true);
+                      await Provider.of<CalculatorProvider>(context,
+                              listen: false)
+                          .getResult(CalculatorDto(
+                                  code: calculatorWidgetProvider
+                                      .selectedCompany.code,
+                                  investDate: calculatorWidgetProvider
+                                      .selectedDateValue,
+                                  investPrice:
+                                      intToCurrency(_priceController.text))
+                              .toMap())
+                          .then((value) {
+                        Navigator.of(context)
+                            .pushNamed(CalculatorResultScreen.routeId)
+                            .then((value) => {
+                                  if (value == 'update')
+                                    {
+                                      Provider.of<CalculatorProvider>(context,
+                                              listen: false)
+                                          .getHistory()
+                                    }
+                                });
+                      });
+                      calculatorWidgetProvider.setLoading(false);
+                    },
+                  ),
+                )
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -499,7 +508,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     int RandomCompany = Random().nextInt(companyList.length);
     int RandomPrice = Random().nextInt(prices.length);
 
-    Provider.of<CalculatorWidgetProvider>(context,listen: false)
+    Provider.of<CalculatorWidgetProvider>(context, listen: false)
         .setCompanyAndDateValue(companyList[RandomCompany], dates[RandomDate]);
     _priceController.text = numberWithComma(prices[RandomPrice]);
   }

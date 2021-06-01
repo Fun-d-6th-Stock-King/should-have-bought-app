@@ -16,11 +16,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<dynamic> historyList;
-
   @override
   void initState() {
-    Provider.of<CalculatorProvider>(context, listen: false).getHistory();
     super.initState();
   }
 
@@ -36,15 +33,8 @@ class _MainScreenState extends State<MainScreen> {
       appBar: DefaultAppBar(context),
       body: RefreshIndicator(
         onRefresh: () async {
-          Provider.of<CalculatorProvider>(context, listen: false)
-              .getHistory()
-              .then(
-                (value) => {
-                  historyList =
-                      Provider.of<CalculatorProvider>(context, listen: false)
-                          .calculateHistory
-                },
-              );
+          await Provider.of<CalculatorProvider>(context, listen: false)
+              .getHistory();
         },
         child: SingleChildScrollView(
           child: Column(
