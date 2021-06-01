@@ -89,7 +89,56 @@ flutter:
     - assets/icons/ico_unlike_big.png
     - assets/icons/ico_search_white.png
     - assets/icons/ico_write.png
-
+    - assets/icons/ico_main_select.png
+    - assets/icons/1.5x/ico_main_select.png
+    - assets/icons/2x/ico_main_select.png
+    - assets/icons/3x/ico_main_select.png
+    - assets/icons/4x/ico_main_select.png
+    - assets/icons/ico_main_unselect.png
+    - assets/icons/1.5x/ico_main_unselect.png
+    - assets/icons/2x/ico_main_unselect.png
+    - assets/icons/3x/ico_main_unselect.png
+    - assets/icons/4x/ico_main_unselect.png
+    - assets/icons/ico_card_select.png
+    - assets/icons/1.5x/ico_card_select.png
+    - assets/icons/2x/ico_card_select.png
+    - assets/icons/3x/ico_card_select.png
+    - assets/icons/4x/ico_card_select.png
+    - assets/icons/ico_card_unselect.png
+    - assets/icons/1.5x/ico_card_unselect.png
+    - assets/icons/2x/ico_card_unselect.png
+    - assets/icons/3x/ico_card_unselect.png
+    - assets/icons/4x/ico_card_unselect.png
+    - assets/icons/ico_drip_select.png
+    - assets/icons/1.5x/ico_drip_select.png
+    - assets/icons/2x/ico_drip_select.png
+    - assets/icons/3x/ico_drip_select.png
+    - assets/icons/4x/ico_drip_select.png
+    - assets/icons/ico_drip_unselect.png
+    - assets/icons/1.5x/ico_drip_unselect.png
+    - assets/icons/2x/ico_drip_unselect.png
+    - assets/icons/3x/ico_drip_unselect.png
+    - assets/icons/4x/ico_drip_unselect.png
+    - assets/icons/ico_word_select.png
+    - assets/icons/1.5x/ico_word_select.png
+    - assets/icons/2x/ico_word_select.png
+    - assets/icons/3x/ico_word_select.png
+    - assets/icons/4x/ico_word_select.png
+    - assets/icons/ico_word_unselect.png
+    - assets/icons/1.5x/ico_word_unselect.png
+    - assets/icons/2x/ico_word_unselect.png
+    - assets/icons/3x/ico_word_unselect.png
+    - assets/icons/4x/ico_word_unselect.png
+    - assets/icons/ico_mypage_select.png
+    - assets/icons/1.5x/ico_mypage_select.png
+    - assets/icons/2x/ico_mypage_select.png
+    - assets/icons/3x/ico_mypage_select.png
+    - assets/icons/4x/ico_mypage_select.png
+    - assets/icons/ico_mypage_unselect.png
+    - assets/icons/1.5x/ico_mypage_unselect.png
+    - assets/icons/2x/ico_mypage_unselect.png
+    - assets/icons/3x/ico_mypage_unselect.png
+    - assets/icons/4x/ico_mypage_unselect.png
   # example:
   # fonts:
   #   - family: Schyler
