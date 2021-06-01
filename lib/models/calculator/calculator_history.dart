@@ -12,6 +12,7 @@ class CalculatorHistory {
   String createdUid;
   String sector;
   String sectorKor;
+  String createdDateText;
 
   CalculatorHistory.fromJson(Map<dynamic, dynamic> map) {
     id = map['id'].toString();
@@ -27,5 +28,6 @@ class CalculatorHistory {
     createdUid = map['createdUid'];
     sector = map['sector'];
     sectorKor = map['sectorKor'];
+    createdDateText = map['createdDateText'];
   }
 }

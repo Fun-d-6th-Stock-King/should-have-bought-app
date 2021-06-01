@@ -22,9 +22,10 @@ class CalculatorWidgetProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setCompanyAndDateValue(Company company, String selectedDateValue) {
+  void setCompanyAndDateValue(Company company, String selectedDateValue, {String price = '100000'}) {
     _selectedDateValue = selectedDateValue;
     _selectedCompany = company;
+    _price = price;
     notifyListeners();
   }
 

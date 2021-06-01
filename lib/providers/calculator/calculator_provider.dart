@@ -14,7 +14,7 @@ class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
   List _tenYearHighList = [];
-  List _calculateHistory = [];
+  List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
   CalculatorStockAll calculationResultAll;
   CalculatorStock calculationResult;
@@ -108,7 +108,7 @@ class CalculatorProvider with ChangeNotifier {
     list = result['calculationHistList'];
     if (list != null) {
       _calculateHistory =
-          list.map((history) => CalculatorHistory.fromJson(history)).toList();
+          list.map<CalculatorHistory>((history) => CalculatorHistory.fromJson(history)).toList();
       notifyListeners();
     }
   }
