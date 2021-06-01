@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/buy_or_not/top_rank.dart';
+import 'package:should_have_bought_app/models/buy_or_not/top_rank_evaluation.dart';
+import 'package:should_have_bought_app/models/buy_or_not/top_rank_item.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/button/buy_or_not_button_widget.dart';
@@ -74,13 +76,15 @@ class _CreateBuyRankingState extends State<BuyRanking> {
       child: Consumer<BuyOrNotProvider>(
           builder: (context, buyOrNotProvider, child) {
             TopRank topRank = buyOrNotProvider.topRank;
+            List<TopRankItem> topRankList = topRank.topRankList;
+            TopRankEvaluation evaluation = topRank.topRankEvaluation;
           return Column(
             children: [
-              NumberOneRankWidget(topRank),
+              NumberOneRankWidget(topRankList.isEmpty == true ? TopRankItem() : topRankList[0], evaluation),
               SizedBox(height: 16),
-              OtherRankWidget(1, topRank),
+              OtherRankWidget(1, topRankList.isEmpty == true ? TopRankItem() : topRankList[1]),
               SizedBox(height: 16),
-              OtherRankWidget(2, topRank),
+              OtherRankWidget(2, topRankList.isEmpty == true ? TopRankItem() : topRankList[2]),
             ],
           );
         }
@@ -107,13 +111,15 @@ class _CreateNotRankingState extends State<NotRanking> {
       child: Consumer<BuyOrNotProvider>(
           builder: (context, buyOrNotProvider, child) {
             TopRank topRank = buyOrNotProvider.topRank;
+            List<TopRankItem> topRankList = topRank.topRankList;
+            TopRankEvaluation evaluation = topRank.topRankEvaluation;
           return Column(
             children: [
-              NumberOneRankWidget(topRank),
+              NumberOneRankWidget(topRankList.isEmpty == true ? TopRankItem() : topRankList[0], evaluation),
               SizedBox(height: 16),
-              OtherRankWidget(1, topRank),
+              OtherRankWidget(1, topRankList.isEmpty == true ? TopRankItem() : topRankList[1]),
               SizedBox(height: 16),
-              OtherRankWidget(2, topRank),
+              OtherRankWidget(2, topRankList.isEmpty == true ? TopRankItem() : topRankList[2]),
             ]
           );
         }
@@ -123,9 +129,9 @@ class _CreateNotRankingState extends State<NotRanking> {
 }
 
 class OtherRankWidget extends StatelessWidget {
-  final TopRank topRank;
+  final TopRankItem topRankItem;
   final int ranking;
-  OtherRankWidget(this.ranking, this.topRank);
+  OtherRankWidget(this.ranking, this.topRankItem);
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +149,7 @@ class OtherRankWidget extends StatelessWidget {
                     SizedBox(width: 15),
                     Text("${ranking+1}", style: rankingNumberStyle),
                     SizedBox(width: 20),
-                    Text(topRank.topRankList[ranking]?.company ?? '',style: thisBuyOrNotWidgetTitleStyle),
+                    Text(topRankItem?.company ?? '',style: thisBuyOrNotWidgetTitleStyle),
                   ],
                 ),
                 SizedBox(height: 3),
@@ -152,23 +158,23 @@ class OtherRankWidget extends StatelessWidget {
                     SizedBox(width: 45),
                     Row(
                       children: [
-                        Text(emojiIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0), style: TextStyle(
+                        Text(emojiIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0), style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                             height: 16/14,
-                            color: colorIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0)
+                            color: colorIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0)
                         )),
-                        Text(numberWithComma(topRank.topRankList[ranking]?.currentPrice.toString() ?? ''), style: TextStyle(
+                        Text(numberWithComma(topRankItem?.currentPrice.toString() ?? ''), style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                             height: 16/14,
-                            color: colorIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0)
+                            color: colorIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0)
                         )),
-                        Text("원 (${checkIncreaseOrDecrease(topRank.topRankList[ranking]?.changeInPercent)}${topRank.topRankList[ranking]?.changeInPercent}%)", style: TextStyle(
+                        Text("원 (${checkIncreaseOrDecrease(topRankItem?.changeInPercent)}${topRankItem?.changeInPercent}%)", style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                             height: 16/14,
-                            color: colorIncreaseOrDecrease(topRank.topRankList[ranking].changeInPercent ?? 0)
+                            color: colorIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0)
                         )),
                       ],
                     ),
@@ -188,7 +194,7 @@ class OtherRankWidget extends StatelessWidget {
                       SizedBox(width: 1),
                       Text('살?', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15,color: likeColor),),
                       SizedBox(width: 5),
-                      Text("${numberWithComma(topRank.topRankList[ranking]?.buyCnt.toString() ?? '')}", style: valueNumberStyle),
+                      Text("${numberWithComma(topRankItem?.buyCnt.toString() ?? '')}", style: valueNumberStyle),
                       SizedBox(width: 23),
                       Container(
                           height: 20,
@@ -198,7 +204,7 @@ class OtherRankWidget extends StatelessWidget {
                       SizedBox(width: 1),
                       Text('말?', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15,color: unlikeColor)),
                       SizedBox(width: 5),
-                      Text("${numberWithComma(topRank.topRankList[ranking]?.sellCnt.toString() ?? '')}", style: valueNumberStyle),
+                      Text("${numberWithComma(topRankItem?.sellCnt.toString() ?? '')}", style: valueNumberStyle),
                     ],
                   ),
                 )
@@ -208,8 +214,9 @@ class OtherRankWidget extends StatelessWidget {
 }
 
 class NumberOneRankWidget extends StatelessWidget {
-  final TopRank topRank;
-  NumberOneRankWidget(this.topRank);
+  final TopRankItem topRankItem;
+  final TopRankEvaluation evaluation;
+  NumberOneRankWidget(this.topRankItem, this.evaluation);
 
   @override
   Widget build(BuildContext context) {
@@ -227,30 +234,30 @@ class NumberOneRankWidget extends StatelessWidget {
                   SizedBox(width: 15),
                   Text('1', style: rankingNumberStyle),
                   SizedBox(width: 20),
-                  Text(topRank.topRankList[0]?.company ?? '', style: thisBuyOrNotWidgetTitleStyle),
+                  Text(topRankItem?.company ?? '', style: thisBuyOrNotWidgetTitleStyle),
                 ],
               ),
               SizedBox(height: 3),
               Row(
                 children: [
                   SizedBox(width: 45),
-                  Text(emojiIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0), style: TextStyle(
+                  Text(emojiIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0), style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                       height: 16/14,
-                      color: colorIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0)
+                      color: colorIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0)
                   )),
-                  Text(numberWithComma(topRank.topRankList[0]?.currentPrice.toString() ?? ''), style: TextStyle(
+                  Text(numberWithComma(topRankItem?.currentPrice.toString() ?? ''), style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                       height: 16/14,
-                      color: colorIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0)
+                      color: colorIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0)
                   )),
-                  Text("원 (${checkIncreaseOrDecrease(topRank.topRankList[0]?.changeInPercent)}${topRank.topRankList[0]?.changeInPercent}%)", style: TextStyle(
+                  Text("원 (${checkIncreaseOrDecrease(topRankItem?.changeInPercent)}${topRankItem?.changeInPercent}%)", style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                       height: 16/14,
-                      color: colorIncreaseOrDecrease(topRank.topRankList[0].changeInPercent ?? 0)
+                      color: colorIncreaseOrDecrease(topRankItem?.changeInPercent ?? 0)
                   )),
                 ],
               ),
@@ -266,7 +273,7 @@ class NumberOneRankWidget extends StatelessWidget {
                   children: [
                     BuyOrNotButtonWidget(
                       type: "BUY",
-                      value: topRank.topRankList[0]?.buyCnt ?? 0, //buyOrNotStock?.buyCount ?? 0,
+                      value: topRankItem?.buyCnt ?? 0, //buyOrNotStock?.buyCount ?? 0,
                       onTap: () {
                         //actionEvaluation(context, buyOrNotStock, 'BUY');
                       },
@@ -279,7 +286,7 @@ class NumberOneRankWidget extends StatelessWidget {
                     SizedBox(width: 23),
                     BuyOrNotButtonWidget(
                       type: "SELL",
-                      value: topRank.topRankList[0]?.sellCnt ?? 0, //buyOrNotStock?.buyCount ?? 0,
+                      value: topRankItem?.sellCnt ?? 0, //buyOrNotStock?.buyCount ?? 0,
                       onTap: () {
                         //actionEvaluation(context, buyOrNotStock, 'BUY');
                       },
@@ -300,16 +307,16 @@ class NumberOneRankWidget extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(topRank.topRankEvaluation?.displayName ?? '', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, height: 20/14)),
+                        Text(evaluation?.displayName ?? '', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, height: 20/14)),
                         SizedBox(width: 10),
-                        Text(topRank.topRankEvaluation?.createdDateText ?? '', style:dateNumberStyle)
+                        Text(evaluation?.createdDateText ?? '', style:dateNumberStyle)
                       ],
                     ),
                     SizedBox(height: 10),
                     ProsAndConsWidget(
-                      pros: topRank.topRankEvaluation?.pros ?? '',
+                      pros: evaluation?.pros ?? '',
                       //evaluationItem?.pros ?? '',
-                      cons: topRank.topRankEvaluation?.cons ?? '',
+                      cons: evaluation?.cons ?? '',
                       //evaluationItem?.cons ?? '',
                       isLoading: false, //isLoadihg,
                     ),
