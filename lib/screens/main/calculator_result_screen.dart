@@ -6,6 +6,7 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/screens/drip_room/drip_room_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
@@ -15,6 +16,7 @@ import 'package:should_have_bought_app/widgets/calculator/result/random_widget.d
 import 'package:should_have_bought_app/widgets/calculator/result/salary_year_month_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/ten_year_invest_chart_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -111,6 +113,10 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           Divider(thickness: 7, color: Color(0xFFF2F2F2)),
           SizedBox(height: 50),
           Frame(child: TenYearChartWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: BestPriceWidget()),
           SizedBox(height: 50),
           Divider(thickness: 7, color: Color(0xFFF2F2F2)),
           SizedBox(height: 50),

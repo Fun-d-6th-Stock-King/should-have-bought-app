@@ -7,6 +7,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
+import 'package:should_have_bought_app/models/calculator/result/best_price.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
 
 class CalculatorProvider with ChangeNotifier {
@@ -15,8 +16,9 @@ class CalculatorProvider with ChangeNotifier {
   List _tenYearHighList = [];
   List _calculateHistory = [];
   Map latestDto;
-  ClaculatorStockAll calculationResultAll;
+  CalculatorStockAll calculationResultAll;
   CalculatorStock calculationResult;
+  BestPrice bestPriceResult;
   SectorData sectorData;
   List<CurrentStockPrice> _currentStockPriceList = <CurrentStockPrice>[];
 
@@ -121,7 +123,15 @@ class CalculatorProvider with ChangeNotifier {
   Future getFourResult() async {
     final result = await CalculatorApi.getAllResult(
         latestDto['code'], int.parse(latestDto['investPrice']));
-    calculationResultAll = ClaculatorStockAll.fromJson(result);
+    calculationResultAll = CalculatorStockAll.fromJson(result);
+    notifyListeners();
+  }
+
+  Future getBestPrice() async {
+    final result = await CalculatorApi.getBestPrice(latestDto['code'],
+        latestDto['investDate'], int.parse(latestDto['investPrice']));
+    bestPriceResult = BestPrice.fromJson(result);
+    calculationResultAll = CalculatorStockAll.fromJson(result);
   }
 
   Future getCurrentStockPrice() async {

@@ -1,16 +1,13 @@
 import 'package:should_have_bought_app/models/calculator/result/calculator_date_stock.dart';
 
-class ClaculatorStockAll {
+class CalculatorStockAll {
   String code;
   String name;
-  int currentPrice;
   final Map<String, CalculatorDateStock> dateToStock = {};
 
-  ClaculatorStockAll.fromJson(Map<dynamic, dynamic> map) {
-    // print(map['day1']);
+  CalculatorStockAll.fromJson(Map<dynamic, dynamic> map) {
     code = map['code'];
     name = map['company'];
-    currentPrice = map['currentPrice'].toInt();
     dateToStock['day1'] = toStock(map['day1']);
     dateToStock['week1'] = toStock(map['week1']);
     dateToStock['month1'] = toStock(map['month1']);
