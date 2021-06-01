@@ -77,4 +77,5 @@ class TodayWordApi extends Api {
     throw Exception(
         "${response.statusCode}:${utf8.decode(response.bodyBytes)}");
   }
+
 }
