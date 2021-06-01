@@ -11,39 +11,41 @@ class HeyYouToo extends StatefulWidget {
 }
 
 class _HeyYouTooState extends State<HeyYouToo> {
-  List<dynamic> _historyList;
-
   @override
-  void didChangeDependencies() {
-    _historyList = Provider.of<CalculatorProvider>(context).calculateHistory;
+  void didChangeDependencies() async {
+    await Provider.of<CalculatorProvider>(context, listen: false).getHistory();
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _historyList.isEmpty
-        ? Container(
-            height: 220.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                CircularProgressIndicator(),
-              ],
-            ))
-        : CarouselSlider(
-            options: CarouselOptions(
-              height: 213.0,
-              viewportFraction: 0.7,
-              enableInfiniteScroll: false,
-            ),
-            items: _historyList.map((history) {
-              return Builder(
-                builder: (context) {
-                  return HistoryCard(history);
-                },
-              );
-            }).toList(),
-          );
+    return Consumer<CalculatorProvider>(
+        builder: (context, calculatorProvider, child) {
+      final _historyList = calculatorProvider.calculateHistory;
+      return _historyList.isEmpty
+          ? Container(
+              height: 220.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                ],
+              ))
+          : CarouselSlider(
+              options: CarouselOptions(
+                height: 213.0,
+                viewportFraction: 0.7,
+                enableInfiniteScroll: false,
+              ),
+              items: _historyList.map((history) {
+                return Builder(
+                  builder: (context) {
+                    return HistoryCard(history);
+                  },
+                );
+              }).toList(),
+            );
+    });
   }
 }

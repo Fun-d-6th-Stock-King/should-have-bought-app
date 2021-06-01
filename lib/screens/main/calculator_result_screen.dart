@@ -13,7 +13,8 @@ import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_t
 import 'package:should_have_bought_app/widgets/calculator/result/loading_random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/salary_year_month_widget.dart';
-import 'package:should_have_bought_app/widgets/calculator/result/ten_year_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/ten_year_invest_chart_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -97,24 +98,23 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     return Scaffold(
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                CalculatorResultWidget(),
-                SizedBox(height: 50),
-                SalaryYearMonthWidget(),
-                SizedBox(height: 50),
-                IncreaseRateTabWidget(),
-                SizedBox(height: 50),
-                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-                SizedBox(height: 40),
-                CurrentValueWidget(),
-                SizedBox(height: 50),
-                Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-              ],
-            ),
-          )
+          Frame(child: CalculatorResultWidget()),
+          SizedBox(height: 50),
+          Frame(child: SalaryYearMonthWidget()),
+          SizedBox(height: 50),
+          Frame(child: IncreaseRateTabWidget()),
+          SizedBox(height: 40),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: CurrentValueWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: TenYearChartWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: AtThisTimeWidget())
         ],
       ),
     );
@@ -128,16 +128,10 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           size: Size(516, 316),
         ),
         Container(
-          height: 310,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Center(
-                child: Image(
-                  image: AssetImage('assets/images/plus_chick.png'),
-                ),
-              ),
-            ],
+          padding: EdgeInsets.only(top: 180),
+          alignment: Alignment.center,
+          child: Image(
+            image: AssetImage('assets/images/plus_chick.png'),
           ),
         ),
         Column(
@@ -145,12 +139,18 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             SizedBox(height: 10),
             CalculatorResultAppBar(),
             SizedBox(height: 2),
-            MainTopText(textColor: textColor),
-            MainMidText(
-              textColor: textColor,
+            Container(
+              height: 175,
+              child: Column(
+                children: [
+                  MainTopText(textColor: textColor),
+                  MainMidText(
+                    textColor: textColor,
+                  ),
+                  MainBottomText(textColor: textColor),
+                ],
+              ),
             ),
-            MainBottomText(textColor: textColor),
-            SizedBox(height: 75),
             ResultCardWidget(),
           ],
         ),
@@ -243,7 +243,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         children: [
           IconButton(
             icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(context).pop('update'),
           ),
           Container(
             height: 48,
@@ -311,7 +311,11 @@ class EmojiYieldPriceText extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         children: [
-          (yieldPercent > 0) ? TextSpan(text: '+ ') : TextSpan(text: '- '),
+          yieldPercent > 0
+              ? TextSpan(text: '+ ')
+              : yieldPercent == 0
+                  ? TextSpan(text: '')
+                  : TextSpan(text: '- '),
           TextSpan(text: '$yieldPrice원'),
         ],
       ),

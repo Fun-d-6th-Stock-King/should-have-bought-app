@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:should_have_bought_app/constant.dart';
 
 String numberWithComma(String value) {
-  if(value == '') return '0';
+  if (value == '') return '0';
   return NumberFormat('###,###,###,###')
       .format(double.parse(value))
       .replaceAll(' ', '');
@@ -60,12 +60,12 @@ String convertKorDateFormat(String date) {
 }
 
 String commonDateFormat(String date) {
-  if(date == '') return '';
+  if (date == '') return '';
   return DateFormat('y.MM.d.h:m').format(DateTime.parse(date));
 }
 
 String commonDayDateFormat(String date) {
-  if(date == '') return '';
+  if (date == '') return '';
   return DateFormat('y.MM.d.').format(DateTime.parse(date));
 }
 
@@ -74,18 +74,29 @@ bool isNotLogin(User currentUser) {
 }
 
 String checkIncreaseOrDecrease(double percent) {
-  if(percent > 0) return '+';
+  if (percent > 0) return '+';
   return '';
 }
 
 Color colorIncreaseOrDecrease(double percent) {
-  if(percent > 0) return possibleColor;
-  if(percent < 0) return nagativeColor;
+  if (percent > 0) return possibleColor;
+  if (percent < 0) return nagativeColor;
   return Colors.black;
 }
 
+class Frame extends StatelessWidget {
+  final Widget child;
+  Frame({@required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 16, right: 16), child: child);
+  }
+}
+
 String emojiIncreaseOrDecrease(double percent) {
-  if(percent > 0) return "▲ ";
-  if(percent < 0) return "▼ ";
+  if (percent > 0) return "▲ ";
+  if (percent < 0) return "▼ ";
   return "- ";
 }

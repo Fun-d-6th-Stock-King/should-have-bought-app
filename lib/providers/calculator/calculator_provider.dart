@@ -5,6 +5,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
 
@@ -14,6 +15,7 @@ class CalculatorProvider with ChangeNotifier {
   List _tenYearHighList = [];
   List _calculateHistory = [];
   Map latestDto;
+  ClaculatorStockAll calculationResultAll;
   CalculatorStock calculationResult;
   SectorData sectorData;
   List<CurrentStockPrice> _currentStockPriceList = <CurrentStockPrice>[];
@@ -116,10 +118,19 @@ class CalculatorProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future getFourResult() async {
+    final result = await CalculatorApi.getAllResult(
+        latestDto['code'], int.parse(latestDto['investPrice']));
+    calculationResultAll = ClaculatorStockAll.fromJson(result);
+  }
+
   Future getCurrentStockPrice() async {
     final result = await CalculatorApi.getCurrentStockPrice();
     print(result);
-     _currentStockPriceList = result.map<CurrentStockPrice>((currentStock) => CurrentStockPrice.fromJson(currentStock)).toList();
+    _currentStockPriceList = result
+        .map<CurrentStockPrice>(
+            (currentStock) => CurrentStockPrice.fromJson(currentStock))
+        .toList();
     notifyListeners();
   }
 }
