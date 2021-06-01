@@ -17,6 +17,7 @@ import 'package:should_have_bought_app/widgets/calculator/result/salary_year_mon
 import 'package:should_have_bought_app/widgets/calculator/result/ten_year_invest_chart_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/should_bought_this_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -120,7 +121,11 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           SizedBox(height: 50),
           Divider(thickness: 7, color: Color(0xFFF2F2F2)),
           SizedBox(height: 50),
-          Frame(child: AtThisTimeWidget())
+          Frame(child: AtThisTimeWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: ShouldBoughtThisWidget()),
         ],
       ),
     );
