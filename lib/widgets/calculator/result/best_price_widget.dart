@@ -29,13 +29,7 @@ class _BestPriceWidgetState extends State<BestPriceWidget> {
   }
 
   String getYieldPercent(int percent) {
-    if (percent > 0) {
-      return '+ $percent%';
-    } else if (percent < 0) {
-      return '- $percent%';
-    } else {
-      return '$percent%';
-    }
+    return '${checkIncreaseOrDecrease(percent.toDouble())}$percent%';
   }
 
   @override
