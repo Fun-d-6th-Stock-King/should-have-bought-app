@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:should_have_bought_app/constant.dart';
 
 class ShouldBoughtThisWidget extends StatefulWidget {
   @override
@@ -8,12 +7,6 @@ class ShouldBoughtThisWidget extends StatefulWidget {
 }
 
 class _ShouldBoughtThisWidgetState extends State<ShouldBoughtThisWidget> {
-  List _temp = [
-    '한국타이어엔테크놀로지',
-    '삼성전자',
-    '삼성전자',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Column(

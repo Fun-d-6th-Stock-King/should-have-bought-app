@@ -143,4 +143,9 @@ class CalculatorProvider with ChangeNotifier {
         .toList();
     notifyListeners();
   }
+
+  Future getPeriodBestPrice() async {
+    final result =
+        await CalculatorApi.getPeriodBestPrice(latestDto['investDate']);
+  }
 }
