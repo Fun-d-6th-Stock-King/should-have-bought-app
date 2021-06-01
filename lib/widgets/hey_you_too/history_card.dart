@@ -61,9 +61,13 @@ class HistoryCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 15),
               Text(
-                '${history.investDateName}보다',
+                '${history.investDateName} 에',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              ),
+              Text(
+                '${numberWithComma(history.investPrice)}원 샀다면',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
               AutoSizeText.rich(
