@@ -61,51 +61,57 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   Widget get bottomNavigationBar {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(33),
-        topRight: Radius.circular(33),
+    return Container(
+      height: 78.26,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(33), topLeft: Radius.circular(33)),
+        boxShadow: [
+          BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 2),
+        ],
       ),
-      child: SizedBox(
-        height: 78.26,
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(33),
+          topRight: Radius.circular(33),
+        ),
         child: BottomNavigationBar(
           elevation: 10,
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xFFFFFFFF),
           fixedColor: Colors.black,
           type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
           selectedLabelStyle: TextStyle(
-              color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.bold),
+              color: Color(0xFF333333), fontSize: 10.0, fontWeight: FontWeight.bold),
           unselectedLabelStyle: TextStyle(
-            color: Colors.black,
+            color: Color(0xFF828282),
             fontSize: 10.0,
           ),
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Image(image: AssetImage('assets/icons/home.png')),
-                label: '메인'),
+                icon: Image(image: AssetImage('assets/icons/ico_main_unselect.png')),
+                activeIcon: Image(image: AssetImage('assets/icons/ico_main_select.png')),
+                label: '홈'),
             BottomNavigationBarItem(
-                icon: Image(image: AssetImage('assets/icons/Card.png')),
-                label: '이거살말'),
+                icon: Image(image: AssetImage('assets/icons/ico_drip_unselect.png')),
+                activeIcon: Image(image: AssetImage('assets/icons/ico_drip_select.png')),
+                label: '드립방'),
             BottomNavigationBarItem(
-              icon: Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: mainColor,
-                ),
-                child: Image(image: AssetImage('assets/icons/home_white.png')),
-              ),
-              label: '살말카드',
+              icon: Image(image: AssetImage('assets/icons/ico_card_unselect.png')),
+              activeIcon: Image(image: AssetImage('assets/icons/ico_card_select.png')),
+              label: '살까말까',
             ),
             // BottomNavigationBarItem(icon:Image(image: AssetImage('assets/icons/home_white.png')),label: '살말카드',backgroundColor: Color(0xFFFFB800)),
             BottomNavigationBarItem(
-                icon: Image(image: AssetImage('assets/icons/atm_location.png')),
-                label: '오늘의단어'),
+                icon: Image(image: AssetImage('assets/icons/ico_word_unselect.png')),
+                activeIcon: Image(image: AssetImage('assets/icons/ico_word_select.png')),
+                label: '오늘단어',
+            ),
             BottomNavigationBarItem(
-                icon: Image(image: AssetImage('assets/icons/Profile.png')),
-                label: 'MY'),
+                icon: Image(image: AssetImage('assets/icons/ico_mypage_unselect.png')),
+                activeIcon: Image(image: AssetImage('assets/icons/ico_mypage_select.png')),
+                label: '마이페이지'),
           ],
           currentIndex: _selectedIndex,
           onTap: _onTapped,
