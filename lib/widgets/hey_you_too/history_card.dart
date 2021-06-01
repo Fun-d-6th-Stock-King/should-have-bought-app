@@ -67,7 +67,7 @@ class HistoryCard extends StatelessWidget {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
               Text(
-                '${numberWithComma(history.investPrice)}원 샀다면',
+                '${numberWithComma(history?.investPrice ?? '')}원 샀다면',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
               AutoSizeText.rich(

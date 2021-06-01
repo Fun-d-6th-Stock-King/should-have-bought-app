@@ -49,7 +49,7 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
           physics: ScrollPhysics(),
           child: Column(
             children: [
-              FlatBackgroundFrame(child: HeaderWidget()),
+              FlatBackgroundFrame(child: _HeaderWidget()),
               SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -121,7 +121,7 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
 }
 
 /// 헤더 위젯
-class HeaderWidget extends StatelessWidget {
+class _HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(

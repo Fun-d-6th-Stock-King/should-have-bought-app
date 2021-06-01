@@ -139,6 +139,11 @@ flutter:
     - assets/icons/2x/ico_mypage_unselect.png
     - assets/icons/3x/ico_mypage_unselect.png
     - assets/icons/4x/ico_mypage_unselect.png
+    - assets/icons/ico_refresh.png
+    - assets/icons/1.5x/ico_refresh.png
+    - assets/icons/2x/ico_refresh.png
+    - assets/icons/3x/ico_refresh.png
+    - assets/icons/4x/ico_refresh.png
   # example:
   # fonts:
   #   - family: Schyler

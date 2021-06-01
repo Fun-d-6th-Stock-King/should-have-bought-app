@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/screens.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/widgets.dart';
@@ -67,7 +68,9 @@ class _MainScreenState extends State<MainScreen> {
                   Divider(thickness: 7, color: Color(0xFFF2F2F2)),
                   SizedBox(height: 43),
                   Frame(
-                    child: MainTitle(title: "그때 살걸... 야, 너두?", more: () {}),
+                    child: MainTitle(title: "그때 살걸... 야, 너두?", more: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HeyToYouMoreScreen()));
+                    }),
                   ),
                   SizedBox(height: 16),
                   HeyYouToo(),
@@ -173,12 +176,17 @@ class MainTitle extends StatelessWidget {
         ),
         more == null
             ? Row()
-            : Row(
-                children: <Widget>[
-                  Text('더보기'),
-                  Icon(Icons.keyboard_arrow_right_outlined),
-                ],
-              )
+            : InkWell(
+              onTap: () {
+                more();
+              },
+              child: Row(
+                  children: <Widget>[
+                    Text('더보기'),
+                    Icon(Icons.keyboard_arrow_right_outlined),
+                  ],
+                ),
+            )
         //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
       ],
     );
