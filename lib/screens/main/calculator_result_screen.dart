@@ -126,6 +126,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           Divider(thickness: 7, color: Color(0xFFF2F2F2)),
           SizedBox(height: 50),
           Frame(child: ShouldBoughtThisWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
         ],
       ),
     );

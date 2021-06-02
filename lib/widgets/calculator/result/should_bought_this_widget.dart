@@ -1,5 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/utils.dart';
 
 class ShouldBoughtThisWidget extends StatefulWidget {
   @override
@@ -8,61 +11,71 @@ class ShouldBoughtThisWidget extends StatefulWidget {
 
 class _ShouldBoughtThisWidgetState extends State<ShouldBoughtThisWidget> {
   @override
+  void didChangeDependencies() async {
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getPeriodBestPrice();
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                '검색 기간동안 가장 많이 오른 종목',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF828282),
+    return Consumer<CalculatorProvider>(
+        builder: (context, calculatorProvider, child) {
+      final _periodList = calculatorProvider.periodBestPriceList;
+      return _periodList == null
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '검색 기간동안 가장 많이 오른 종목',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF828282),
+                        ),
+                      ),
+                      Text(
+                        '이것도 살걸',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Text(
-                '이것도 살걸',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 20),
-        Container(
-          height: 130,
-          child: ListView(
-            children: <Widget>[
-              StockTile(
-                index: 1,
-                company: '한국타이어테크놀로지',
-              ),
-              StockTile(
-                index: 2,
-                company: '삼성전자',
-              ),
-              StockTile(
-                index: 3,
-                company: '카카오',
-              ),
-            ],
-          ),
-        )
-      ],
-    );
+                SizedBox(height: 20),
+                Container(
+                  height: 130,
+                  child: ListView.builder(
+                    itemCount: _periodList.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return StockTile(
+                        index: index,
+                        company: _periodList[index].company,
+                        price: _periodList[index].price,
+                        percent: _periodList[index].yieldPercent,
+                      );
+                    },
+                  ),
+                )
+              ],
+            );
+    });
   }
 }
 
 class StockTile extends StatelessWidget {
   final int index;
   final String company;
-  const StockTile({this.index, this.company});
+  final String price;
+  final double percent;
+  const StockTile({this.index, this.company, this.price, this.percent});
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +85,8 @@ class StockTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(right: 10.0),
-            child: Text(index.toString()),
+            padding: EdgeInsets.only(right: 15.0),
+            child: Text((index + 1).toString()),
           ),
           ConstrainedBox(
             constraints: BoxConstraints(
@@ -93,9 +106,11 @@ class StockTile extends StatelessWidget {
           ConstrainedBox(
             constraints: BoxConstraints(
               maxWidth: 80,
+              minWidth: 80,
             ),
             child: AutoSizeText(
-              '1,900,211원',
+              '${numberWithComma(price)}원',
+              textAlign: TextAlign.end,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
@@ -109,7 +124,7 @@ class StockTile extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 3.0),
               child: AutoSizeText(
-                '+300.39%',
+                '${checkIncreaseOrDecrease(percent)} $percent%',
                 style: TextStyle(
                   color: Colors.red,
                   fontSize: 18,
