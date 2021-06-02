@@ -144,6 +144,11 @@ flutter:
     - assets/icons/2x/ico_refresh.png
     - assets/icons/3x/ico_refresh.png
     - assets/icons/4x/ico_refresh.png
+    - assets/images/image_chick.png
+    - assets/images/1.5x/image_chick.png
+    - assets/images/2x/image_chick.png
+    - assets/images/3x/image_chick.png
+    - assets/images/4x/image_chick.png
   # example:
   # fonts:
   #   - family: Schyler
