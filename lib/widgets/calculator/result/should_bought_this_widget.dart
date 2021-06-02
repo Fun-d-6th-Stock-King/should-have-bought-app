@@ -79,6 +79,7 @@ class StockTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
     return Container(
       padding: EdgeInsets.only(bottom: 15.0),
       child: Row(
@@ -90,8 +91,8 @@ class StockTile extends StatelessWidget {
           ),
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: 120,
-              minWidth: 120,
+              maxWidth: mediaQuery.size.width * 0.3,
+              minWidth: mediaQuery.size.width * 0.3,
             ),
             child: AutoSizeText(
               company,
@@ -101,12 +102,13 @@ class StockTile extends StatelessWidget {
                 color: Color(0xFF141414),
               ),
               maxLines: 1,
+              minFontSize: 11,
             ),
           ),
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: 80,
-              minWidth: 80,
+              maxWidth: mediaQuery.size.width * 0.25,
+              minWidth: mediaQuery.size.width * 0.25,
             ),
             child: AutoSizeText(
               '${numberWithComma(price)}원',
@@ -119,12 +121,16 @@ class StockTile extends StatelessWidget {
               maxLines: 1,
             ),
           ),
-          FittedBox(
-            fit: BoxFit.cover,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: mediaQuery.size.width * 0.25,
+              maxWidth: mediaQuery.size.width * 0.25,
+            ),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 3.0),
               child: AutoSizeText(
                 '${checkIncreaseOrDecrease(percent)} $percent%',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.red,
                   fontSize: 18,
