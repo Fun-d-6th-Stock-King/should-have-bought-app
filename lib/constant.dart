@@ -93,3 +93,8 @@ const stockBodyNumberStyle = TextStyle(
   fontSize: 21,
   height: 25 / 21,
 );
+
+const kResultTitleStyle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w700,
+);

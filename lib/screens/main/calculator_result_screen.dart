@@ -19,6 +19,7 @@ import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_wi
 import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/should_bought_this_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/buy_or_not_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/best_one_line_review_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -131,6 +132,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           Divider(thickness: 7, color: Color(0xFFF2F2F2)),
           SizedBox(height: 50),
           Frame(child: BuyOrNotWidget()),
+          SizedBox(height: 15),
+          Frame(child: BestOneLineReviewWidget()),
           SizedBox(height: 50),
         ],
       ),
