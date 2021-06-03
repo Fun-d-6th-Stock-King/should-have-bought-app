@@ -23,7 +23,7 @@ class _CreateThisBuyOrNotWidgetState extends State<ThisBuyOrNotWidget> {
         initialIndex: 0,
         child: Column(children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * 0.55,
+            width: 220,
             child: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: mainColor,

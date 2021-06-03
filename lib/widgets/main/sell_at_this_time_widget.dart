@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 
 class SellAtThisTimeWidget extends StatefulWidget {
   @override
@@ -39,13 +43,11 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
   double _prevAniValue = 0.0;
 
   // these will be our tab icons. You can use whatever you like for the content of your buttons
-  List _icons = [
-    Icons.star,
-    Icons.whatshot,
-    Icons.call,
-    Icons.contacts,
-    Icons.email,
-    Icons.donut_large
+  List<Company> _company = [
+    Company(company: '삼성전자', code: '005930'),
+    Company(company: '하이닉스', code: '000660'),
+    Company(company: '카카오', code: '035720'),
+    Company(company: '현대자동차', code: '005380'),
   ];
 
   // active button's foreground color
@@ -69,13 +71,13 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
   void initState() {
     super.initState();
 
-    for (int index = 0; index < _icons.length; index++) {
+    for (int index = 0; index < _company.length; index++) {
       // create a GlobalKey for each Tab
       _keys.add(new GlobalKey());
     }
 
     // this creates the controller with 6 tabs (in our case)
-    _controller = TabController(vsync: this, length: _icons.length);
+    _controller = TabController(vsync: this, length: _company.length);
     // this will execute the function every time there's a swipe animation
     _controller.animation.addListener(_handleTabAnimation);
     // this will execute the function every time the _controller.index value changes
@@ -102,8 +104,14 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
     _colorTweenForegroundOn =
         ColorTween(begin: _foregroundOff, end: _foregroundOn)
             .animate(_animationControllerOn);
+
   }
 
+  @override
+  void didChangeDependencies() async{
+    super.didChangeDependencies();
+    await Provider.of<CalculatorProvider>(context, listen: false).tenYearHighList;
+  }
   @override
   void dispose() {
     _controller.dispose();
@@ -119,48 +127,53 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
               // this generates our tabs buttons
               child: Padding(
                 padding: const EdgeInsets.only(left:23.0),
-                child: ListView.builder(
-                  // this gives the TabBar a bounce effect when scrolling farther than it's size
-                    physics: BouncingScrollPhysics(),
-                    controller: _scrollController,
-                    // make the list horizontal
-                    scrollDirection: Axis.horizontal,
-                    // number of tabs
-                    itemCount: _icons.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        // each button's key
-                          key: _keys[index],
-                          // padding for the buttons
-                          padding: EdgeInsets.all(6.0),
-                          child: ButtonTheme(
-                              child: AnimatedBuilder(
-                                animation: _colorTweenBackgroundOn,
-                                builder: (context, child) => FlatButton(
-                                  // get the color of the button's background (dependent of its state)
-                                    color: _getBackgroundColor(index),
-                                    // make the button a rectangle with round corners
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(31)),
-                                    onPressed: () {
-                                      setState(() {
-                                        _buttonTap = true;
-                                        // trigger the controller to change between Tab Views
-                                        _controller.animateTo(index);
-                                        // set the current index
-                                        _setCurrentIndex(index);
-                                        // scroll to the tapped button (needed if we tap the active button and it's not on its position)
-                                        _scrollTo(index);
-                                      });
-                                    },
-                                    child: Icon(
-                                      // get the icon
-                                      _icons[index],
-                                      // get the color of the icon (dependent of its state)
-                                      color: _getForegroundColor(index),
-                                    )),
-                              )));
-                    }),
+                child: Consumer<CalculatorProvider>(
+                  builder: (context, calculatorProvider,child) {
+                    List<StockHist> tenYearHighList = calculatorProvider.tenYearHighList;
+                    print('asd');
+                    print(tenYearHighList);
+                    return ListView.builder(
+                      // this gives the TabBar a bounce effect when scrolling farther than it's size
+                        physics: BouncingScrollPhysics(),
+                        controller: _scrollController,
+                        // make the list horizontal
+                        scrollDirection: Axis.horizontal,
+                        // number of tabs
+                        itemCount: _company.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            // each button's key
+                              key: _keys[index],
+                              // padding for the buttons
+                              padding: EdgeInsets.all(6.0),
+                              child: ButtonTheme(
+                                  child: AnimatedBuilder(
+                                    animation: _colorTweenBackgroundOn,
+                                    builder: (context, child) => FlatButton(
+                                      // get the color of the button's background (dependent of its state)
+                                        color: _getBackgroundColor(index),
+                                        // make the button a rectangle with round corners
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(31)),
+                                        onPressed: () {
+                                          setState(() {
+                                            _buttonTap = true;
+                                            // trigger the controller to change between Tab Views
+                                            _controller.animateTo(index);
+                                            // set the current index
+                                            _setCurrentIndex(index);
+                                            // scroll to the tapped button (needed if we tap the active button and it's not on its position)
+                                            _scrollTo(index);
+                                          });
+                                        },
+                                        child: Text(
+                                          // get the icon
+                                          _company[index].company,style: TextStyle(color:_getForegroundColor(index)),
+                                        )),
+                                  )));
+                        });
+                  }
+                ),
               )),
           SizedBox(height: 15),
           Container(
@@ -177,56 +190,10 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
                   controller: _controller,
                   children: <Widget>[
                     // our Tab Views
-                    Padding(
-                      padding: const EdgeInsets.all(17.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 14,vertical: 7),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(31.0),
-                                  color: Color.fromRGBO(255, 184, 0, 0.15),
-                                ),
-                                child: Text('2021.01.11 장중 최고가'),
-                              ),
-                              SizedBox(height: 7),
-                              Text('96,800원', style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 27,
-                                height: 31/27,
-                                color: Color(0xFFFF3948),
-                              )),
-                              SizedBox(height: 15),
-                              Padding(
-                                padding: const EdgeInsets.only(left:5.0),
-                                child: Row(
-                                  children: [
-                                    Text('현재가'),
-                                    SizedBox(width: 7),
-                                    Text('82,600원')
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Image(image:AssetImage('assets/images/image_chick.png')),
-                              SizedBox(width: 15)
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Icon(_icons[1]),
-                    Icon(_icons[2]),
-                    Icon(_icons[3]),
-                    Icon(_icons[4]),
-                    Icon(_icons[5])
+                    SellAtThisTimeCardWidget(),
+                    SellAtThisTimeCardWidget(),
+                    SellAtThisTimeCardWidget(),
+                    SellAtThisTimeCardWidget(),
                   ],
                 ),
               ),
@@ -315,7 +282,7 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
       // if the button is to the right of the middle
 
       // get the last button
-      renderBox = _keys[_icons.length - 1].currentContext.findRenderObject();
+      renderBox = _keys[_company.length - 1].currentContext.findRenderObject();
       // get its position
       position = renderBox.localToGlobal(Offset.zero).dx;
       // and size
@@ -357,5 +324,59 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
     } else {
       return _foregroundOff;
     }
+  }
+}
+
+class SellAtThisTimeCardWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(17.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 14,vertical: 7),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(31.0),
+                  color: Color.fromRGBO(255, 184, 0, 0.15),
+                ),
+                child: Text('2021.01.11 장중 최고가', style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize:13,
+                  height: 15/13,
+                )),
+              ),
+              SizedBox(height: 7),
+              Text('96,800원', style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 27,
+                height: 31/27,
+                color: Color(0xFFFF3948),
+              )),
+              SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.only(left:5.0),
+                child: Row(
+                  children: [
+                    Text('현재가'),
+                    SizedBox(width: 7),
+                    Text('82,600원')
+                  ],
+                ),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              Image(image:AssetImage('assets/images/image_chick.png')),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:should_have_bought_app/api/calculator/calculator_api.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
@@ -13,7 +14,7 @@ import 'package:should_have_bought_app/models/calculator/current_stock_price.dar
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
-  List _tenYearHighList = [];
+  List<StockHist> _tenYearHighList = [];
   List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
   CalculatorStockAll calculationResultAll;
@@ -30,7 +31,7 @@ class CalculatorProvider with ChangeNotifier {
     return _searchCompanyList;
   }
 
-  List get tenYearHighList {
+  List<StockHist> get tenYearHighList {
     return _tenYearHighList;
   }
 
@@ -95,8 +96,7 @@ class CalculatorProvider with ChangeNotifier {
 
     if (list != null) {
       _tenYearHighList = list
-          .map((e) =>
-              {"company": e["company"], "high": e["maxQuote"]["high"].toInt()})
+          .map((item) => StockHist.fromJson(item))
           .toList();
       notifyListeners();
     }

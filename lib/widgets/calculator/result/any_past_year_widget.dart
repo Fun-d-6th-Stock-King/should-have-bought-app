@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 
 class AnyPastYearWidget extends StatefulWidget {
@@ -14,7 +15,7 @@ class AnyPastYearWidget extends StatefulWidget {
 }
 
 class _AnyPastYearWidgetState extends State<AnyPastYearWidget> {
-  List _tenYearList;
+  List<StockHist> _tenYearList;
 
   @override
   void didChangeDependencies() {
@@ -68,7 +69,7 @@ class _AnyPastYearWidgetState extends State<AnyPastYearWidget> {
                             child: Row(
                               children: [
                                 Text(
-                                  _tenYearList[index]["company"],
+                                  _tenYearList[index].company,
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
@@ -82,7 +83,7 @@ class _AnyPastYearWidgetState extends State<AnyPastYearWidget> {
                                   ),
                                 ),
                                 Text(
-                                  _tenYearList[index]["high"].toString(),
+                                  _tenYearList[index].maxQuote.high.toString(),
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
