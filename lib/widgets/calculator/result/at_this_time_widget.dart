@@ -44,8 +44,6 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
     '10년전에 살걸',
   ];
 
-  final List _fourDto = [];
-
   final Color _foregroundOn = Colors.white;
   final Color _foregroundOff = Colors.black;
 
@@ -129,55 +127,57 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
           SizedBox(
             height: 20,
           ),
-          Container(
-            height: 49.0,
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: _yearsText.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  key: _keys[index],
-                  padding: EdgeInsets.all(6.0),
-                  child: ButtonTheme(
-                    child: AnimatedBuilder(
-                      animation: _colorTweenBackgroundOn,
-                      builder: (context, child) => ElevatedButton(
-                        style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(0.0),
-                          shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(62.0),
+          _fourResult == null
+              ? Center(child: CircularProgressIndicator())
+              : Container(
+                  height: 49.0,
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _yearsText.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        key: _keys[index],
+                        padding: EdgeInsets.all(6.0),
+                        child: ButtonTheme(
+                          child: AnimatedBuilder(
+                            animation: _colorTweenBackgroundOn,
+                            builder: (context, child) => ElevatedButton(
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0.0),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(62.0),
+                                  ),
+                                ),
+                                backgroundColor: MaterialStateProperty.all(
+                                  _getBackgroundColor(index),
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _buttonTap = true;
+                                  _controller.animateTo(index);
+                                  _setCurrentIndex(index);
+                                  _scrollTo(index);
+                                });
+                              },
+                              child: Text(
+                                _texts[index],
+                                style: TextStyle(
+                                  color: _getForegroundColor(index),
+                                  fontSize: 15,
+                                  fontWeight: _getForegroundFontWeight(index),
+                                ),
+                              ),
                             ),
                           ),
-                          backgroundColor: MaterialStateProperty.all(
-                            _getBackgroundColor(index),
-                          ),
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _buttonTap = true;
-                            _controller.animateTo(index);
-                            _setCurrentIndex(index);
-                            _scrollTo(index);
-                          });
-                        },
-                        child: Text(
-                          _texts[index],
-                          style: TextStyle(
-                            color: _getForegroundColor(index),
-                            fontSize: 15,
-                            fontWeight: _getForegroundFontWeight(index),
-                          ),
-                        ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ),
+                ),
           SizedBox(height: 30),
           _fourResult == null
               ? Center(child: CircularProgressIndicator())
