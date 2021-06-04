@@ -19,7 +19,6 @@ import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_wi
 import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/should_bought_this_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/buy_or_not_widget.dart';
-import 'package:should_have_bought_app/widgets/calculator/result/best_one_line_review_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
