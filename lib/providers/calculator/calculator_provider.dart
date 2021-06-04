@@ -135,7 +135,7 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getBestPrice(latestDto['code'],
         latestDto['investDate'], int.parse(latestDto['investPrice']));
     bestPriceResult = BestPrice.fromJson(result);
-    calculationResultAll = CalculatorStockAll.fromJson(result);
+    notifyListeners();
   }
 
   Future getCurrentStockPrice() async {
