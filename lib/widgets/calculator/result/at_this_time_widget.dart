@@ -95,10 +95,19 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
     super.dispose();
   }
 
+  bool isLoading = false;
   @override
-  void didChangeDependencies() async {
-    await Provider.of<CalculatorProvider>(context, listen: false)
-        .getFourResult();
+  void didChangeDependencies() {
+    setState(() {
+      isLoading = true;
+    });
+    Provider.of<CalculatorProvider>(context, listen: false)
+        .getFourResult()
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
     super.didChangeDependencies();
   }
 
@@ -106,7 +115,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
         builder: (context, calculatorProvider, child) {
-      var _fourResult = calculatorProvider.calculationResultAll;
+      final _fourResult = calculatorProvider.calculationResultAll;
       return Column(
         children: <Widget>[
           Container(
@@ -127,59 +136,57 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
           SizedBox(
             height: 20,
           ),
-          _fourResult == null
-              ? Center(child: CircularProgressIndicator())
-              : Container(
-                  height: 49.0,
-                  child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    controller: _scrollController,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _yearsText.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        key: _keys[index],
-                        padding: EdgeInsets.all(6.0),
-                        child: ButtonTheme(
-                          child: AnimatedBuilder(
-                            animation: _colorTweenBackgroundOn,
-                            builder: (context, child) => ElevatedButton(
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all(0.0),
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(62.0),
-                                  ),
-                                ),
-                                backgroundColor: MaterialStateProperty.all(
-                                  _getBackgroundColor(index),
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _buttonTap = true;
-                                  _controller.animateTo(index);
-                                  _setCurrentIndex(index);
-                                  _scrollTo(index);
-                                });
-                              },
-                              child: Text(
-                                _texts[index],
-                                style: TextStyle(
-                                  color: _getForegroundColor(index),
-                                  fontSize: 15,
-                                  fontWeight: _getForegroundFontWeight(index),
-                                ),
-                              ),
+          Container(
+            height: 49.0,
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              itemCount: _yearsText.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  key: _keys[index],
+                  padding: EdgeInsets.all(6.0),
+                  child: ButtonTheme(
+                    child: AnimatedBuilder(
+                      animation: _colorTweenBackgroundOn,
+                      builder: (context, child) => ElevatedButton(
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(0.0),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(62.0),
                             ),
                           ),
+                          backgroundColor: MaterialStateProperty.all(
+                            _getBackgroundColor(index),
+                          ),
                         ),
-                      );
-                    },
+                        onPressed: () {
+                          setState(() {
+                            _buttonTap = true;
+                            _controller.animateTo(index);
+                            _setCurrentIndex(index);
+                            _scrollTo(index);
+                          });
+                        },
+                        child: Text(
+                          _texts[index],
+                          style: TextStyle(
+                            color: _getForegroundColor(index),
+                            fontSize: 15,
+                            fontWeight: _getForegroundFontWeight(index),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                );
+              },
+            ),
+          ),
           SizedBox(height: 30),
-          _fourResult == null
+          isLoading
               ? Center(child: CircularProgressIndicator())
               : Container(
                   height: 120,

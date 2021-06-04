@@ -22,50 +22,51 @@ class _ShouldBoughtThisWidgetState extends State<ShouldBoughtThisWidget> {
     return Consumer<CalculatorProvider>(
         builder: (context, calculatorProvider, child) {
       final _periodList = calculatorProvider.periodBestPriceList;
-      return _periodList == null
-          ? Center(child: CircularProgressIndicator())
-          : Column(
+      return Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        '검색 기간동안 가장 많이 오른 종목',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF828282),
-                        ),
-                      ),
-                      Text(
-                        '이것도 살걸',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
+                Text(
+                  '검색 기간동안 가장 많이 오른 종목',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF828282),
                   ),
                 ),
-                SizedBox(height: 20),
-                Container(
-                  height: 130,
-                  child: ListView.builder(
-                    itemCount: _periodList.length ?? 0,
-                    itemBuilder: (context, index) {
-                      return StockTile(
-                        index: index,
-                        company: _periodList[index].company,
-                        price: _periodList[index].price,
-                        percent: _periodList[index].yieldPercent,
-                      );
-                    },
+                Text(
+                  '이것도 살걸',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
                   ),
-                )
+                ),
               ],
-            );
+            ),
+          ),
+          SizedBox(height: 20),
+          Container(
+            height: 130,
+            child: ListView.builder(
+              itemCount: _periodList.length ?? 0,
+              itemBuilder: (context, index) {
+                if (_periodList[index] == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return StockTile(
+                  index: index,
+                  company: _periodList[index].company,
+                  price: _periodList[index].price,
+                  percent: _periodList[index].yieldPercent,
+                );
+              },
+            ),
+          )
+        ],
+      );
     });
   }
 }

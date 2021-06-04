@@ -116,9 +116,7 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
 
   String getYieldPercent(int percent) {
     if (percent > 0) {
-      return '+ $percent%';
-    } else if (percent < 0) {
-      return '- $percent%';
+      return '+$percent%';
     } else {
       return '$percent%';
     }
