@@ -30,10 +30,11 @@ class CalculatorResultScreen extends StatefulWidget {
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color textColor;
   Color topColor;
+  AssetImage chickImage;
 
   bool isLoading = false;
 
-  void setBackgroundColor() {
+  void setDynamicOption() {
     final percent = Provider.of<CalculatorProvider>(context, listen: false)
         .calculationResult
         .yieldPercent;
@@ -41,24 +42,30 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       setState(() {
         topColor = Color(0xffFF6561);
         textColor = Colors.white;
+        chickImage = AssetImage('assets/images/plus_chick.png');
       });
     } else if (percent < 0) {
       setState(() {
         topColor = Color(0xff4990FF);
         textColor = Colors.white;
+        chickImage = AssetImage('assets/images/minus_chick.png');
       });
     } else {
       setState(() {
         topColor = Color(0xffF2F2F2);
         textColor = Colors.black;
+        chickImage = AssetImage('assets/images/normal_chick.png');
       });
     }
   }
+
+  void setChick() {}
 
   void randomValues() {
     setState(() {
       isLoading = true;
     });
+
     final _companyList =
         Provider.of<CalculatorProvider>(context, listen: false).companyList;
     final _randomDate = Random().nextInt(dates.length);
@@ -71,7 +78,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       investPrice: intToCurrency(prices[_randomPrice]),
     ).toMap())
         .then((_) {
-      setBackgroundColor();
+      setDynamicOption();
       setState(() {
         isLoading = false;
       });
@@ -94,7 +101,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    setBackgroundColor();
+    setDynamicOption();
   }
 
   @override
@@ -148,7 +155,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           padding: EdgeInsets.only(top: 180),
           alignment: Alignment.center,
           child: Image(
-            image: AssetImage('assets/images/plus_chick.png'),
+            image: chickImage,
           ),
         ),
         Column(
