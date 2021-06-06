@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Color.fromARGB(255, 229, 229, 229),
           accentColor: Colors.black,
+          canvasColor: Colors.transparent,
         ),
         builder: EasyLoading.init(),
         //     (context, child) {
