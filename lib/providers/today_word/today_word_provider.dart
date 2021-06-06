@@ -26,7 +26,6 @@ class TodayWordProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future getWordList(Map<String, dynamic> params) async {
-    EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
     _order = params['order'];
     _pageNo = params['pageNo'];
     _pageSize = params['pageSize'];
@@ -43,7 +42,6 @@ class TodayWordProvider with ChangeNotifier {
     _wordItemList = addWordItemList;
 
     notifyListeners();
-    EasyLoading.dismiss();
     return addWordItemList;
   }
 
@@ -69,24 +67,17 @@ class TodayWordProvider with ChangeNotifier {
   }
 
   Future getTodayBest() async {
-    EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
     final result = await TodayWordApi.getBestWord();
     _todayBest = WordItem.fromJson(result);
     print(result);
-    EasyLoading.dismiss();
     notifyListeners();
   }
 
   Future likeWord(WordItem wordItem) async {
-    EasyLoading.show(status: 'loading...', maskType: EasyLoadingMaskType.black);
     final result = await TodayWordApi.saveWordLike(wordItem.id);
-    wordItem.userlike = !wordItem.userlike;
-    if (wordItem.userlike) {
-      wordItem.likeCount += 1;
-    } else {
-      wordItem.likeCount -= 1;
-    }
-    EasyLoading.dismiss();
+    var _target = WordItem.fromJson(result);
+    wordItem.userlike = _target.userlike;
+    wordItem.likeCount = _target.likeCount;
     print(result);
     notifyListeners();
   }
