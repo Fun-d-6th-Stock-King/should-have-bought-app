@@ -1,12 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:should_have_bought_app/constant.dart';
-import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
+import 'package:should_have_bought_app/models/util/page_info.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
+import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
+import 'package:should_have_bought_app/screens.dart';
+import 'package:should_have_bought_app/screens/util/skeleton_widget.dart';
+import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
+import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
+import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
+import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 
 class DripRoomTabScreen extends StatefulWidget {
   static const routeId = '/select-drip';
@@ -17,21 +29,138 @@ class DripRoomTabScreen extends StatefulWidget {
 class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   bool emojiShowing = false;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+    Map<String, dynamic> parmeters = {
+      'order': 'POPULARITY',
+      'pageNo': '1',
+      'pageSize': '100'
+    };
+
+    bool isEmpty = Provider.of<DripRoomProvider>(context, listen: false)
+                .evaluationItemList
+                .length ==
+            0
+        ? true
+        : false;
+    if (isEmpty) {
+      await EasyLoading.show(
+        status: 'loading...',
+        maskType: EasyLoadingMaskType.none,
+      );
+      Provider.of<DripRoomProvider>(context, listen: false)
+          .getEvaluationList(parmeters)
+          .then((value) => EasyLoading.dismiss());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    var cardSize_width = MediaQuery.of(context).size.width * 0.8;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        child: Text('hello'),
-      ),
+      backgroundColor: Color(0xFFF6F6F6),
+      body: Consumer<DripRoomProvider>(
+          child: emptyDripListRoomScreen(context),
+          builder: (context, dripRoomProvider, child) {
+            List evaluationItemList = dripRoomProvider.evaluationItemList;
+            return dripRoomProvider.evaluationItemList.length == 0
+                ? child
+                : Column(children: [
+                    SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Text(
+                            "BEST",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal),
+                          ),
+                          SizedBox(width: cardSize_width * 0.6),
+                          Container(
+                            child: Row(
+                              children: [
+                                Text('오늘HOT'),
+                                Icon(Icons.keyboard_arrow_down_outlined)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          controller: _scrollController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: evaluationItemList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                                child: Column(children: [
+                              SizedBox(height: 10),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: BestDripCardListWidget(
+                                    evaluationItemList[index]),
+                              ),
+                              SizedBox(height: 10),
+                            ]));
+                          }),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Text(
+                            "전체",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal),
+                          ),
+                          SizedBox(width: 5),
+                          Text(evaluationItemList.length.toString()),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      flex: 1,
+                      child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          controller: _scrollController,
+                          scrollDirection: Axis.vertical,
+                          itemCount: evaluationItemList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                                child: Column(children: [
+                              SizedBox(height: 10),
+                              Container(
+                                child: BestDripCardListWidget(
+                                    evaluationItemList[index]),
+                              ),
+                              SizedBox(height: 15),
+                            ]));
+                          }),
+                    ),
+                  ]);
+          }),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100.0),
         child: FloatingActionButton(
@@ -167,7 +296,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                   keyboardType: TextInputType.text,
                                   maxLength: 20,
                                   textAlignVertical: TextAlignVertical.center,
-                                  decoration: new InputDecoration(
+                                  decoration: InputDecoration(
                                       border: InputBorder.none,
                                       focusedBorder: InputBorder.none,
                                       enabledBorder: InputBorder.none,
@@ -299,4 +428,202 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
   }
 
   void _registerFlow() {}
+}
+
+class BestDripCardListWidget extends StatelessWidget {
+  final EvaluationItem evaluationItem;
+
+  BestDripCardListWidget(this.evaluationItem);
+  @override
+  Widget build(BuildContext context) {
+    var cardSize_width = MediaQuery.of(context).size.width * 0.8;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children: [
+          Container(
+              width: cardSize_width,
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 15, bottom: 15),
+              margin: const EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding:
+                                EdgeInsets.only(left: cardSize_width * 0.7),
+                            child: Column(
+                              children: [
+                                Image(
+                                    image: AssetImage(
+                                        'assets/icons/ico_like.png')),
+                                SizedBox(height: 2),
+                                Text(
+                                  evaluationItem.likeCount.toString(),
+                                  style: TextStyle(
+                                      fontSize: 11, color: Color(0xFF828282)),
+                                ),
+                              ],
+                            )),
+                        Text(
+                          '\u{1F601}', //이모티콘
+                          style: TextStyle(
+                              fontSize: 80, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(height: 15),
+                      ],
+                    ),
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 13.0),
+                        ),
+                        Text(
+                          evaluationItem?.displayName ?? '',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              height: 17 / 12),
+                        ),
+                        VerticalDivider(
+                          color: Color(0xFF8E8E8E),
+                          thickness: 0.6,
+                        ),
+                        Text(
+                          evaluationItem?.createdDate ?? '',
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xFF828282)),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: ProsAndConsWidget(
+                      pros: evaluationItem?.pros ?? '',
+                      cons: evaluationItem?.cons ?? '',
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                ],
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class DripCardListWidget extends StatelessWidget {
+  final EvaluationItem evaluationItem;
+
+  DripCardListWidget(this.evaluationItem);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          padding:
+              const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 20),
+          margin: const EdgeInsets.only(bottom: 15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      evaluationItem.company ?? '',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2, right: 4),
+                          child: Image(
+                              image: AssetImage('assets/icons/ico_like.png')),
+                        ),
+                        Text(
+                          evaluationItem.likeCount.toString(),
+                          style:
+                              TextStyle(fontSize: 11, color: Color(0xFF828282)),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 6),
+              Divider(
+                color: Color(0xFF8E8E8E),
+                thickness: 0.6,
+              ),
+              SizedBox(height: 14),
+              Padding(
+                padding: const EdgeInsets.only(left: 13.0),
+                child: ProsAndConsWidget(
+                  pros: evaluationItem?.pros ?? '',
+                  cons: evaluationItem?.cons ?? '',
+                ),
+              ),
+            ],
+          )),
+    );
+  }
+}
+
+Widget emptyDripListRoomScreen(BuildContext context) {
+  return Column(
+    children: [
+      SizedBox(height: 30),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 13),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('BEST'),
+                Row(
+                  children: [
+                    Text('오늘HOT'),
+                    Icon(Icons.keyboard_arrow_down_outlined)
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 11),
+            BestDripCardListWidget(EvaluationItem())
+          ],
+        ),
+      )
+    ],
+  );
 }
