@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/result/calculator_date_stock.dart';
@@ -54,11 +55,14 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                '${numberWithComma(widget.calculatorResult.yieldPrice.toString())}원',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w700,
+              FittedBox(
+                child: AutoSizeText(
+                  '${numberWithComma(widget.calculatorResult.yieldPrice.toString())}원',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 1,
                 ),
               ),
               FittedBox(
@@ -112,9 +116,7 @@ class _AtThisTimeItemState extends State<AtThisTimeItem> {
 
   String getYieldPercent(int percent) {
     if (percent > 0) {
-      return '+ $percent%';
-    } else if (percent < 0) {
-      return '- $percent%';
+      return '+$percent%';
     } else {
       return '$percent%';
     }

@@ -6,6 +6,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/calculator/high_price_ten_year.dart';
 import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
+import 'package:should_have_bought_app/models/calculator/result/period_best_price.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 import 'package:should_have_bought_app/models/calculator/result/best_price.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
@@ -20,6 +21,7 @@ class CalculatorProvider with ChangeNotifier {
   CalculatorStock calculationResult;
   BestPrice bestPriceResult;
   SectorData sectorData;
+  List<PeriodBestPrice> _periodBestPriceList = <PeriodBestPrice>[];
   List<CurrentStockPrice> _currentStockPriceList = <CurrentStockPrice>[];
 
   List get companyList {
@@ -39,6 +41,8 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   List<CurrentStockPrice> get currentStockPriceList => _currentStockPriceList;
+
+  List<PeriodBestPrice> get periodBestPriceList => _periodBestPriceList;
 
   void filterSearchResults(String query) {
     List<Company> dummySearchList = [];
@@ -131,7 +135,7 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getBestPrice(latestDto['code'],
         latestDto['investDate'], int.parse(latestDto['investPrice']));
     bestPriceResult = BestPrice.fromJson(result);
-    calculationResultAll = CalculatorStockAll.fromJson(result);
+    notifyListeners();
   }
 
   Future getCurrentStockPrice() async {
@@ -141,6 +145,19 @@ class CalculatorProvider with ChangeNotifier {
         .map<CurrentStockPrice>(
             (currentStock) => CurrentStockPrice.fromJson(currentStock))
         .toList();
+    notifyListeners();
+  }
+
+  Future getPeriodBestPrice() async {
+    final result =
+        await CalculatorApi.getPeriodBestPrice(latestDto['investDate']);
+    final list = result['yieldSortList'];
+    if (list != null) {
+      _periodBestPriceList = list
+          .map<PeriodBestPrice>(
+              (sortedStock) => PeriodBestPrice.fromJson(sortedStock))
+          .toList();
+    }
     notifyListeners();
   }
 }
