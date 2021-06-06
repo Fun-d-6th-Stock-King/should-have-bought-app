@@ -23,6 +23,16 @@ Map<String, String> dateValue = {
   'YEAR10': '10년 전'
 };
 
+Map<String, String> reverseDateValue = {
+  '어제': 'DAY1',
+  '1주전': 'WEEK1',
+  '한달전': 'MONTH1',
+  '6개월전': 'MONTH6',
+  '1년전': 'YEAR1',
+  '5년전': 'YEAR5',
+  '10년전': 'YEAR10'
+};
+
 List<String> dates = [
   'DAY1',
   'WEEK1',

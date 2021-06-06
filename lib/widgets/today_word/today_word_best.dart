@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/today_word/word_item.dart';
 import 'package:should_have_bought_app/providers/today_word/today_word_provider.dart';
+import 'package:should_have_bought_app/screens/tab_screen.dart';
 
 class TodayWordBest extends StatefulWidget {
   @override
@@ -84,16 +85,21 @@ class _CreateTodayWordBestState extends State<TodayWordBest> {
               }
             ),
           ),
-          Container(
-            height: 41,
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(255, 184, 0, 0.15),
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12.0), bottomRight: Radius.circular(12.0))
-            ),
-            alignment: Alignment.center,
-            child: Text('내일의 주식단어 추천하러 가기 >', style: TextStyle(
-                color:Color(0xFFFF9900), fontSize: 13, fontWeight: FontWeight.w500
-            ),
+          InkWell(
+            onTap: () {
+              Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TabScreen(selectIndex: 3)));
+            },
+            child: Container(
+              height: 41,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(255, 184, 0, 0.15),
+                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12.0), bottomRight: Radius.circular(12.0))
+              ),
+              alignment: Alignment.center,
+              child: Text('내일의 주식단어 추천하러 가기 >', style: TextStyle(
+                  color:Color(0xFFFF9900), fontSize: 13, fontWeight: FontWeight.w500
+              ),
+              ),
             ),
           )
         ],

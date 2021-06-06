@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:should_have_bought_app/api/calculator/calculator_api.dart';
-import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/models/calculator/high_price_ten_year.dart';
 import 'package:should_have_bought_app/models/calculator/result/calculator_stock_all.dart';
 import 'package:should_have_bought_app/models/calculator/result/period_best_price.dart';
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
@@ -14,8 +14,8 @@ import 'package:should_have_bought_app/models/calculator/current_stock_price.dar
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
-  List _tenYearHighList = [];
-  List _calculateHistory = [];
+  List<HighPriceTenYear> _tenYearHighList = [];
+  List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
   CalculatorStockAll calculationResultAll;
   CalculatorStock calculationResult;
@@ -32,7 +32,7 @@ class CalculatorProvider with ChangeNotifier {
     return _searchCompanyList;
   }
 
-  List get tenYearHighList {
+  List<HighPriceTenYear> get tenYearHighList {
     return _tenYearHighList;
   }
 
@@ -97,10 +97,10 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getTenYearHigher();
     List list = result;
 
+    print(list);
     if (list != null) {
       _tenYearHighList = list
-          .map((e) =>
-              {"company": e["company"], "high": e["maxQuote"]["high"].toInt()})
+          .map((item) => HighPriceTenYear.fromJson(item))
           .toList();
       notifyListeners();
     }
@@ -112,7 +112,7 @@ class CalculatorProvider with ChangeNotifier {
     list = result['calculationHistList'];
     if (list != null) {
       _calculateHistory =
-          list.map((history) => CalculatorHistory.fromJson(history)).toList();
+          list.map<CalculatorHistory>((history) => CalculatorHistory.fromJson(history)).toList();
       notifyListeners();
     }
   }

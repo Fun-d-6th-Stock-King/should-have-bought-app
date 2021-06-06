@@ -21,7 +21,9 @@ class _TabScreenState extends State<TabScreen> {
     super.initState();
     _selectedIndex = widget.selectIndex ?? 0;
     EasyLoading.instance.animationStyle = EasyLoadingAnimationStyle.scale;
-    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.fadingCircle;
+    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.threeBounce;
+    EasyLoading.instance.loadingStyle = EasyLoadingStyle.light;
+    EasyLoading.instance.backgroundColor = Colors.transparent;
     _screens = [
       MainScreen(),
       DripRoomScreen(),

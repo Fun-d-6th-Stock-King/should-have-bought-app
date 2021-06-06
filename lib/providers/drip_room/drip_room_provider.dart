@@ -19,13 +19,13 @@ class DripRoomProvider with ChangeNotifier {
     print(result);
     List list = result['simpleEvaluationList'];
     _pageInfo = PageInfo.fromJson(result['pageInfo']);
-    print(_evaluationItemList.length);
-    List addEvaluationItemList = list.map((evaluationItem) => EvaluationItem.fromJson(evaluationItem)).toList();
-    _evaluationItemList = [..._evaluationItemList, ...addEvaluationItemList];
+    print(_evaluationItemList);
+    // List addEvaluationItemList = list.map((evaluationItem) => EvaluationItem.fromJson(evaluationItem)).toList();
+    _evaluationItemList = list.map((evaluationItem) => EvaluationItem.fromJson(evaluationItem)).toList();
 
     notifyListeners();
 
-    return addEvaluationItemList;
+    return _evaluationItemList;
   }
 
   Future getTodayBest() async {
@@ -37,5 +37,18 @@ class DripRoomProvider with ChangeNotifier {
 
   void setIsLoading(bool isLoading) {
     _isLoading = isLoading;
+  }
+
+  Future likeDrip(EvaluationItem evaluationItem) async {
+    final result = await DripRoomApi.likeDrip(evaluationItem.id);
+    int findIndex = _evaluationItemList.indexWhere((element) => element.id == evaluationItem.id);
+
+    EvaluationItem findEvaluationItem =_evaluationItemList[findIndex];
+    _evaluationItemList[findIndex] = EvaluationItem.fromJson({
+      ...findEvaluationItem.toMap(),
+      'userlike': !findEvaluationItem.userlike,
+      'likeCount': result['like'] == true ?  findEvaluationItem.likeCount+1 : findEvaluationItem.likeCount-1
+    });
+    notifyListeners();
   }
 }

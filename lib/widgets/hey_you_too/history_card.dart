@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 
@@ -22,10 +27,25 @@ class HistoryCard extends StatelessWidget {
         ),
       ),
       child: InkWell(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => StockDetailScreen(
-              Company(company: history.company,code: history.code),0)
-          ));
+        onTap: () async{
+          await Provider.of<CalculatorProvider>(context,
+              listen: false)
+              .getResult(CalculatorDto(
+              code: history.code,
+              investDate: reverseDateValue[history.investDateName],
+              investPrice: int.parse(history.investPrice)
+              ).toMap()).then((value) {
+            Navigator.of(context)
+                .pushNamed(CalculatorResultScreen.routeId)
+                .then((value) => {
+              if (value == 'update')
+                {
+                  Provider.of<CalculatorProvider>(context,
+                      listen: false)
+                      .getHistory()
+                }
+            });
+          });
         },
         child: Container(
           padding: EdgeInsets.only(left: 22, top: 22),
@@ -49,7 +69,7 @@ class HistoryCard extends StatelessWidget {
                       maxLines: 2,
                     ),
                   ),
-                  ConstrainedBox(
+                  ConstrainedBox( 
                     constraints: BoxConstraints(
                       minHeight: 40,
                     ),
@@ -61,11 +81,16 @@ class HistoryCard extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 25),
               Text(
-                '${history.investDateName}보다',
+                '${history.investDateName} 에 샀다면',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
+              // Text(
+              //   '${numberWithComma(history?.investPrice ?? '')}원 샀다면',
+              //   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              // ),
+              SizedBox(height: 5),
               AutoSizeText.rich(
                 TextSpan(
                   style: TextStyle(
@@ -78,16 +103,16 @@ class HistoryCard extends StatelessWidget {
                     fontSize: 21,
                   ),
                   children: <TextSpan>[
-                    (history.yieldPercent > 0)
-                        ? TextSpan(text: '+')
-                        : (history.yieldPercent < 0)
-                            ? TextSpan(text: '-')
-                            : TextSpan(),
-                    TextSpan(text: '${numberWithComma(history.yieldPrice)}원'),
+                    // (history.yieldPercent > 0)
+                    //     ? TextSpan(text: '+')
+                    //     : (history.yieldPercent < 0)
+                    //         ? TextSpan(text: '-')
+                    //         : TextSpan(),
+                    //TextSpan(text: '${numberWithComma(history.yieldPrice)}원'),
                     TextSpan(
-                      text: '(${history.yieldPercent}%)',
+                      text: '${history.yieldPercent}%',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 24,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
