@@ -22,6 +22,10 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
         enable: true, activationMode: ActivationMode.singleTap);
     super.initState();
   }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
 
     LineSeries<_ChartData, num> daliyChart(String type) {
       return LineSeries<_ChartData, num>(
-          animationDuration: 2500,
+          animationDuration: 1500,
           legendIconType: LegendIconType.circle,
           dataSource: type == "high" ? dayHighData : dayLowData,
           color: const Color(0xFF4990FF),
@@ -82,7 +86,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
     }
     LineSeries<_ChartData, num> weeklyChart(String type) {
       return LineSeries<_ChartData, num>(
-          animationDuration: 2500,
+          animationDuration: 1500,
           legendIconType: LegendIconType.circle,
           dataSource: type == "high" ? weekHighData : weekLowData,
           color: const Color(0xFFFF6258),
@@ -106,7 +110,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
     }
     LineSeries<_ChartData, num> yearlyChart(String type) {
       return LineSeries<_ChartData, num>(
-          animationDuration: 2500,
+          animationDuration: 1500,
           legendIconType: LegendIconType.circle,
           dataSource: type == "high" ? yearHighData : yearLowData,
           color: const Color(0xFFFF9900),
@@ -130,7 +134,7 @@ class _CurrentStockChartWidgetState extends State<CurrentStockChartWidget> {
     }
     LineSeries<_ChartData, num> defaultChart(String type) {
       return LineSeries<_ChartData, num>(
-          animationDuration: 2500,
+          animationDuration: 500,
           legendIconType: LegendIconType.circle,
           dataSource: type == "high" ? defaltHighData : defaltLowData,
           color: Colors.blueGrey,

@@ -1,7 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
+import 'package:should_have_bought_app/models/calculator/high_price_ten_year.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 
 class AnyPastYearWidget extends StatefulWidget {
@@ -15,7 +14,7 @@ class AnyPastYearWidget extends StatefulWidget {
 }
 
 class _AnyPastYearWidgetState extends State<AnyPastYearWidget> {
-  List<StockHist> _tenYearList;
+  List<HighPriceTenYear> _tenYearList;
 
   @override
   void didChangeDependencies() {

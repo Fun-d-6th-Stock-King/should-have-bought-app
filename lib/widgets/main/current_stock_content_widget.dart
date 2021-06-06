@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/chart/current_stock_chart_widget.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
@@ -25,25 +27,39 @@ class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.currentStockPrice.company,
-              style: TextStyle(
-                  fontSize: 18, height: 26 / 18, fontWeight: FontWeight.w500),
-            ),
-            Text(
-              '${numberWithComma(widget.currentStockPrice.price.toStringAsFixed(0))}원',
-              style: TextStyle(
-                  fontSize: 34,
-                  height: 49 / 34,
-                  fontWeight: FontWeight.w500,
-                  color: widget.currentStockPrice.changeInPercent > 0
-                      ? possibleColor
-                      : nagativeColor),
-            ),
-            Row(
-              children: [
-                widget.currentStockPrice.changeInPercent > 0
-                    ? Text(
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                    StockDetailScreen(
+                        Company(company: widget.currentStockPrice.company,
+                            code: widget.currentStockPrice.code), 0)
+                ));
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.currentStockPrice.company,
+                    style: TextStyle(
+                        fontSize: 18,
+                        height: 26 / 18,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    '${numberWithComma(
+                        widget.currentStockPrice.price.toStringAsFixed(0))}원',
+                    style: TextStyle(
+                        fontSize: 34,
+                        height: 49 / 34,
+                        fontWeight: FontWeight.w500,
+                        color: widget.currentStockPrice.changeInPercent > 0
+                            ? possibleColor
+                            : nagativeColor),
+                  ),
+                  Row(
+                    children: [
+                      widget.currentStockPrice.changeInPercent > 0
+                          ? Text(
                         '+',
                         style: TextStyle(
                             fontSize: 23,
@@ -51,21 +67,24 @@ class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
                             fontWeight: FontWeight.w300,
                             color: possibleColor),
                       )
-                    : Text(''),
-                Text(
-                  '${widget.currentStockPrice.changeInPercent}%',
-                  style: TextStyle(
-                      fontSize: 23,
-                      height: 27 / 23,
-                      fontWeight: FontWeight.w300,
-                      color: widget.currentStockPrice.changeInPercent > 0
-                          ? possibleColor
-                          : nagativeColor),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 24,
+                          : Text(''),
+                      Text(
+                        '${widget.currentStockPrice.changeInPercent}%',
+                        style: TextStyle(
+                            fontSize: 23,
+                            height: 27 / 23,
+                            fontWeight: FontWeight.w300,
+                            color: widget.currentStockPrice.changeInPercent > 0
+                                ? possibleColor
+                                : nagativeColor),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -83,7 +102,8 @@ class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18.0),
                   color: Color.fromRGBO(245, 245, 245, 0.98)),
-              child: CurrentStockChartWidget(type: _currentButton, value:widget.currentStockPrice),
+              child: CurrentStockChartWidget(
+                  type: _currentButton, value: widget.currentStockPrice),
             )
           ],
         ),
@@ -104,9 +124,10 @@ class _CurrentStockContentWidgetState extends State<CurrentStockContentWidget> {
           decoration: BoxDecoration(
               border: Border(
                   bottom: BorderSide(
-            color: _currentButton == name ? mainColor : Colors.transparent,
-            width: 2.5,
-          ))),
+                    color: _currentButton == name ? mainColor : Colors
+                        .transparent,
+                    width: 2.5,
+                  ))),
           child: Text(
             name,
             style: TextStyle(

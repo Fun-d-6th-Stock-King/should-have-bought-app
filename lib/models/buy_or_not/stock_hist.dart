@@ -33,7 +33,7 @@ class StockHist {
       price: json['price'] ?? 0,
       changeInPercent: json['changeInPercent'],
       maxQuote: BuyOrNotChart.fromJson(json['maxQuote']),
-      minQuote: BuyOrNotChart.fromJson(json['minQuote'] ?? {}),
+      minQuote: BuyOrNotChart.fromJson(json['minQuote']),
       quoteList: json['quoteList']
           .map<BuyOrNotChart>((value) => BuyOrNotChart.fromJson(value))
           .toList(),

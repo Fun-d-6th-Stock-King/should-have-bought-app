@@ -60,7 +60,7 @@ class CalculatorApi extends Api {
     final response = await http.get(
         Uri.parse("$stockApiUrl/api/buythen/high-price-10year"),
         headers: header);
-
+    print('[GET] /api/buythen/high-price-10year');
     if (response.statusCode == 200) {
       final responseBody = json.decode(utf8.decode(response.bodyBytes));
       return responseBody;

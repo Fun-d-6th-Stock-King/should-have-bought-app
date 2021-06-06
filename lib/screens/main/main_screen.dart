@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async{
     super.didChangeDependencies();
   }
 
@@ -43,20 +43,21 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Frame(child: HeaderWidget()),
             SizedBox(height: 21), // add 계산기
-            Frame(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text("메인편집",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          height: 1.5,
-                          color: mainColor)),
-                  //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
-                ],
-              ),
-            ),
+            // TODO: 메인편집
+            // Frame(
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     children: [
+            //       Text("메인편집",
+            //           style: TextStyle(
+            //               fontSize: 14,
+            //               fontWeight: FontWeight.w500,
+            //               height: 1.5,
+            //               color: mainColor)),
+            //       //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
+            //     ],
+            //   ),
+            // ),
             SizedBox(
               height: 7,
             ),
@@ -84,30 +85,31 @@ class _MainScreenState extends State<MainScreen> {
                         fontWeight: FontWeight.w700,
                         height: 1.5,
                       )),
-                  Container(
-                    padding: EdgeInsets.only(
-                        left: 11, bottom: 2, top: 2, right: 3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40.0),
-                      border: Border.all(
-                        width: 1,
-                        color: Color(0xFF828282),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("종목선택",
-                            style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                height: 1.5,
-                                color: Color(0xFF828282))),
-                        Icon(Icons.keyboard_arrow_down_outlined,
-                            color: Color(0xFF828282))
-                      ],
-                    ),
-                  ),
+                  // TODO: 종목선택
+                  // Container(
+                  //   padding: EdgeInsets.only(
+                  //       left: 11, bottom: 2, top: 2, right: 3),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(40.0),
+                  //     border: Border.all(
+                  //       width: 1,
+                  //       color: Color(0xFF828282),
+                  //     ),
+                  //   ),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Text("종목선택",
+                  //           style: TextStyle(
+                  //               fontSize: 13,
+                  //               fontWeight: FontWeight.w400,
+                  //               height: 1.5,
+                  //               color: Color(0xFF828282))),
+                  //       Icon(Icons.keyboard_arrow_down_outlined,
+                  //           color: Color(0xFF828282))
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -121,7 +123,8 @@ class _MainScreenState extends State<MainScreen> {
             SizedBox(height: 51),
             Divider(thickness: 7, color: Color(0xFFF2F2F2)),
             SizedBox(height: 43),
-            Frame(child: MainTitle(title: "이거 살까? 말까?", more: () {})),
+            //TODO: 살까말까 랭킹 더보기
+            Frame(child: MainTitle(title: "이거 살까? 말까?")),
             SizedBox(height: 23),
             ThisBuyOrNotWidget(),
             Divider(thickness: 7, color: Color(0xFFF2F2F2)),

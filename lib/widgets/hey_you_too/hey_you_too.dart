@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +10,8 @@ class HeyYouToo extends StatefulWidget {
 }
 
 class _HeyYouTooState extends State<HeyYouToo> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void didChangeDependencies() async {
     await Provider.of<CalculatorProvider>(context, listen: false).getHistory();
@@ -32,20 +33,27 @@ class _HeyYouTooState extends State<HeyYouToo> {
                   CircularProgressIndicator(),
                 ],
               ))
-          : CarouselSlider(
-              options: CarouselOptions(
-                height: 213.0,
-                viewportFraction: 0.7,
-                enableInfiniteScroll: false,
-              ),
-              items: _historyList.map((history) {
-                return Builder(
-                  builder: (context) {
-                    return HistoryCard(history);
-                  },
-                );
-              }).toList(),
-            );
+          : Container(
+          height: 213,
+          // this generates our tabs buttons
+          child: Padding(
+            padding: const EdgeInsets.only(left:23.0),
+            child: ListView.builder(
+              // this gives the TabBar a bounce effect when scrolling farther than it's size
+                physics: BouncingScrollPhysics(),
+                controller: _scrollController,
+                // make the list horizontal
+                scrollDirection: Axis.horizontal,
+                // number of tabs
+                itemCount: _historyList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right:16.0),
+                    child: HistoryCard(_historyList[index]),
+                  );
+                }
+            ),
+          ));
     });
   }
 }

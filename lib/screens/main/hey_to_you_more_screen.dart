@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
@@ -32,7 +34,17 @@ class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
             onTap: () => Navigator.pop(context)),
         elevation: 0,
         actions: [
-          Image(image: AssetImage("assets/icons/ico_refresh.png")),
+          InkWell(
+            onTap: () async {
+              await EasyLoading.show(
+                status: 'loading...',
+                maskType: EasyLoadingMaskType.none,
+              );
+              await Provider.of<CalculatorProvider>(context, listen: false)
+                  .getHistory(pageSize: 100).then((value) => EasyLoading.dismiss());
+            }, 
+            child: Image(image: AssetImage("assets/icons/ico_refresh.png"))
+          ),
         ],
         centerTitle: true,
         title: Text(''),
@@ -173,18 +185,40 @@ class HeyToYouMoreCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             //emojiIncreaseOrDecrease
-                            Text('${emojiIncreaseOrDecrease(calculatorHistory?.yieldPercent?.toDouble() ?? 0)}${numberWithComma(calculatorHistory?.yieldPrice.toString() ?? '')}원',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22,
-                                    height: 32 / 27,
-                                    color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF))),
-                            Text("(${calculatorHistory.yieldPercent.toDouble() > 0 ? "+": ''}${calculatorHistory?.yieldPercent ?? 0}%)",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22,
-                                    height: 32 / 27,
-                                    color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF)))
+                            Row(
+                              children: [
+                                AutoSizeText(
+                                  '${emojiIncreaseOrDecrease(calculatorHistory?.yieldPercent?.toDouble() ?? 0)}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                      height: 32 / 27,
+                                      color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF)),
+                                  presetFontSizes: [16, 18],
+                                  maxLines: 1,
+                                ),
+                                AutoSizeText(
+                                  "${numberWithComma(calculatorHistory?.yieldPrice.toString() ?? '')}원",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 22,
+                                      height: 32 / 27,
+                                      color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF)),
+                                  presetFontSizes: [20, 22],
+                                  maxLines: 1,
+                                ),
+                              ],
+                            ),
+                            AutoSizeText(
+                              "(${calculatorHistory.yieldPercent.toDouble() > 0 ? "+": ''}${calculatorHistory?.yieldPercent ?? 0}%)",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 22,
+                                  height: 32 / 27,
+                                  color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF)),
+                              presetFontSizes: [20, 22],
+                              maxLines: 1,
+                            ),
                           ],
                         ),
                         Container(
@@ -203,12 +237,17 @@ class HeyToYouMoreCard extends StatelessWidget {
                                     fontSize: 15,
                                     height: 19 / 15,
                                     color: Colors.black)),
-                            Text('${numberWithComma(calculatorHistory?.price.toString() ?? '')}원/1주',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18,
-                                    height: 26 / 15,
-                                    color: Colors.black))
+                            AutoSizeText(
+                              '${numberWithComma(calculatorHistory?.price.toString() ?? '')}원/1주',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                  height: 26 / 15,
+                                  color: Colors.black),
+                              presetFontSizes: [16, 18],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ],
                         ),
                       ],
