@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_widget_provider.dart';
+import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/screens/tab_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 
@@ -96,21 +98,28 @@ class HeyToYouMoreCard extends StatelessWidget {
   final CalculatorHistory calculatorHistory;
   HeyToYouMoreCard(this.calculatorHistory);
 
-
-  void actionHowToBoughtThen(BuildContext context) {
-    Provider.of<CalculatorWidgetProvider>(context, listen: false)
-        .setCompanyAndDateValue(Company(company: calculatorHistory.company, code: calculatorHistory.code)
-          , reverseDateValue[calculatorHistory.investDateName]
-          ,price:calculatorHistory.investPrice);
-    Navigator.pop(context);
-    Navigator.pushReplacement(context,  MaterialPageRoute(builder: (context) => TabScreen(selectIndex: 0)));
-  }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        actionHowToBoughtThen(context);
+      onTap: () async{
+        await Provider.of<CalculatorProvider>(context,
+            listen: false)
+            .getResult(CalculatorDto(
+            code: calculatorHistory.code,
+            investDate: reverseDateValue[calculatorHistory.investDateName],
+            investPrice: int.parse(calculatorHistory.investPrice)
+        ).toMap()).then((value) {
+          Navigator.of(context)
+              .pushNamed(CalculatorResultScreen.routeId)
+              .then((value) => {
+            if (value == 'update')
+              {
+                Provider.of<CalculatorProvider>(context,
+                    listen: false)
+                    .getHistory()
+              }
+          });
+        });
       },
       child: Container(
         decoration: BoxDecoration(
