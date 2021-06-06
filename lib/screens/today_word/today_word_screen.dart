@@ -302,6 +302,7 @@ class WordCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
     return InkWell(
       onTap: () {
         print("단어 카드 위젯");
@@ -359,12 +360,19 @@ class WordCardWidget extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(
-                        wordItem.wordName ?? '',
-                        style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w900,
-                            height: 17 / 12),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: mediaQuery.size.width * 0.6,
+                        ),
+                        child: Text(
+                          wordItem.wordName ?? '',
+                          style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w900,
+                              height: 17 / 12),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
                     ],
                   ),
@@ -399,7 +407,11 @@ class WordCardWidget extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 9),
-              Text(wordItem.mean),
+              Text(
+                wordItem.mean,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

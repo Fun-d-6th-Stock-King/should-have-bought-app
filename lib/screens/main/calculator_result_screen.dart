@@ -17,6 +17,8 @@ import 'package:should_have_bought_app/widgets/calculator/result/salary_year_mon
 import 'package:should_have_bought_app/widgets/calculator/result/ten_year_invest_chart_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/should_bought_this_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/buy_or_not_widget.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -28,10 +30,11 @@ class CalculatorResultScreen extends StatefulWidget {
 class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color textColor;
   Color topColor;
+  AssetImage chickImage;
 
   bool isLoading = false;
 
-  void setBackgroundColor() {
+  void setDynamicOption() {
     final percent = Provider.of<CalculatorProvider>(context, listen: false)
         .calculationResult
         .yieldPercent;
@@ -39,24 +42,30 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       setState(() {
         topColor = Color(0xffFF6561);
         textColor = Colors.white;
+        chickImage = AssetImage('assets/images/plus_chick.png');
       });
     } else if (percent < 0) {
       setState(() {
         topColor = Color(0xff4990FF);
         textColor = Colors.white;
+        chickImage = AssetImage('assets/images/minus_chick.png');
       });
     } else {
       setState(() {
         topColor = Color(0xffF2F2F2);
         textColor = Colors.black;
+        chickImage = AssetImage('assets/images/normal_chick.png');
       });
     }
   }
+
+  void setChick() {}
 
   void randomValues() {
     setState(() {
       isLoading = true;
     });
+
     final _companyList =
         Provider.of<CalculatorProvider>(context, listen: false).companyList;
     final _randomDate = Random().nextInt(dates.length);
@@ -69,7 +78,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       investPrice: intToCurrency(prices[_randomPrice]),
     ).toMap())
         .then((_) {
-      setBackgroundColor();
+      setDynamicOption();
       setState(() {
         isLoading = false;
       });
@@ -92,7 +101,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    setBackgroundColor();
+    setDynamicOption();
   }
 
   @override
@@ -120,7 +129,16 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           SizedBox(height: 50),
           Divider(thickness: 7, color: Color(0xFFF2F2F2)),
           SizedBox(height: 50),
-          Frame(child: AtThisTimeWidget())
+          Frame(child: AtThisTimeWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: ShouldBoughtThisWidget()),
+          SizedBox(height: 50),
+          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+          SizedBox(height: 50),
+          Frame(child: BuyOrNotWidget()),
+          SizedBox(height: 50),
         ],
       ),
     );
@@ -137,7 +155,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           padding: EdgeInsets.only(top: 180),
           alignment: Alignment.center,
           child: Image(
-            image: AssetImage('assets/images/plus_chick.png'),
+            image: chickImage,
           ),
         ),
         Column(

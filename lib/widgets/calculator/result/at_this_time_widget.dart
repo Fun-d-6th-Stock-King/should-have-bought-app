@@ -44,8 +44,6 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
     '10년전에 살걸',
   ];
 
-  final List _fourDto = [];
-
   final Color _foregroundOn = Colors.white;
   final Color _foregroundOff = Colors.black;
 
@@ -97,10 +95,19 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
     super.dispose();
   }
 
+  bool isLoading = false;
   @override
-  void didChangeDependencies() async {
-    await Provider.of<CalculatorProvider>(context, listen: false)
-        .getFourResult();
+  void didChangeDependencies() {
+    setState(() {
+      isLoading = true;
+    });
+    Provider.of<CalculatorProvider>(context, listen: false)
+        .getFourResult()
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
     super.didChangeDependencies();
   }
 
@@ -108,7 +115,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
         builder: (context, calculatorProvider, child) {
-      var _fourResult = calculatorProvider.calculationResultAll;
+      final _fourResult = calculatorProvider.calculationResultAll;
       return Column(
         children: <Widget>[
           Container(
@@ -179,7 +186,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
             ),
           ),
           SizedBox(height: 30),
-          _fourResult == null
+          isLoading
               ? Center(child: CircularProgressIndicator())
               : Container(
                   height: 120,

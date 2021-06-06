@@ -79,6 +79,8 @@ flutter:
     - assets/lottie/o_animation.json
     - assets/lottie/x_animation.json
     - assets/images/plus_chick.png
+    - assets/images/normal_chick.png
+    - assets/images/minus_chick.png
     - assets/icons/ico_heart.png
     - assets/icons/ico_check.png
     - assets/icons/ico_like.png
