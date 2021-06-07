@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
@@ -79,6 +80,17 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
         ),
       ),
     );
+  }
+
+  Future<bool> _getAdMobCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int counter = (prefs.getInt('counter') ?? 0) + 1;
+    print('Pressed $counter ');
+    await prefs.setInt('counter', counter);
+    if(counter%3 == 0) {
+      return true;
+    }
+    return false;
   }
 
   Widget build(BuildContext context) {
@@ -162,33 +174,38 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                             ),
                           ),
                     onPressed: () async {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                          AdMobWidget()
-                      ));
-                      // calculatorWidgetProvider.setLoading(true);
-                      // await Provider.of<CalculatorProvider>(context,
-                      //         listen: false)
-                      //     .getResult(CalculatorDto(
-                      //             code: calculatorWidgetProvider
-                      //                 .selectedCompany.code,
-                      //             investDate: calculatorWidgetProvider
-                      //                 .selectedDateValue,
-                      //             investPrice:
-                      //                 intToCurrency(_priceController.text))
-                      //         .toMap())
-                      //     .then((value) {
-                      //   Navigator.of(context)
-                      //       .pushNamed(CalculatorResultScreen.routeId)
-                      //       .then((value) => {
-                      //             if (value == 'update')
-                      //               {
-                      //                 Provider.of<CalculatorProvider>(context,
-                      //                         listen: false)
-                      //                     .getHistory()
-                      //               }
-                      //           });
-                      // });
-                      // calculatorWidgetProvider.setLoading(false);
+                      _getAdMobCounter().then((value) async{
+                        if(value == true) {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                              AdMobWidget()
+                          ));
+                        } else {
+                          calculatorWidgetProvider.setLoading(true);
+                          await Provider.of<CalculatorProvider>(context,
+                              listen: false)
+                              .getResult(CalculatorDto(
+                              code: calculatorWidgetProvider
+                                  .selectedCompany.code,
+                              investDate: calculatorWidgetProvider
+                                  .selectedDateValue,
+                              investPrice:
+                              intToCurrency(_priceController.text))
+                              .toMap())
+                              .then((value) {
+                            Navigator.of(context)
+                                .pushNamed(CalculatorResultScreen.routeId)
+                                .then((value) => {
+                              if (value == 'update')
+                                {
+                                  Provider.of<CalculatorProvider>(context,
+                                      listen: false)
+                                      .getHistory()
+                                }
+                            });
+                          });
+                          calculatorWidgetProvider.setLoading(false);
+                        }
+                      });
                     },
                   ),
                 )
