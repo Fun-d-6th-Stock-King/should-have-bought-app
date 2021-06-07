@@ -1,3 +1,5 @@
+import 'package:should_have_bought_app/models/calculator/result/exception_case.dart';
+
 class CalculatorStock {
   String code;
   String name;
@@ -17,6 +19,7 @@ class CalculatorStock {
     'SK하이닉스': 0.0,
     '카카오': 0.0,
   };
+  ExceptionCase exceptionCase;
 
   CalculatorStock.fromJson(Map<dynamic, dynamic> map) {
     code = map['code'];
@@ -35,5 +38,6 @@ class CalculatorStock {
     topStocks['삼성전자'] = map['calculatedValue']['samsungStock'];
     topStocks['SK하이닉스'] = map['calculatedValue']['skStock'];
     topStocks['카카오'] = map['calculatedValue']['kakaoStock'];
+    exceptionCase = ExceptionCase.fromJson(map['exceptCase']);
   }
 }
