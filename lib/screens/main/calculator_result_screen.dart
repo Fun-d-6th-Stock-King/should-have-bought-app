@@ -8,6 +8,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/drip_room/drip_room_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/bottomSheet/example_bottom_sheet.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
 
@@ -61,7 +62,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
   void setChick() {}
 
-  void randomValues() {
+  void randomValues(BuildContext context) {
     setState(() {
       isLoading = true;
     });
@@ -79,6 +80,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     ).toMap())
         .then((_) {
       setDynamicOption();
+      ExampleBottomSheet(context);
       setState(() {
         isLoading = false;
       });
@@ -109,7 +111,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     return Scaffold(
       body: ListView(
         children: [
-          Frame(child: CalculatorResultWidget()),
+          Frame(child: CalculatorResultWidget(context)),
           SizedBox(height: 50),
           Frame(child: SalaryYearMonthWidget()),
           SizedBox(height: 50),
@@ -144,7 +146,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     );
   }
 
-  Widget CalculatorResultWidget() {
+  Widget CalculatorResultWidget(BuildContext context) {
     return Stack(
       children: <Widget>[
         CustomPaint(
@@ -161,7 +163,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         Column(
           children: [
             SizedBox(height: 10),
-            CalculatorResultAppBar(),
+            CalculatorResultAppBar(context),
             SizedBox(height: 2),
             Container(
               height: 175,
@@ -259,7 +261,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     );
   }
 
-  Widget CalculatorResultAppBar() {
+  Widget CalculatorResultAppBar(BuildContext context) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -279,7 +281,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             child: isLoading
                 ? LoadingRandomWidget()
                 : RandomWidget(onTap: () {
-                    randomValues();
+                    randomValues(context);
                   }),
           ),
         ],
