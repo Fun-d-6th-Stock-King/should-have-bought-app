@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,7 +15,7 @@ Future main() async {
   await DotEnv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  Admob.initialize();
   KakaoContext.clientId = env['KAKAO_CLIENT_ID'];
   KakaoContext.javascriptClientId = env['KAKAO_JAVASCRIPT_CLIENT_ID'];
   // 디버그시에 필요

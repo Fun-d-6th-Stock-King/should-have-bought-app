@@ -14,7 +14,7 @@ import 'package:should_have_bought_app/providers/calculator/calculator_widget_pr
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
-
+import 'package:should_have_bought_app/widgets/admob/ad_mob_widget.dart';
 import 'company_item.dart';
 
 class CalculatorWidget extends StatefulWidget {
@@ -162,30 +162,33 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                             ),
                           ),
                     onPressed: () async {
-                      calculatorWidgetProvider.setLoading(true);
-                      await Provider.of<CalculatorProvider>(context,
-                              listen: false)
-                          .getResult(CalculatorDto(
-                                  code: calculatorWidgetProvider
-                                      .selectedCompany.code,
-                                  investDate: calculatorWidgetProvider
-                                      .selectedDateValue,
-                                  investPrice:
-                                      intToCurrency(_priceController.text))
-                              .toMap())
-                          .then((value) {
-                        Navigator.of(context)
-                            .pushNamed(CalculatorResultScreen.routeId)
-                            .then((value) => {
-                                  if (value == 'update')
-                                    {
-                                      Provider.of<CalculatorProvider>(context,
-                                              listen: false)
-                                          .getHistory()
-                                    }
-                                });
-                      });
-                      calculatorWidgetProvider.setLoading(false);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          AdMobWidget()
+                      ));
+                      // calculatorWidgetProvider.setLoading(true);
+                      // await Provider.of<CalculatorProvider>(context,
+                      //         listen: false)
+                      //     .getResult(CalculatorDto(
+                      //             code: calculatorWidgetProvider
+                      //                 .selectedCompany.code,
+                      //             investDate: calculatorWidgetProvider
+                      //                 .selectedDateValue,
+                      //             investPrice:
+                      //                 intToCurrency(_priceController.text))
+                      //         .toMap())
+                      //     .then((value) {
+                      //   Navigator.of(context)
+                      //       .pushNamed(CalculatorResultScreen.routeId)
+                      //       .then((value) => {
+                      //             if (value == 'update')
+                      //               {
+                      //                 Provider.of<CalculatorProvider>(context,
+                      //                         listen: false)
+                      //                     .getHistory()
+                      //               }
+                      //           });
+                      // });
+                      // calculatorWidgetProvider.setLoading(false);
                     },
                   ),
                 )
