@@ -12,6 +12,11 @@ class CalculatorStock {
   double holdingStock;
   String salaryYear;
   String salaryMonth;
+  Map topStocks = {
+    '삼성전자': 0.0,
+    'SK하이닉스': 0.0,
+    '카카오': 0.0,
+  };
 
   CalculatorStock.fromJson(Map<dynamic, dynamic> map) {
     code = map['code'];
@@ -27,5 +32,8 @@ class CalculatorStock {
     holdingStock = map['calculatedValue']['holdingStock'].toDouble();
     salaryYear = map['calculatedValue']['salaryYear'].toString();
     salaryMonth = map['calculatedValue']['salaryMonth'].toString();
+    topStocks['삼성전자'] = map['calculatedValue']['samsungStock'];
+    topStocks['SK하이닉스'] = map['calculatedValue']['skStock'];
+    topStocks['카카오'] = map['calculatedValue']['kakaoStock'];
   }
 }

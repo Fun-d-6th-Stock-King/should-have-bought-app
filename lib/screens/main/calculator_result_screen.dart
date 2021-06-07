@@ -8,6 +8,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/drip_room/drip_room_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/any_past_year_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
 
@@ -112,6 +113,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
           Frame(child: CalculatorResultWidget()),
           SizedBox(height: 50),
           Frame(child: SalaryYearMonthWidget()),
+          SizedBox(height: 30),
+          Frame(child: AnyPastYearWidget()),
           SizedBox(height: 50),
           Frame(child: IncreaseRateTabWidget()),
           SizedBox(height: 40),
