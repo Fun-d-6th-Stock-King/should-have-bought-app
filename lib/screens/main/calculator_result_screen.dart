@@ -31,8 +31,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color textColor;
   Color topColor;
   AssetImage chickImage;
-  bool isBottomSheet = true;
+  bool isBottomSheet = false;
   bool isLoading = false;
+  CalculatorStock calculatorResult;
 
   void setDynamicOption() {
     final percent = Provider.of<CalculatorProvider>(context, listen: false)
@@ -96,6 +97,13 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   void reBuildApi() {
     Provider.of<CalculatorProvider>(context, listen: false).getSectorData();
     Provider.of<CalculatorProvider>(context, listen: false).getTenYearHigher();
+    calculatorResult = Provider.of<CalculatorProvider>(context, listen: false)
+        .calculationResult;
+    if (calculatorResult.exceptionCase.isExceptCase) {
+      setState(() {
+        isBottomSheet = true;
+      });
+    }
   }
 
   @override
@@ -106,30 +114,81 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(isBottomSheet);
     return Scaffold(
       bottomSheet: isBottomSheet == true
-          ? InkWell(
-              onTap: () {
-                setState(() => isBottomSheet = false);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(25),
-                      topLeft: Radius.circular(25)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black38, spreadRadius: 0, blurRadius: 1),
-                  ],
-                ),
-                width: MediaQuery.of(context).size.width,
-                height: 200,
-                child: Column(
-                  children: [
-                    Text('Text'),
-                  ],
-                ),
+          ? Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    topLeft: Radius.circular(25)),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black38, spreadRadius: 0, blurRadius: 1),
+                ],
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 19,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: '10년 전',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '에는 상장 전인 종목이예요. \n 대신 ',
+                        ),
+                        TextSpan(
+                          text: '5년 전',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '정보를 알려드릴게요.',
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isBottomSheet = false;
+                      });
+                    },
+                    child: Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: mainColor,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '네, 알겠어요.',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
             )
           : null,
@@ -209,9 +268,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         isBottomSheet == true
             ? GestureDetector(
                 onTap: () {
-                  setState(() => isBottomSheet = false);
-                },
-                onVerticalDragStart: (details) {
                   setState(() => isBottomSheet = false);
                 },
                 child: CustomPaint(
