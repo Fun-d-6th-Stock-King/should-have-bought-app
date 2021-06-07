@@ -8,7 +8,6 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/drip_room/drip_room_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
-//import 'package:should_have_bought_app/widgets/bottomSheet/example_bottom_sheet.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
 
@@ -108,28 +107,32 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: isBottomSheet == true ? InkWell(
-        onTap: () {
-          setState(() => isBottomSheet = false);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(25), topLeft: Radius.circular(25)),
-              boxShadow: [
-                BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 1),
-              ],
-          ),
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: Column(
-            children: [
-              Text('Text'),
-            ],
-          ),
-        ),
-      ) : null,
+      bottomSheet: isBottomSheet == true
+          ? InkWell(
+              onTap: () {
+                setState(() => isBottomSheet = false);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(25),
+                      topLeft: Radius.circular(25)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black38, spreadRadius: 0, blurRadius: 1),
+                  ],
+                ),
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                child: Column(
+                  children: [
+                    Text('Text'),
+                  ],
+                ),
+              ),
+            )
+          : null,
       body: Container(
         child: ListView(
           children: [
@@ -203,15 +206,21 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             ResultCardWidget(),
           ],
         ),
-        isBottomSheet == true ?
-        GestureDetector(
-          onTap: () {setState(() =>isBottomSheet = false);},
-          onVerticalDragStart: (details) {setState(() =>isBottomSheet = false);},
-          child: CustomPaint(
-            painter: MyPainter(Colors.black.withOpacity(0.5)),
-            size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
-          ),
-        ) : Container(),
+        isBottomSheet == true
+            ? GestureDetector(
+                onTap: () {
+                  setState(() => isBottomSheet = false);
+                },
+                onVerticalDragStart: (details) {
+                  setState(() => isBottomSheet = false);
+                },
+                child: CustomPaint(
+                  painter: MyPainter(Colors.black.withOpacity(0.5)),
+                  size: Size(MediaQuery.of(context).size.width,
+                      MediaQuery.of(context).size.height),
+                ),
+              )
+            : Container(),
       ],
     );
   }
