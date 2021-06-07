@@ -8,7 +8,7 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/drip_room/drip_room_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
-import 'package:should_have_bought_app/widgets/bottomSheet/example_bottom_sheet.dart';
+//import 'package:should_have_bought_app/widgets/bottomSheet/example_bottom_sheet.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
 
@@ -32,7 +32,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color textColor;
   Color topColor;
   AssetImage chickImage;
-
+  bool isBottomSheet = true;
   bool isLoading = false;
 
   void setDynamicOption() {
@@ -80,7 +80,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     ).toMap())
         .then((_) {
       setDynamicOption();
-      ExampleBottomSheet(context);
       setState(() {
         isLoading = false;
       });
@@ -101,7 +100,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     setDynamicOption();
   }
@@ -109,39 +108,63 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          Frame(child: CalculatorResultWidget(context)),
-          SizedBox(height: 50),
-          Frame(child: SalaryYearMonthWidget()),
-          SizedBox(height: 50),
-          Frame(child: IncreaseRateTabWidget()),
-          SizedBox(height: 40),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: CurrentValueWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: TenYearChartWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: BestPriceWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: AtThisTimeWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: ShouldBoughtThisWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: BuyOrNotWidget()),
-          SizedBox(height: 50),
-        ],
+      bottomSheet: isBottomSheet == true ? InkWell(
+        onTap: () {
+          setState(() => isBottomSheet = false);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(25), topLeft: Radius.circular(25)),
+              boxShadow: [
+                BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 1),
+              ],
+          ),
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: Column(
+            children: [
+              Text('Text'),
+            ],
+          ),
+        ),
+      ) : null,
+      body: Container(
+        child: ListView(
+          children: [
+            Frame(child: CalculatorResultWidget(context)),
+            SizedBox(height: 50),
+            Frame(child: SalaryYearMonthWidget()),
+            SizedBox(height: 50),
+            Frame(child: IncreaseRateTabWidget()),
+            SizedBox(height: 40),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: CurrentValueWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: TenYearChartWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: BestPriceWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: AtThisTimeWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: ShouldBoughtThisWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: BuyOrNotWidget()),
+            SizedBox(height: 50),
+          ],
+        ),
       ),
     );
   }
@@ -180,6 +203,15 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             ResultCardWidget(),
           ],
         ),
+        isBottomSheet == true ?
+        GestureDetector(
+          onTap: () {setState(() =>isBottomSheet = false);},
+          onVerticalDragStart: (details) {setState(() =>isBottomSheet = false);},
+          child: CustomPaint(
+            painter: MyPainter(Colors.black.withOpacity(0.5)),
+            size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+          ),
+        ) : Container(),
       ],
     );
   }
@@ -292,7 +324,9 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
 class YieldPercentText extends StatelessWidget {
   final CalculatorStock calculationResult;
+
   YieldPercentText(this.calculationResult);
+
   @override
   Widget build(BuildContext context) {
     final yieldPercent = calculationResult.yieldPercent;
@@ -319,6 +353,7 @@ class YieldPercentText extends StatelessWidget {
 
 class EmojiYieldPriceText extends StatelessWidget {
   final CalculatorStock calculationResult;
+
   EmojiYieldPriceText(this.calculationResult);
 
   @override
@@ -450,6 +485,7 @@ class MainMidText extends StatelessWidget {
 // This is the Painter class
 class MyPainter extends CustomPainter {
   final Color topColor;
+
   MyPainter(this.topColor);
 
   @override
