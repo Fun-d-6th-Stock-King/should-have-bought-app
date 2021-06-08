@@ -127,7 +127,6 @@ class BestOneLineBox extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12,
-                                  height: 17 / 12,
                                   color: Colors.white),
                             ),
                           ),
@@ -156,11 +155,10 @@ class BestOneLineBox extends StatelessWidget {
                               color: nagativeColor,
                             ),
                             child: Text(
-                              '장점',
+                              '단점',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12,
-                                  height: 17 / 12,
                                   color: Colors.white),
                             ),
                           ),
