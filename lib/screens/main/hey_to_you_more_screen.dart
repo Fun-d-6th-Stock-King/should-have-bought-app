@@ -171,8 +171,10 @@ class HeyToYouMoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async{
-        print(calculatorHistory.investDateName);
-        print(reverseDateValue[calculatorHistory.investDateName]);
+        await EasyLoading.show(
+          status: 'loading...',
+          maskType: EasyLoadingMaskType.none,
+        );
         Provider.of<CalculatorWidgetProvider>(context,listen: false)
             .setSendCalcuatorDto(CalculatorDto(
             code: calculatorHistory.code,
@@ -181,10 +183,6 @@ class HeyToYouMoreCard extends StatelessWidget {
         ));
         getAdMobCounter().then((value) async {
           if (value == true) {
-            await EasyLoading.show(
-              status: 'loading...',
-              maskType: EasyLoadingMaskType.none,
-            );
             interstitialAd.show();
           } else {
             await Provider.of<CalculatorProvider>(context,
@@ -194,6 +192,7 @@ class HeyToYouMoreCard extends StatelessWidget {
                 investDate: reverseDateValue[calculatorHistory.investDateName],
                 investPrice: int.parse(calculatorHistory.investPrice)
             ).toMap()).then((value) {
+              EasyLoading.dismiss();
               Navigator.of(context)
                   .pushNamed(CalculatorResultScreen.routeId)
                   .then((value) => {

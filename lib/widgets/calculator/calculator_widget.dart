@@ -229,10 +229,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                     onPressed: () async {
                       getAdMobCounter().then((value) async {
                         if (value == true) {
-                          await EasyLoading.show(
-                            status: 'loading...',
-                            maskType: EasyLoadingMaskType.none,
-                          );
                           interstitialAd.show();
                         } else {
                           calculatorWidgetProvider.setLoading(true);

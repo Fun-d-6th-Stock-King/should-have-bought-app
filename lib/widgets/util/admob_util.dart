@@ -6,7 +6,7 @@ Future<bool> getAdMobCounter() async {
   int counter = (prefs.getInt('counter') ?? 0) + 1;
   print('Pressed $counter ');
   await prefs.setInt('counter', counter);
-  if(counter%5 == 0) {
+  if(counter%4 == 0) {
     return true;
   }
   return false;

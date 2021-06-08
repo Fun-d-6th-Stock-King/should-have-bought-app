@@ -31,6 +31,10 @@ class HistoryCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () async {
+          await EasyLoading.show(
+            status: 'loading...',
+            maskType: EasyLoadingMaskType.none,
+          );
           Provider.of<CalculatorWidgetProvider>(context,listen: false)
               .setSendCalcuatorDto(CalculatorDto(
               code: history.code,
@@ -39,10 +43,6 @@ class HistoryCard extends StatelessWidget {
           ));
           getAdMobCounter().then((value) async {
             if (value == true) {
-              await EasyLoading.show(
-                status: 'loading...',
-                maskType: EasyLoadingMaskType.none,
-              );
               interstitialAd.show();
             } else {
               await Provider.of<CalculatorProvider>(context, listen: false)
@@ -52,6 +52,7 @@ class HistoryCard extends StatelessWidget {
                           investPrice: int.parse(history.investPrice))
                       .toMap())
                   .then((value) {
+                EasyLoading.dismiss();
                 Navigator.of(context)
                     .pushNamed(CalculatorResultScreen.routeId)
                     .then((value) => {

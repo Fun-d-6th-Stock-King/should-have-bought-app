@@ -42,6 +42,12 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
         .getEvaluationList(parmeters)
         .then((value) => EasyLoading.dismiss());
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    EasyLoading.dismiss();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
