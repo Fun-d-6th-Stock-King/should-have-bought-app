@@ -356,27 +356,31 @@ class MainBottomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final investPrice = numberWithComma(
-        Provider.of<CalculatorProvider>(context).calculationResult.investPrice);
-    return AutoSizeText.rich(
-      TextSpan(
-        style: TextStyle(
-          fontSize: 24,
-          color: textColor,
-          fontWeight: FontWeight.w300,
-        ),
-        children: <TextSpan>[
+    return Consumer<CalculatorProvider>(
+      builder: (context, calculatorProvider, child) {
+        String investPrice = numberWithComma(
+            Provider.of<CalculatorProvider>(context).calculationResult.investPrice);
+        return AutoSizeText.rich(
           TextSpan(
-            text: investPrice,
-            style: kMainBoldTextStyle,
+            style: TextStyle(
+              fontSize: 24,
+              color: textColor,
+              fontWeight: FontWeight.w300,
+            ),
+            children: <TextSpan>[
+              TextSpan(
+                text: investPrice,
+                style: kMainBoldTextStyle,
+              ),
+              TextSpan(
+                text: '원 샀으면 지금..?',
+              ),
+            ],
           ),
-          TextSpan(
-            text: '원 샀으면 지금..?',
-          ),
-        ],
-      ),
-      maxLines: 1,
-      minFontSize: 10,
+          maxLines: 1,
+          minFontSize: 10,
+        );
+      }
     );
   }
 }

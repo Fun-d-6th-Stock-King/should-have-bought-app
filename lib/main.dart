@@ -16,6 +16,9 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Admob.initialize();
+  // Or add a list of test ids.
+  // 352675100585341
+  // Admob.initialize(testDeviceIds: ['YOUR DEVICE ID']);
   KakaoContext.clientId = env['KAKAO_CLIENT_ID'];
   KakaoContext.javascriptClientId = env['KAKAO_JAVASCRIPT_CLIENT_ID'];
   // 디버그시에 필요

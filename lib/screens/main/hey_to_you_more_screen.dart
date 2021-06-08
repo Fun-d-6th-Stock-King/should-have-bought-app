@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,6 +12,7 @@ import 'package:should_have_bought_app/providers/calculator/calculator_widget_pr
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/screens/tab_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/util/admob_util.dart';
 
 class HeyToYouMoreScreen extends StatefulWidget {
   @override
@@ -19,12 +21,78 @@ class HeyToYouMoreScreen extends StatefulWidget {
 }
 
 class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
+  AdmobInterstitial interstitialAd;
+
+  @override
+  void initState() {
+    super.initState();
+    initAdmob();
+  }
+
   @override
   void didChangeDependencies() async{
     // TODO: implement didChangeDependencies
     await Provider.of<CalculatorProvider>(context, listen: false).getHistory(pageSize: 100);
     super.didChangeDependencies();
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    interstitialAd.dispose();
+    super.dispose();
+  }
+
+  void initAdmob() {
+    interstitialAd = AdmobInterstitial(
+      adUnitId: getInterstitialAdUnitId(),
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) interstitialAd.load();
+        handleEvent(event, args, 'Interstitial');
+      },
+    );
+    interstitialAd.load();
+  }
+
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('New Admob $adType Ad loaded!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad opened!');
+        break;
+      case AdmobAdEvent.closed:
+        {
+          sendResultScreen();
+          break;
+        }
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType failed to load. :(');
+        break;
+      default:
+    }
+  }
+  void sendResultScreen() async {
+    CalculatorDto calculatorDto = await Provider.of<CalculatorWidgetProvider>(context, listen: false).sendCalcuatorDto;
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getResult(calculatorDto.toMap())
+        .then((value) {
+      EasyLoading.dismiss();
+      Navigator.of(context)
+          .pushNamed(CalculatorResultScreen.routeId)
+          .then((value) => {
+        if (value == 'update')
+          {
+            Provider.of<CalculatorProvider>(context, listen: false)
+                .getHistory()
+          }
+      });
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +144,7 @@ class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
                               SizedBox(height: 30),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
-                                child: HeyToYouMoreCard(_historyList[index]),
+                                child: HeyToYouMoreCard(_historyList[index], interstitialAd),
                               )
                             ]
                         )
@@ -84,7 +152,7 @@ class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
                   }
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
-                    child: HeyToYouMoreCard(_historyList[index]),
+                    child: HeyToYouMoreCard(_historyList[index], interstitialAd),
                   );
                 });
           }
@@ -96,30 +164,48 @@ class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
 
 class HeyToYouMoreCard extends StatelessWidget {
   final CalculatorHistory calculatorHistory;
-  HeyToYouMoreCard(this.calculatorHistory);
+  AdmobInterstitial interstitialAd;
+  HeyToYouMoreCard(this.calculatorHistory, this.interstitialAd);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async{
-        await Provider.of<CalculatorProvider>(context,
-            listen: false)
-            .getResult(CalculatorDto(
+        print(calculatorHistory.investDateName);
+        print(reverseDateValue[calculatorHistory.investDateName]);
+        Provider.of<CalculatorWidgetProvider>(context,listen: false)
+            .setSendCalcuatorDto(CalculatorDto(
             code: calculatorHistory.code,
             investDate: reverseDateValue[calculatorHistory.investDateName],
             investPrice: int.parse(calculatorHistory.investPrice)
-        ).toMap()).then((value) {
-          Navigator.of(context)
-              .pushNamed(CalculatorResultScreen.routeId)
-              .then((value) => {
-            if (value == 'update')
-              {
-                Provider.of<CalculatorProvider>(context,
-                    listen: false)
-                    .getHistory()
-              }
-          });
-        });
+        ));
+        getAdMobCounter().then((value) async {
+          if (value == true) {
+            await EasyLoading.show(
+              status: 'loading...',
+              maskType: EasyLoadingMaskType.none,
+            );
+            interstitialAd.show();
+          } else {
+            await Provider.of<CalculatorProvider>(context,
+                listen: false)
+                .getResult(CalculatorDto(
+                code: calculatorHistory.code,
+                investDate: reverseDateValue[calculatorHistory.investDateName],
+                investPrice: int.parse(calculatorHistory.investPrice)
+            ).toMap()).then((value) {
+              Navigator.of(context)
+                  .pushNamed(CalculatorResultScreen.routeId)
+                  .then((value) => {
+                if (value == 'update')
+                  {
+                    Provider.of<CalculatorProvider>(context,
+                        listen: false)
+                        .getHistory()
+                  }
+              });
+            });
+          }});
       },
       child: Container(
         decoration: BoxDecoration(
