@@ -30,7 +30,6 @@ class ProsAndConsWidget extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
-                    height: 17 / 12,
                     color: Colors.white),
               ),
             ),
@@ -68,7 +67,6 @@ class ProsAndConsWidget extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
-                    height: 17 / 12,
                     color: Colors.white),
               ),
             ),
