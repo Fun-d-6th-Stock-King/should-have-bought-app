@@ -34,7 +34,7 @@ class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
       final _stockResult = calculatorProvider.calculationResult;
       final _stockEvaluateList =
           buyOrNotProvider.stockEvaluationList.evaluationList;
-      if (_stockEvaluateList.isNotEmpty) {
+      if (_stockEvaluateList !=null && _stockEvaluateList.isNotEmpty) {
         _bestStockEvaluateList = _stockEvaluateList[0];
       }
       return Column(
@@ -266,7 +266,7 @@ class IconWithNumber extends StatelessWidget {
             padding: const EdgeInsets.only(top: 2.0),
             child: Text(
               numberWithComma(
-                number.toString(),
+                number?.toString() ?? '',
               ),
             ),
           )
