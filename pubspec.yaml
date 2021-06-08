@@ -151,6 +151,11 @@ flutter:
     - assets/images/2x/image_chick.png
     - assets/images/3x/image_chick.png
     - assets/images/4x/image_chick.png
+    - assets/images/guide.png
+    - assets/images/1.5x/guide.png
+    - assets/images/2x/guide.png
+    - assets/images/3x/guide.png
+    - assets/images/4x/guide.png
   # example:
   # fonts:
   #   - family: Schyler

@@ -2,9 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens/main/main_screen.dart';
+import 'package:should_have_bought_app/screens/my_page/guide_page.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/mypage_appbar.dart';
+import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
-class MyPageScreen extends StatelessWidget {
+class MyPageScreen extends StatefulWidget {
+  @override
+  _MyPageScreenState createState() => _MyPageScreenState();
+}
+
+class _MyPageScreenState extends State<MyPageScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isLogined = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,8 +27,8 @@ class MyPageScreen extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 35),
             Container(
               width: 150,
               height: 150,
@@ -28,53 +39,45 @@ class MyPageScreen extends StatelessWidget {
                   width: 3.0,
                 ),
               ),
-              child: CircleAvatar(
-                backgroundColor: defaultBackgroundColor,
-                child:
-                    Image(image: AssetImage('assets/images/normal_chick.png')),
+              child: InkWell(
+                onTap: () {
+                  if (isNotLogin(_auth.currentUser)) {
+                    LoginHandler(context);
+                    setState(() {
+                      isLogined = true;
+                    });
+                  }
+                },
+                child: CircleAvatar(
+                  backgroundColor: defaultBackgroundColor,
+                  child:
+                      Image(image: AssetImage('assets/images/image_chick.png')),
+                ),
               ),
             ),
             SizedBox(height: 12),
-            Text(
-              '안녕하세요!',
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-              ),
-            ),
-            RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w300,
-                ),
-                children: [
-                  TextSpan(
-                    text: '홍길동',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: mainColor,
-                    ),
-                  ),
-                  TextSpan(text: '님'),
-                ],
-              ),
-            ),
+            isNotLogin(_auth.currentUser)
+                ? UnLoginedText()
+                : LoginedText(name: _auth.currentUser.displayName),
             SizedBox(height: 60),
-            Container(
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-                color: mainColor,
-              ),
-              child: Center(
-                child: Text(
-                  '가이드',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 19,
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pushNamed(GuidePage.routeId);
+              },
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  color: mainColor,
+                ),
+                child: Center(
+                  child: Text(
+                    '가이드',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 19,
+                    ),
                   ),
                 ),
               ),
@@ -85,17 +88,20 @@ class MyPageScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    print('로그아웃');
-                    logOutDialog(context).then((value) {
-                      if (value) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainScreen()),
-                          (Route<dynamic> route) => false,
-                        );
-                      }
-                      return null;
-                    });
+                    if (!isNotLogin(_auth.currentUser)) {
+                      logOutDialog(context).then((value) {
+                        isLogined = false;
+                        if (value) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MainScreen()),
+                            (Route<dynamic> route) => false,
+                          );
+                        }
+                        return null;
+                      });
+                    }
                   },
                   child: Text(
                     '로그아웃',
@@ -126,6 +132,7 @@ class MyPageScreen extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(height: 60),
           ],
         ),
       ),
@@ -202,5 +209,58 @@ class MyPageScreen extends StatelessWidget {
   Future logout() async {
     final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
     _firebaseAuth.signOut();
+  }
+}
+
+class UnLoginedText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "로그인 하시면\n 더 많은 기능을 경험할 수 있어요!",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
+
+class LoginedText extends StatelessWidget {
+  final String name;
+  const LoginedText({this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          '안녕하세요!',
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+          ),
+        ),
+        RichText(
+          text: TextSpan(
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 26,
+              fontWeight: FontWeight.w300,
+            ),
+            children: [
+              TextSpan(
+                text: name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: mainColor,
+                ),
+              ),
+              TextSpan(text: '님'),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

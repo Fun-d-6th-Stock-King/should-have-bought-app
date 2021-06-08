@@ -9,21 +9,5 @@ Widget MyPageAppbar(BuildContext context) {
     backgroundColor: defaultBackgroundColor,
     leading: null,
     elevation: 0,
-    actions: <Widget>[
-      TextButton(
-        child: Text(
-          '변경',
-          style: TextStyle(
-            color: mainColor,
-          ),
-        ),
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) => EditProfileBottomSheet(),
-          );
-        },
-      ),
-    ],
   );
 }
