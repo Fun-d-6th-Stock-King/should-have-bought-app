@@ -34,7 +34,7 @@ class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
       final _stockResult = calculatorProvider.calculationResult;
       final _stockEvaluateList =
           buyOrNotProvider.stockEvaluationList.evaluationList;
-      if (_stockEvaluateList !=null && _stockEvaluateList.isNotEmpty) {
+      if (_stockEvaluateList != null && _stockEvaluateList.isNotEmpty) {
         _bestStockEvaluateList = _stockEvaluateList[0];
       }
       return Column(
@@ -48,12 +48,6 @@ class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
                   '살까?말까?',
                   style: kResultTitleStyle,
                 ),
-                Row(
-                  children: <Widget>[
-                    Text('더보기'),
-                    Icon(Icons.keyboard_arrow_right_outlined),
-                  ],
-                )
               ],
             ),
           ),
