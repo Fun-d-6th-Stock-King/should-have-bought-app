@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/screens/main/search_screen.dart';
 
 Widget DripRoomAppBar(BuildContext context) {
@@ -17,7 +19,12 @@ Widget DripRoomAppBar(BuildContext context) {
         icon: Image(image: AssetImage('assets/icons/ico_search_white.png')),
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SearchScreen(type:'drip')));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchScreen(type: 'drip'))).then((_) {
+            Provider.of<CalculatorProvider>(context, listen: false)
+                .clearQuery();
+          });
         },
       ),
     ],
