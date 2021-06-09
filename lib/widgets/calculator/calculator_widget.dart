@@ -1,11 +1,15 @@
 import 'dart:math';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:should_have_bought_app/widgets/util/admob_util.dart'
+    show getInterstitialAdUnitId, getAdMobCounter;
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
@@ -14,7 +18,6 @@ import 'package:should_have_bought_app/providers/calculator/calculator_widget_pr
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
-
 import 'company_item.dart';
 
 class CalculatorWidget extends StatefulWidget {
@@ -27,6 +30,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
   TextEditingController _priceController = TextEditingController();
 
   Future futureGetCompanyList;
+  AdmobInterstitial interstitialAd;
 
   @override
   void initState() {
@@ -36,6 +40,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma(price);
+    initAdmob();
   }
 
   @override
@@ -48,6 +53,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     super.dispose();
     _searchController.dispose();
     _priceController.dispose();
+    interstitialAd.dispose();
   }
 
   void setCompanyValue(Company company) {
@@ -79,6 +85,65 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
         ),
       ),
     );
+  }
+
+  void initAdmob() {
+    interstitialAd = AdmobInterstitial(
+      adUnitId: getInterstitialAdUnitId(),
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) interstitialAd.load();
+        handleEvent(event, args, 'Interstitial');
+      },
+    );
+    interstitialAd.load();
+  }
+
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('New Admob $adType Ad loaded!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad opened!');
+        break;
+      case AdmobAdEvent.closed:
+        {
+          sendResultScreen();
+          break;
+        }
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType failed to load. :(');
+        break;
+      default:
+    }
+  }
+
+  void sendResultScreen() async {
+    Company selectedCompany =
+        Provider.of<CalculatorWidgetProvider>(context, listen: false)
+            .selectedCompany;
+    String selectedDateValue =
+        Provider.of<CalculatorWidgetProvider>(context, listen: false)
+            .selectedDateValue;
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getResult(CalculatorDto(
+                code: selectedCompany.code,
+                investDate: selectedDateValue,
+                investPrice: intToCurrency(_priceController.text))
+            .toMap())
+        .then((value) {
+      EasyLoading.dismiss();
+      Navigator.of(context)
+          .pushNamed(CalculatorResultScreen.routeId)
+          .then((value) => {
+                if (value == 'update')
+                  {
+                    Provider.of<CalculatorProvider>(context, listen: false)
+                        .getHistory()
+                  }
+              });
+    });
   }
 
   Widget build(BuildContext context) {
@@ -162,30 +227,37 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                             ),
                           ),
                     onPressed: () async {
-                      calculatorWidgetProvider.setLoading(true);
-                      await Provider.of<CalculatorProvider>(context,
-                              listen: false)
-                          .getResult(CalculatorDto(
-                                  code: calculatorWidgetProvider
-                                      .selectedCompany.code,
-                                  investDate: calculatorWidgetProvider
-                                      .selectedDateValue,
-                                  investPrice:
-                                      intToCurrency(_priceController.text))
-                              .toMap())
-                          .then((value) {
-                        Navigator.of(context)
-                            .pushNamed(CalculatorResultScreen.routeId)
-                            .then((value) => {
-                                  if (value == 'update')
-                                    {
-                                      Provider.of<CalculatorProvider>(context,
-                                              listen: false)
-                                          .getHistory()
-                                    }
-                                });
+                      getAdMobCounter().then((value) async {
+                        if (value == true) {
+                          interstitialAd.show();
+                        } else {
+                          calculatorWidgetProvider.setLoading(true);
+                          await Provider.of<CalculatorProvider>(context,
+                                  listen: false)
+                              .getResult(CalculatorDto(
+                                      code: calculatorWidgetProvider
+                                          .selectedCompany.code,
+                                      investDate: calculatorWidgetProvider
+                                          .selectedDateValue,
+                                      investPrice:
+                                          intToCurrency(_priceController.text))
+                                  .toMap())
+                              .then((value) {
+                            Navigator.of(context)
+                                .pushNamed(CalculatorResultScreen.routeId)
+                                .then((value) => {
+                                      if (value == 'update')
+                                        {
+                                          Provider.of<CalculatorProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .getHistory()
+                                        }
+                                    });
+                          });
+                          calculatorWidgetProvider.setLoading(false);
+                        }
                       });
-                      calculatorWidgetProvider.setLoading(false);
                     },
                   ),
                 )
@@ -516,7 +588,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
 class CurrencyInputFormatter extends TextInputFormatter {
   CurrencyInputFormatter({this.maxDigits});
+
   final int maxDigits;
+
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.selection.baseOffset == 0) {

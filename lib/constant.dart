@@ -24,7 +24,7 @@ Map<String, String> dateValue = {
 };
 
 Map<String, String> reverseDateValue = {
-  '어제': 'DAY1',
+  '1일전': 'DAY1',
   '1주전': 'WEEK1',
   '한달전': 'MONTH1',
   '6개월전': 'MONTH6',

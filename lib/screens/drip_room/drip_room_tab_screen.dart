@@ -153,7 +153,6 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    height: 17 / 20,
                                     color: Colors.white),
                               ),
                             ),
@@ -208,7 +207,6 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    height: 17 / 20,
                                     color: Colors.white),
                               ),
                             ),

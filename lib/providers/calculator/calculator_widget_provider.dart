@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 
 class CalculatorWidgetProvider with ChangeNotifier {
@@ -6,11 +7,13 @@ class CalculatorWidgetProvider with ChangeNotifier {
   Company _selectedCompany = Company(company: '삼성전자', code: '005930');
   String _price = '100000';
   bool _isLoading = false;
+  CalculatorDto _sendCalcuatorDto = CalculatorDto(code: '',investDate: '', investPrice: 0);
 
   bool get isLoading => _isLoading;
   String get selectedDateValue => _selectedDateValue;
   Company get selectedCompany => _selectedCompany;
   String get price => _price;
+  CalculatorDto get sendCalcuatorDto => _sendCalcuatorDto;
 
   void setSelectedDateValue(String selectedDateValue) {
     _selectedDateValue = selectedDateValue;
@@ -31,6 +34,10 @@ class CalculatorWidgetProvider with ChangeNotifier {
 
   void setLoading(bool isloading) {
     _isLoading = isloading;
+    notifyListeners();
+  }
+  void setSendCalcuatorDto(CalculatorDto sendCalcuatorDto) {
+    _sendCalcuatorDto =sendCalcuatorDto;
     notifyListeners();
   }
 }

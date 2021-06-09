@@ -34,7 +34,7 @@ class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
       final _stockResult = calculatorProvider.calculationResult;
       final _stockEvaluateList =
           buyOrNotProvider.stockEvaluationList.evaluationList;
-      if (_stockEvaluateList.isNotEmpty) {
+      if (_stockEvaluateList !=null && _stockEvaluateList.isNotEmpty) {
         _bestStockEvaluateList = _stockEvaluateList[0];
       }
       return Column(
@@ -127,7 +127,6 @@ class BestOneLineBox extends StatelessWidget {
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12,
-                                  height: 17 / 12,
                                   color: Colors.white),
                             ),
                           ),
@@ -156,11 +155,10 @@ class BestOneLineBox extends StatelessWidget {
                               color: nagativeColor,
                             ),
                             child: Text(
-                              '장점',
+                              '단점',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12,
-                                  height: 17 / 12,
                                   color: Colors.white),
                             ),
                           ),
@@ -266,7 +264,7 @@ class IconWithNumber extends StatelessWidget {
             padding: const EdgeInsets.only(top: 2.0),
             child: Text(
               numberWithComma(
-                number.toString(),
+                number?.toString() ?? '',
               ),
             ),
           )

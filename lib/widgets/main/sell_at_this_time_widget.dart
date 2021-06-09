@@ -11,7 +11,8 @@ class SellAtThisTimeWidget extends StatefulWidget {
   _SellAtThisTimeWidgetState createState() => _SellAtThisTimeWidgetState();
 }
 
-class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with TickerProviderStateMixin {
+class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget>
+    with TickerProviderStateMixin {
   // TickerProviderStateMixin allows the fade out/fade in animation when changing the active button
 
   // this will control the button clicks and tab changing
@@ -105,14 +106,15 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
     _colorTweenForegroundOn =
         ColorTween(begin: _foregroundOff, end: _foregroundOn)
             .animate(_animationControllerOn);
-
   }
 
   @override
-  void didChangeDependencies() async{
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-    await Provider.of<CalculatorProvider>(context, listen: false).getTenYearHigher();
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getTenYearHigher();
   }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -122,85 +124,84 @@ class _SellAtThisTimeWidgetState extends State<SellAtThisTimeWidget> with Ticker
   @override
   Widget build(BuildContext context) {
     return Consumer<CalculatorProvider>(
-        builder: (context, calculatorProvider,child) {
-          List<HighPriceTenYear> tenYearHighList = calculatorProvider.tenYearHighList;
-        return Column(children: <Widget>[
-              // this is the TabBar
-              Container(
-                  height: 40,
-                  // this generates our tabs buttons
-                  child: Padding(
-                    padding: const EdgeInsets.only(left:23.0),
-                    child: ListView.builder(
-                          // this gives the TabBar a bounce effect when scrolling farther than it's size
-                            physics: BouncingScrollPhysics(),
-                            controller: _scrollController,
-                            // make the list horizontal
-                            scrollDirection: Axis.horizontal,
-                            // number of tabs
-                            itemCount: _company.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                // each button's key
-                                  key: _keys[index],
-                                  // padding for the buttons
-                                  padding: EdgeInsets.all(6.0),
-                                  child: ButtonTheme(
-                                      child: AnimatedBuilder(
-                                        animation: _colorTweenBackgroundOn,
-                                        builder: (context, child) => FlatButton(
-                                          // get the color of the button's background (dependent of its state)
-                                            color: _getBackgroundColor(index),
-                                            // make the button a rectangle with round corners
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(31)),
-                                            onPressed: () {
-                                              setState(() {
-                                                _buttonTap = true;
-                                                // trigger the controller to change between Tab Views
-                                                _controller.animateTo(index);
-                                                // set the current index
-                                                _setCurrentIndex(index);
-                                                // scroll to the tapped button (needed if we tap the active button and it's not on its position)
-                                                _scrollTo(index);
-                                              });
-                                            },
-                                            child: Text(
-                                              // get the icon
-                                              _company[index].company,style: TextStyle(color:_getForegroundColor(index)),
-                                            )),
-                                      )));
-                      }
-                    ),
-                  )),
-              SizedBox(height: 15),
-              Container(
-                height: 145,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 23),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Color(0xFFFFF8E6),
-                    ),
-                    child: TabBarView(
-                      // and it is controlled by the controller
-                      controller: _controller,
-                      children: <Widget>[
-                        // our Tab Views
-                        SellAtThisTimeCardWidget(tenYearHighList[0]),
-                        SellAtThisTimeCardWidget(tenYearHighList[1]),
-                        SellAtThisTimeCardWidget(tenYearHighList[2]),
-                        SellAtThisTimeCardWidget(tenYearHighList[3]),
-                      ],
-                    ),
-                  ),
+        builder: (context, calculatorProvider, child) {
+      List<HighPriceTenYear> tenYearHighList =
+          calculatorProvider.tenYearHighList;
+      return Column(children: <Widget>[
+        // this is the TabBar
+        Container(
+            height: 40,
+            // this generates our tabs buttons
+            child: Padding(
+              padding: const EdgeInsets.only(left: 23.0),
+              child: ListView.builder(
+                  // this gives the TabBar a bounce effect when scrolling farther than it's size
+                  physics: BouncingScrollPhysics(),
+                  controller: _scrollController,
+                  // make the list horizontal
+                  scrollDirection: Axis.horizontal,
+                  // number of tabs
+                  itemCount: tenYearHighList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                        // each button's key
+                        key: _keys[index],
+                        // padding for the buttons
+                        padding: EdgeInsets.all(6.0),
+                        child: ButtonTheme(
+                            child: AnimatedBuilder(
+                          animation: _colorTweenBackgroundOn,
+                          builder: (context, child) => FlatButton(
+                              // get the color of the button's background (dependent of its state)
+                              color: _getBackgroundColor(index),
+                              // make the button a rectangle with round corners
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(31)),
+                              onPressed: () {
+                                setState(() {
+                                  _buttonTap = true;
+                                  // trigger the controller to change between Tab Views
+                                  _controller.animateTo(index);
+                                  // set the current index
+                                  _setCurrentIndex(index);
+                                  // scroll to the tapped button (needed if we tap the active button and it's not on its position)
+                                  _scrollTo(index);
+                                });
+                              },
+                              child: Text(
+                                // get the icon
+                                _company[index].company,
+                                style: TextStyle(
+                                    color: _getForegroundColor(index)),
+                              )),
+                        )));
+                  }),
+            )),
+        SizedBox(height: 15),
+        Container(
+          height: 145,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 23),
+            child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color(0xFFFFF8E6),
                 ),
-              ),
-            ]);
-      }
-    );
+                child: TabBarView(
+                    // and it is controlled by the controller
+                    controller: _controller,
+                    children: <Widget>[
+                      SellAtThisTimeCardWidget(tenYearHighList[0]),
+                      SellAtThisTimeCardWidget(tenYearHighList[1]),
+                      SellAtThisTimeCardWidget(tenYearHighList[2]),
+                      SellAtThisTimeCardWidget(tenYearHighList[3])
+                    ])),
+          ),
+        ),
+      ]);
+    });
   }
+
 
   // runs during the switching tabs animation
   _handleTabAnimation() {
@@ -331,6 +332,7 @@ class SellAtThisTimeCardWidget extends StatelessWidget {
   final HighPriceTenYear highPriceTenYear;
 
   SellAtThisTimeCardWidget(this.highPriceTenYear);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -342,32 +344,37 @@ class SellAtThisTimeCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 14,vertical: 7),
+                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(31.0),
                   color: Color.fromRGBO(255, 184, 0, 0.15),
                 ),
-                child: Text('${commonDayDateFormat(highPriceTenYear.maxQuote.date)} 장중 최고가', style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize:13,
-                  height: 15/13,
-                )),
+                child: Text(
+                    '${commonDayDateFormat(highPriceTenYear.maxQuote?.date ?? '')} 장중 최고가',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                      height: 15 / 13,
+                    )),
               ),
               SizedBox(height: 7),
-              Text('${numberWithComma(highPriceTenYear.maxQuote.high.toString())}원', style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 27,
-                height: 31/27,
-                color: Color(0xFFFF3948),
-              )),
+              Text(
+                  '${numberWithComma(highPriceTenYear.maxQuote?.high?.toString() ?? '')}원',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 27,
+                    height: 31 / 27,
+                    color: Color(0xFFFF3948),
+                  )),
               SizedBox(height: 15),
               Padding(
-                padding: const EdgeInsets.only(left:5.0),
+                padding: const EdgeInsets.only(left: 5.0),
                 child: Row(
                   children: [
                     Text('현재가'),
                     SizedBox(width: 7),
-                    Text('${numberWithComma(highPriceTenYear.maxQuote.open.toString())}원')
+                    Text(
+                        '${numberWithComma(highPriceTenYear.currentPrice?.toString())}원')
                   ],
                 ),
               )
@@ -375,7 +382,7 @@ class SellAtThisTimeCardWidget extends StatelessWidget {
           ),
           Row(
             children: [
-              Image(image:AssetImage('assets/images/image_chick.png')),
+              Image(image: AssetImage('assets/images/image_chick.png')),
             ],
           ),
         ],

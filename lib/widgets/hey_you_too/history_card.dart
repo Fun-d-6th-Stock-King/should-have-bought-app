@@ -1,20 +1,23 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_widget_provider.dart';
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
-import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/util/admob_util.dart';
 
 class HistoryCard extends StatelessWidget {
   final CalculatorHistory history;
+  AdmobInterstitial interstitialAd;
   DateTime now = DateTime.now();
 
-  HistoryCard(this.history);
+  HistoryCard(this.history, this.interstitialAd);
 
   @override
   Widget build(BuildContext context) {
@@ -27,24 +30,41 @@ class HistoryCard extends StatelessWidget {
         ),
       ),
       child: InkWell(
-        onTap: () async{
-          await Provider.of<CalculatorProvider>(context,
-              listen: false)
-              .getResult(CalculatorDto(
+        onTap: () async {
+          await EasyLoading.show(
+            status: 'loading...',
+            maskType: EasyLoadingMaskType.none,
+          );
+          Provider.of<CalculatorWidgetProvider>(context,listen: false)
+              .setSendCalcuatorDto(CalculatorDto(
               code: history.code,
               investDate: reverseDateValue[history.investDateName],
               investPrice: int.parse(history.investPrice)
-              ).toMap()).then((value) {
-            Navigator.of(context)
-                .pushNamed(CalculatorResultScreen.routeId)
-                .then((value) => {
-              if (value == 'update')
-                {
-                  Provider.of<CalculatorProvider>(context,
-                      listen: false)
-                      .getHistory()
-                }
-            });
+          ));
+          getAdMobCounter().then((value) async {
+            if (value == true) {
+              interstitialAd.show();
+            } else {
+              await Provider.of<CalculatorProvider>(context, listen: false)
+                  .getResult(CalculatorDto(
+                          code: history.code,
+                          investDate: reverseDateValue[history.investDateName],
+                          investPrice: int.parse(history.investPrice))
+                      .toMap())
+                  .then((value) {
+                EasyLoading.dismiss();
+                Navigator.of(context)
+                    .pushNamed(CalculatorResultScreen.routeId)
+                    .then((value) => {
+                          if (value == 'update')
+                            {
+                              Provider.of<CalculatorProvider>(context,
+                                      listen: false)
+                                  .getHistory()
+                            }
+                        });
+              });
+            }
           });
         },
         child: Container(
@@ -64,18 +84,20 @@ class HistoryCard extends StatelessWidget {
                     ),
                     child: AutoSizeText(
                       '${history.company} ',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                       maxFontSize: 22,
                       maxLines: 2,
                     ),
                   ),
-                  ConstrainedBox( 
+                  ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: 40,
                     ),
                     child: AutoSizeText(
                       convertMinuteToHours(history.createdDate),
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w300),
+                      style:
+                          TextStyle(fontSize: 11, fontWeight: FontWeight.w300),
                       maxLines: 1,
                     ),
                   ),
