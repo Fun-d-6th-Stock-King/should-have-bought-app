@@ -108,3 +108,9 @@ const kResultTitleStyle = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w700,
 );
+
+const kExceptStyle = TextStyle(
+  color: Colors.black,
+  fontWeight: FontWeight.w500,
+  fontSize: 16,
+);
