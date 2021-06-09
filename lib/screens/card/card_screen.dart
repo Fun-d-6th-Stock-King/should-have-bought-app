@@ -221,7 +221,7 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: MediaQuery.of(context).size.height * 0.33,
                 child: ChartWidget()),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 18.0),
@@ -267,7 +267,7 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                           ],
                         ),
                         SizedBox(
-                          height: 8,
+                          height: 3,
                         ),
                         //Divider(height: 2, color: Colors.grey,),
                         Row(
@@ -291,13 +291,6 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                       ],
                     ),
                   ),
-                  MediaQuery.of(context).size.height > 610
-                      ? SizedBox(height: 10)
-                      : SizedBox(height: 1),
-                  Text(
-                    '더보기 >',
-                    style: TextStyle(fontSize: 16, color: Color(0xFF8C8C8C)),
-                  )
                 ],
               ),
             ),

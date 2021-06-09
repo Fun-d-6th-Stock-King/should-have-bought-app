@@ -8,19 +8,22 @@ Widget CardAppBar(BuildContext context) {
     leading: null,
     elevation: 0,
     centerTitle: true,
-    title: DefaultTextStyle(
-      style : TextStyle(
-        color: Colors.black,
-        fontSize: 18,
+    title: Container(
+      width: 300,
+      child: DefaultTextStyle(
+        style : TextStyle(
+          color: Colors.black,
+          fontSize: 17,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children :[
+            Text('이 종목'),
+            Text(' 🅾️ 살래? ❎ 말래?', style: TextStyle(
+              fontWeight: FontWeight.w700
+            ),)
+        ],),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children :[
-          Text('이 종목'),
-          Text(' 🅾️ 살래? ❎ 말래?', style: TextStyle(
-            fontWeight: FontWeight.w700
-          ),)
-      ],),
     ),
   );
 }

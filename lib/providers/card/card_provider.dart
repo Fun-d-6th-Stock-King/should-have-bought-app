@@ -12,14 +12,14 @@ class CardProvider with ChangeNotifier {
   Future<List> getToDoEvalList() async {
     final result = await DripRoomApi.noEvalList();
     List<Company> toDoCompanyList = result['companyList'].map<Company>((item)=> Company.fromJson(item)).toList();
-    final toDoEvalList = toDoCompanyList.map((item) async{
-      final getChart = await BuyOrNotApi.getBuyOrNotStockChart(item.code).then((stockHist) {
-        return StockHist.fromJson(stockHist['stockHist']);
-      });
-      return getChart;
-    }).toList();
-    print(toDoEvalList);
-    return toDoEvalList;
+    // final toDoEvalList = toDoCompanyList.map((item) async{
+    //   final getChart = await BuyOrNotApi.getBuyOrNotStockChart(item.code).then((stockHist) {
+    //     return StockHist.fromJson(stockHist['stockHist']);
+    //   });
+    //   return getChart;
+    // }).toList();
+    // print(toDoEvalList);
+    return toDoCompanyList;
     //
     // _toDoEvalList = toDoEvalList;
     // print('cardPr');
