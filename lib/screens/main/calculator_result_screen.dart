@@ -7,7 +7,6 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
-import 'package:should_have_bought_app/screens/drip_room/drip_room_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
@@ -20,6 +19,7 @@ import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_wi
 import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/should_bought_this_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/buy_or_not_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/any_past_year_widget.dart';
 import 'package:should_have_bought_app/widgets/util/admob_util.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
@@ -143,13 +143,13 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     reBuildApi();
   }
 
-
   void reBuildApi() {
     Provider.of<CalculatorProvider>(context, listen: false).getSectorData();
     Provider.of<CalculatorProvider>(context, listen: false).getTenYearHigher();
     calculatorResult = Provider.of<CalculatorProvider>(context, listen: false)
         .calculationResult;
-    if (calculatorResult.exceptionCase.isExceptCase) {
+    if (calculatorResult.exceptionCase.isExceptCase ||
+        calculatorResult.exceptionCase.isStockExcept) {
       setState(() {
         isBottomSheet = true;
       });
@@ -158,7 +158,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(isBottomSheet);
     return Scaffold(
       bottomSheet: isBottomSheet == true
           ? Container(
@@ -177,35 +176,16 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 19,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: '10년 전',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '에는 상장 전인 종목이예요. \n 대신 ',
-                        ),
-                        TextSpan(
-                          text: '5년 전',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '정보를 알려드릴게요.',
-                        )
-                      ],
-                    ),
-                  ),
+                  if (calculatorResult.exceptionCase.isDateExcept)
+                    DateExceptText(calculatorResult)
+                  else if (calculatorResult.exceptionCase.isPriceExcept)
+                    PriceExceptText(calculatorResult)
+                  else if (calculatorResult.exceptionCase.isTradingHalt)
+                    HaltExceptText()
+                  else if (calculatorResult.exceptionCase.isInvestmentAlert)
+                    AlertExceptText()
+                  else if (calculatorResult.exceptionCase.isManagement)
+                    ManagementExceptText(),
                   SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
@@ -225,8 +205,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                           '네, 알겠어요.',
                           style: TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -242,6 +222,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             Frame(child: CalculatorResultWidget(context)),
             SizedBox(height: 50),
             Frame(child: SalaryYearMonthWidget()),
+            SizedBox(height: 20),
+            Frame(child: AnyPastYearWidget()),
             SizedBox(height: 50),
             Frame(child: IncreaseRateTabWidget()),
             SizedBox(height: 40),
@@ -431,6 +413,154 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                     });
                   }),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class DateExceptText extends StatelessWidget {
+  final CalculatorStock calculatorResult;
+  const DateExceptText(this.calculatorResult);
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w400,
+          fontSize: 19,
+        ),
+        children: [
+          TextSpan(
+            text:
+                '${dateValue[calculatorResult.exceptionCase.oldInvestDate]} 전',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(
+            text: '에는 상장 전인 종목이예요. \n 대신 ',
+          ),
+          TextSpan(
+            text:
+                '${dateValue[calculatorResult.exceptionCase.newInvestDate]} 전',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(
+            text: '정보를 알려드릴게요.',
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class PriceExceptText extends StatelessWidget {
+  final CalculatorStock calculatorResult;
+  const PriceExceptText(this.calculatorResult);
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w400,
+          fontSize: 19,
+        ),
+        children: [
+          TextSpan(
+            text:
+                '${dateValue[calculatorResult.exceptionCase.oldInvestDate]} 전 ${convertMoney(calculatorResult.exceptionCase.oldInvestPrice.toString())}원',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(
+            text: '으로는 1주도 살 수 없어요.\n',
+          ),
+          TextSpan(
+            text: '1주 금액 기준',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(
+            text: '으로 알려드릴게요.',
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class HaltExceptText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: kExceptStyle,
+        children: [
+          TextSpan(text: '잠깐! '),
+          TextSpan(
+            text: '거래중지',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(text: '된 종목이에요\n'),
+          TextSpan(text: '거래중지 사유를 확인 후 신중하게 거래하세요.')
+        ],
+      ),
+    );
+  }
+}
+
+class AlertExceptText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: kExceptStyle,
+        children: [
+          TextSpan(text: '잠깐! '),
+          TextSpan(
+            text: '투자경고',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(text: ' 종목이에요\n'),
+          TextSpan(text: '경고 사유를 확인 후 신중하게 거래하세요.')
+        ],
+      ),
+    );
+  }
+}
+
+class ManagementExceptText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: kExceptStyle,
+        children: [
+          TextSpan(text: '잠깐! '),
+          TextSpan(
+            text: '상장폐지',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          TextSpan(text: ' 우려가 있는 종목이에요\n'),
+          TextSpan(text: '구매 의사가 있다면 참고해주세요.')
         ],
       ),
     );
