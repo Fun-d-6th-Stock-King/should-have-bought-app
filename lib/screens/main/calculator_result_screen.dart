@@ -7,7 +7,6 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
-import 'package:should_have_bought_app/screens/drip_room/drip_room_screen.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/increase_rate_tab_widget.dart';
@@ -20,6 +19,7 @@ import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_wi
 import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/should_bought_this_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/buy_or_not_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/any_past_year_widget.dart';
 import 'package:should_have_bought_app/widgets/util/admob_util.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
@@ -143,7 +143,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     reBuildApi();
   }
 
-
   void reBuildApi() {
     Provider.of<CalculatorProvider>(context, listen: false).getSectorData();
     Provider.of<CalculatorProvider>(context, listen: false).getTenYearHigher();
@@ -223,6 +222,8 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             Frame(child: CalculatorResultWidget(context)),
             SizedBox(height: 50),
             Frame(child: SalaryYearMonthWidget()),
+            SizedBox(height: 20),
+            Frame(child: AnyPastYearWidget()),
             SizedBox(height: 50),
             Frame(child: IncreaseRateTabWidget()),
             SizedBox(height: 40),
