@@ -114,3 +114,8 @@ const kExceptStyle = TextStyle(
   fontWeight: FontWeight.w500,
   fontSize: 16,
 );
+
+const kWordWriteTitleStyle = TextStyle(
+  fontSize: 15,
+  fontWeight: FontWeight.w600,
+);

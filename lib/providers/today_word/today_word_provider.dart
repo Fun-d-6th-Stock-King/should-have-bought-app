@@ -67,7 +67,6 @@ class TodayWordProvider with ChangeNotifier {
   }
 
   Future getTodayBest() async {
-
     final result = await TodayWordApi.getBestWord();
     _todayBest = WordItem.fromJson(result);
     print(result);
@@ -83,4 +82,8 @@ class TodayWordProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future saveWord(Map data) async {
+    await TodayWordApi.saveWord(data);
+    notifyListeners();
+  }
 }
