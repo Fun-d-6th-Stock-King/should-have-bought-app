@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/models/today_word/word_item.dart';
@@ -98,18 +99,131 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
   }
 
   _writeWord(BuildContext context) {
-    // showModalBottomSheet(
-    //     context: context,
-    //     isScrollControlled: true,
-    //     backgroundColor: Colors.white,
-    //     shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.only(
-    //       topLeft: Radius.circular(8.0),
-    //       topRight: Radius.circular(8.0),
-    //     )),
-    //     builder: (ctx) {
-    //       return Text("zxczxcxc");
-    //     });
+    TextEditingController _topController;
+    TextEditingController _bottomController;
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8.0),
+          topRight: Radius.circular(8.0),
+        )),
+        builder: (ctx) {
+          return Container(
+            height: 350,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
+              ),
+              color: Colors.white,
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(Icons.exit_to_app_sharp),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '단어 이름',
+                      style: kWordWriteTitleStyle,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(13.0),
+                      color: Color(0xFFF7F7F7),
+                    ),
+                    child: TextFormField(
+                      controller: _topController,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return '단어를 입력하세요';
+                        } else {
+                          return null;
+                        }
+                      },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(15),
+                      ],
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        counterText: '',
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('단어 내용', style: kWordWriteTitleStyle),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(13.0),
+                      color: Color(0xFFF7F7F7),
+                    ),
+                    child: TextField(
+                      controller: _bottomController,
+                      autofocus: true,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 4,
+                      maxLength: 80,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 10.0,
+                        ),
+                        border: InputBorder.none,
+                        counterStyle: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 23),
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(13.0),
+                      color: mainColor,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '작성 완료',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
     // var parmeters = <String, dynamic>{
     //   'order': 'LATELY',
     //   'pageNo': '1',
