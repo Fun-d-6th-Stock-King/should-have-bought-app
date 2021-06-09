@@ -1,11 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
+import 'package:should_have_bought_app/utils.dart';
 
 class CompanyItem extends StatelessWidget {
-  CompanyItem({this.company, this.onTap});
+  CompanyItem({this.company, this.query, this.onTap});
 
   final Company company;
+  final String query;
   final ValueChanged<Company> onTap;
 
   @override
@@ -24,7 +26,12 @@ class CompanyItem extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(company.company, style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500, height: 1.5)),
+              RichText(
+                text: TextSpan(
+                  children: highlightOccurrences(company.company, query),
+                  style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500, height: 1.5, color: Colors.black),
+                ),
+              ),//Te
             ],
           ),
           contentPadding: EdgeInsets.only(bottom: 18.0,top:9.0),

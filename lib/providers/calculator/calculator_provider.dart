@@ -14,6 +14,7 @@ import 'package:should_have_bought_app/models/calculator/current_stock_price.dar
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
+  String _query = '';
   List<HighPriceTenYear> _tenYearHighList = [HighPriceTenYear(),HighPriceTenYear(),HighPriceTenYear(),HighPriceTenYear()];
   List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
@@ -39,13 +40,20 @@ class CalculatorProvider with ChangeNotifier {
   List get calculateHistory {
     return _calculateHistory;
   }
+  String get query => _query;
 
   List<CurrentStockPrice> get currentStockPriceList => _currentStockPriceList;
 
   List<PeriodBestPrice> get periodBestPriceList => _periodBestPriceList;
 
+  void clearQuery() {
+    _query = "";
+    notifyListeners();
+  }
+
   void filterSearchResults(String query) {
     List<Company> dummySearchList = [];
+    _query = query;
     dummySearchList.addAll(_companyList?.cast<Company>());
 
     if (query.isNotEmpty) {
@@ -61,6 +69,7 @@ class CalculatorProvider with ChangeNotifier {
     }
     _searchCompanyList.clear();
     _searchCompanyList.addAll(_companyList);
+
     notifyListeners();
   }
 

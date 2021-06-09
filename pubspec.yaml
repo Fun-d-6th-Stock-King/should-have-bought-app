@@ -69,7 +69,6 @@ flutter:
     - assets/icons/home.png
     - assets/icons/home_white.png
     - assets/icons/Profile.png
-    - assets/icons/search.png
     - assets/icons/ico_loading.png
     - assets/icons/ico_loading_background.png
     - assets/icons/ico_default_profile.png
