@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -12,6 +13,7 @@ import 'package:should_have_bought_app/screens/util/skeleton_widget.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
 import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
+import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 
 class DripRoomScreen extends StatefulWidget {
@@ -20,6 +22,8 @@ class DripRoomScreen extends StatefulWidget {
 }
 
 class _DripRoomScreenState extends State<DripRoomScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
@@ -29,21 +33,21 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
       'pageNo': '1',
       'pageSize': '100'
     };
-    bool isEmpty = Provider.of<DripRoomProvider>(context, listen: false)
-                .evaluationItemList
-                .length ==
-            0
-        ? true
-        : false;
-    if (isEmpty) {
-      await EasyLoading.show(
-        status: 'loading...',
-        maskType: EasyLoadingMaskType.none,
-      );
-      Provider.of<DripRoomProvider>(context, listen: false)
-          .getEvaluationList(parmeters)
-          .then((value) => EasyLoading.dismiss());
-    }
+
+    await EasyLoading.show(
+      status: 'loading...',
+      maskType: EasyLoadingMaskType.none,
+    );
+    Provider.of<DripRoomProvider>(context, listen: false)
+        .getEvaluationList(parmeters)
+        .then((value) => EasyLoading.dismiss());
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    EasyLoading.dismiss();
+    super.dispose();
   }
 
   @override
@@ -81,7 +85,8 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
                                         ],
                                       ),
                                       SizedBox(height: 11),
-                                      DripCardWidget(evaluationItemList[index])
+                                      DripCardWidget(
+                                          evaluationItemList[index], _auth)
                                     ],
                                   ),
                                 )
@@ -90,11 +95,58 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
                           }
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: DripCardWidget(evaluationItemList[index]),
+                            child: DripCardWidget(
+                                evaluationItemList[index], _auth),
                           );
                         }),
                   );
           }),
+    );
+  }
+
+  Widget emptyDripRoomScreen(BuildContext context) {
+    return Column(
+      children: [
+        FlatBackgroundFrame(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    DripRoomAppBar(context),
+                    SizedBox(height: 33),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Today's BEST",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 9),
+                  ],
+                ))),
+        SizedBox(height: 37),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text('최신순'),
+                  Icon(Icons.keyboard_arrow_down_outlined)
+                ],
+              ),
+              SizedBox(height: 11),
+              DripCardWidget(EvaluationItem(), _auth)
+            ],
+          ),
+        )
+      ],
     );
   }
 }
@@ -130,8 +182,9 @@ class DripRoomWidget extends StatelessWidget {
 
 class DripCardWidget extends StatelessWidget {
   final EvaluationItem evaluationItem;
+  final FirebaseAuth _auth;
 
-  DripCardWidget(this.evaluationItem);
+  DripCardWidget(this.evaluationItem, this._auth);
 
   @override
   Widget build(BuildContext context) {
@@ -170,25 +223,41 @@ class DripCardWidget extends StatelessWidget {
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 2, right: 4),
-                          child: Image(
-                              image: AssetImage('assets/icons/ico_like.png')),
-                        ),
-                        Text(
-                          evaluationItem.likeCount.toString(),
-                          style:
-                              TextStyle(fontSize: 11, color: Color(0xFF828282)),
-                        )
-                      ],
+                    InkWell(
+                      onTap: () async {
+                        _auth.currentUser == null
+                            ? LoginHandler(context)
+                            : await Provider.of<DripRoomProvider>(context,
+                                    listen: false)
+                                .likeDrip(evaluationItem);
+                      },
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 28,
+                            height: 28,
+                            child: ClipOval(
+                              child: Container(
+                                color: evaluationItem.userlike == true
+                                    ? mainColor
+                                    : kGreyColor,
+                                child: Image(
+                                    image: AssetImage(
+                                        'assets/icons/ico_heart.png')),
+                              ),
+                            ),
+                          ),
+                          Text(evaluationItem.likeCount.toString(),
+                              style: TextStyle(
+                                  color: mainColor,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500)),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 6),
               Divider(
                 color: Color(0xFF8E8E8E),
                 thickness: 0.6,
@@ -299,47 +368,4 @@ class _CreateBestDripCardWidgetState extends State<BestDripCardWidget> {
       }),
     );
   }
-}
-
-Widget emptyDripRoomScreen(BuildContext context) {
-  return Column(
-    children: [
-      FlatBackgroundFrame(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  DripRoomAppBar(context),
-                  SizedBox(height: 33),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Today's BEST",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 9),
-                ],
-              ))),
-      SizedBox(height: 37),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [Text('최신순'), Icon(Icons.keyboard_arrow_down_outlined)],
-            ),
-            SizedBox(height: 11),
-            DripCardWidget(EvaluationItem())
-          ],
-        ),
-      )
-    ],
-  );
 }

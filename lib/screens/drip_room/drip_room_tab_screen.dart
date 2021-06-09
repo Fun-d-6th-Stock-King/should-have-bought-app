@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/util/page_info.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
@@ -18,25 +19,32 @@ import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
 import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
+import 'dart:convert';
+import 'package:should_have_bought_app/api/api.dart';
+import 'package:http/http.dart' as http;
 
 class DripRoomTabScreen extends StatefulWidget {
   static const routeId = '/select-drip';
+  final Company company;
+  DripRoomTabScreen(this.company);
   @override
   _DripRoomTabScreenState createState() => _DripRoomTabScreenState();
 }
 
 class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _cons = TextEditingController();
+  final TextEditingController _pros = TextEditingController();
+  final TextEditingController _giphyImgId = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool emojiShowing = false;
 
-  EvaluationItem get evaluationItem => null;
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    _controller.dispose();
+    _cons.dispose();
+    _pros.dispose();
+    _giphyImgId.dispose();
     super.dispose();
   }
 
@@ -179,6 +187,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
   void _showCreateDripSheet(BuildContext context) async {
     var heightOfModalBottomSheet = 450.0;
     var clickCount = 0;
+
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -219,7 +228,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                 alignment: Alignment.center,
                                 child: TextFormField(
                                     textAlign: TextAlign.center,
-                                    controller: _controller,
+                                    controller: _giphyImgId,
                                     showCursor: false,
                                     readOnly: true,
                                     style: const TextStyle(
@@ -306,6 +315,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                               Expanded(
                                 child: Container(
                                   child: TextFormField(
+                                    controller: _pros,
                                     autofocus: false,
                                     showCursor: false,
                                     cursorColor: Colors.black,
@@ -367,6 +377,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                     cursorColor: Colors.black,
                                     keyboardType: TextInputType.text,
                                     maxLength: 20,
+                                    controller: _cons,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: new InputDecoration(
                                         border: InputBorder.none,
@@ -403,12 +414,19 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                               ),
                             ),
                             // TODO: 등록로직 필요 (정민님)
+
                             onPressed: () async {
+                              Map data = {
+                                'pros': _pros.text,
+                                'cons': _cons.text,
+                                'giphyImgId': _giphyImgId.text,
+                                'code': widget.company.code,
+                              };
                               _auth.currentUser == null
                                   ? LoginHandler(context)
-                                  : await Provider.of<DripRoomProvider>(context,
+                                  : Provider.of<DripRoomProvider>(context,
                                           listen: false)
-                                      .dripComment(evaluationItem);
+                                      .dripSave(data);
                             },
                           ),
                         ),
@@ -419,11 +437,11 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                             child: EmojiPicker(
                                 onEmojiSelected:
                                     (Category category, Emoji emoji) {
-                                  _controller
+                                  _giphyImgId
                                     ..text = emoji.emoji
                                     ..selection = TextSelection.fromPosition(
                                         TextPosition(
-                                            offset: _controller.text.length));
+                                            offset: _giphyImgId.text.length));
                                 },
                                 config: const Config(
                                     columns: 10,
@@ -498,7 +516,7 @@ class BestDripCardListWidget extends StatelessWidget {
                               ],
                             )),
                         Text(
-                          '\u{1F601}', //이모티콘
+                          evaluationItem?.giphyImgId ?? '', //이모티콘
                           style: TextStyle(
                               fontSize: 80, fontWeight: FontWeight.w500),
                         ),
