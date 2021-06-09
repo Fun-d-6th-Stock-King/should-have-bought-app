@@ -439,8 +439,7 @@ class DateExceptText extends StatelessWidget {
         ),
         children: [
           TextSpan(
-            text:
-                '${dateValue[calculatorResult.exceptionCase.oldInvestDate]} 전',
+            text: '${dateValue[calculatorResult.exceptionCase.oldInvestDate]}',
             style: TextStyle(
               fontWeight: FontWeight.w700,
             ),
@@ -449,8 +448,7 @@ class DateExceptText extends StatelessWidget {
             text: '에는 상장 전인 종목이예요. \n 대신 ',
           ),
           TextSpan(
-            text:
-                '${dateValue[calculatorResult.exceptionCase.newInvestDate]} 전',
+            text: '${dateValue[calculatorResult.exceptionCase.newInvestDate]}',
             style: TextStyle(
               fontWeight: FontWeight.w700,
             ),
@@ -480,7 +478,7 @@ class PriceExceptText extends StatelessWidget {
         children: [
           TextSpan(
             text:
-                '${dateValue[calculatorResult.exceptionCase.oldInvestDate]} 전 ${convertMoney(calculatorResult.exceptionCase.oldInvestPrice.toString())}원',
+                '${dateValue[calculatorResult.exceptionCase.oldInvestDate]} ${convertMoney(calculatorResult.exceptionCase.oldInvestPrice.toString())}원',
             style: TextStyle(
               fontWeight: FontWeight.w700,
             ),
