@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens/main/main_screen.dart';
 import 'package:should_have_bought_app/screens/my_page/guide_page.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/mypage_appbar.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
+import 'package:should_have_bought_app/providers/my_page/my_page_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyPageScreen extends StatefulWidget {
   @override
@@ -13,8 +16,21 @@ class MyPageScreen extends StatefulWidget {
 }
 
 class _MyPageScreenState extends State<MyPageScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool isLogined = false;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void _launchURL(url) async =>
+      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,114 +42,120 @@ class _MyPageScreenState extends State<MyPageScreen> {
           horizontal: 16,
         ),
         alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(150.0),
-                border: Border.all(
-                  color: mainColor,
-                  width: 3.0,
-                ),
-              ),
-              child: InkWell(
-                onTap: () {
-                  if (isNotLogin(_auth.currentUser)) {
-                    LoginHandler(context);
-                    setState(() {
-                      isLogined = true;
-                    });
-                  }
-                },
-                child: CircleAvatar(
-                  backgroundColor: defaultBackgroundColor,
-                  child:
-                      Image(image: AssetImage('assets/images/image_chick.png')),
-                ),
-              ),
-            ),
-            SizedBox(height: 12),
-            isNotLogin(_auth.currentUser)
-                ? UnLoginedText()
-                : LoginedText(name: _auth.currentUser.displayName),
-            SizedBox(height: 60),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(GuidePage.routeId);
-              },
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  color: mainColor,
-                ),
-                child: Center(
-                  child: Text(
-                    '가이드',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 19,
+        child: Consumer<MyPageProvider>(
+          builder: (context, myPageProvider,child) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(150.0),
+                    border: Border.all(
+                      color: mainColor,
+                      width: 3.0,
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      if (isNotLogin(_auth.currentUser)) {
+                        LoginHandler(context);
+                      }
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: defaultBackgroundColor,
+                      child:
+                          Image(image: AssetImage('assets/images/image_chick.png')),
                     ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+                SizedBox(height: 12),
+                isNotLogin(_auth.currentUser)
+                    ? UnLoginedText()
+                    : LoginedText(name: _auth.currentUser.displayName),
+                SizedBox(height: 60),
                 InkWell(
                   onTap: () {
-                    if (!isNotLogin(_auth.currentUser)) {
-                      logOutDialog(context).then((value) {
-                        isLogined = false;
-                        if (value) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MainScreen()),
-                            (Route<dynamic> route) => false,
-                          );
-                        }
-                        return null;
-                      });
-                    }
+                    Navigator.of(context).pushNamed(GuidePage.routeId);
                   },
-                  child: Text(
-                    '로그아웃',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: mainColor,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '가이드',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 19,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  height: 15,
-                  child: VerticalDivider(
-                    width: 1,
-                  ),
-                  color: Color(0xFF898A8D).withOpacity(0.10),
-                ),
-                InkWell(
-                  onTap: () {},
-                  child: Text(
-                    '팀원소개',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (isNotLogin(_auth.currentUser)) {
+                          LoginHandler(context);
+                        } else {
+                          logOutDialog(context).then((value) {
+                            myPageProvider.setIsLogin(false);
+                            if (value) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MainScreen()),
+                                    (Route<dynamic> route) => false,
+                              );
+                            }
+                            return null;
+                          });
+                        }
+                      },
+                      child: Text(
+                        isNotLogin(_auth.currentUser)
+                            ? '로그인' : '로그아웃',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ),
-                  ),
+                    Container(
+                      height: 15,
+                      child: VerticalDivider(
+                        width: 1,
+                      ),
+                      color: Color(0xFF898A8D).withOpacity(0.10),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        _launchURL('https://www.notion.so/2a6eaa0887f5420289bf3b3d5cd08380');
+                      },
+                      child: Text(
+                        '팀원소개',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                SizedBox(height: 60),
               ],
-            ),
-            SizedBox(height: 60),
-          ],
+            );
+          }
         ),
       ),
     );
