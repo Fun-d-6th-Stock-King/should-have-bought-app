@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intl/intl.dart';
 import 'package:should_have_bought_app/models/util/page_info.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
@@ -27,11 +26,19 @@ class DripRoomTabScreen extends StatefulWidget {
 }
 
 class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool emojiShowing = false;
+
+  EvaluationItem get evaluationItem => null;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() async {
@@ -65,12 +72,13 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0xFFF6F6F6),
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
           child: Column(children: [
         SizedBox(height: 25),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 22),
-          margin: const EdgeInsets.only(top: 10),
+          margin: const EdgeInsets.only(top: 10, bottom: 10),
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
@@ -94,7 +102,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
           ),
         ),
         SizedBox(
-            height: size.height * 0.47,
+            height: size.height * 0.45,
             child: Consumer<DripRoomProvider>(
                 child: emptyDripListRoomScreen(context),
                 builder: (context, dripRoomProvider, child) {
@@ -160,7 +168,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
         padding: const EdgeInsets.only(bottom: 100.0),
         child: FloatingActionButton(
           backgroundColor: mainColor,
-          onPressed: () => _showCreateDripBottomSheet(context),
+          onPressed: () => _showCreateDripSheet(context),
           child: Icon(Icons.add),
         ),
       ),
@@ -168,7 +176,9 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
   }
 
   // TODO: 등록 버튼 (정민님)
-  void _showCreateDripBottomSheet(BuildContext context) async {
+  void _showCreateDripSheet(BuildContext context) async {
+    var heightOfModalBottomSheet = 450.0;
+    var clickCount = 0;
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -179,196 +189,208 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
           topRight: Radius.circular(8.0),
         )),
         builder: (ctx) {
-          return AnimatedPadding(
-              duration: Duration(milliseconds: 150),
-              curve: Curves.easeOut,
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
+          emojiShowing = false;
+
+          return StatefulBuilder(builder: (BuildContext context,
+              StateSetter setState /*You can rename this!*/) {
+            return AnimatedPadding(
+                padding: MediaQuery.of(context).viewInsets,
+                duration: Duration(milliseconds: 150),
+                curve: Curves.easeOut,
                 child: Container(
-                  height: 750,
-                  child: Column(
-                    children: [
-                      Stack(
-                        overflow: Overflow.visible,
-                        children: <Widget>[
-                          Container(
-                              margin: EdgeInsets.only(top: 20),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: mainColor,
-                                    width: 2,
-                                  )),
-                              width: 200,
-                              height: 200,
-                              alignment: Alignment.center,
-                              child: TextFormField(
-                                  textAlign: TextAlign.center,
-                                  controller: _controller,
-                                  showCursor: false,
-                                  readOnly: true,
-                                  style: const TextStyle(
-                                      fontSize: 150.0, color: Colors.white),
-                                  decoration: InputDecoration(
-                                    hintText: '\u{1F601}',
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(100),
-                                      borderSide: BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                  ))),
-                          Positioned(
-                            left: 70,
-                            right: 70,
-                            child: FloatingActionButton(
-                              onPressed: () {
-                                setState(() {
-                                  emojiShowing = !emojiShowing;
-                                });
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
+                  child: Container(
+                    height: heightOfModalBottomSheet,
+                    child: Column(
+                      children: [
+                        Stack(
+                          overflow: Overflow.visible,
+                          children: <Widget>[
+                            Container(
+                                margin: EdgeInsets.only(top: 25),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: mainColor,
-                                    width: 1.5,
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: mainColor,
+                                      width: 2,
+                                    )),
+                                width: 200,
+                                height: 200,
+                                alignment: Alignment.center,
+                                child: TextFormField(
+                                    textAlign: TextAlign.center,
+                                    controller: _controller,
+                                    showCursor: false,
+                                    readOnly: true,
+                                    style: const TextStyle(
+                                        fontSize: 120.0, color: Colors.white),
+                                    decoration: InputDecoration(
+                                      hintText: '\u{1F601}',
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        borderSide: BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                    ))),
+                            Positioned(
+                              left: 70,
+                              right: 70,
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  setState(() {
+                                    emojiShowing = !emojiShowing;
+                                    clickCount += 1;
+                                    if (clickCount == 1) {
+                                      heightOfModalBottomSheet += 150;
+                                    } else {
+                                      clickCount = 0;
+                                      heightOfModalBottomSheet -= 150;
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: mainColor,
+                                      width: 1.5,
+                                    ),
                                   ),
+                                  child: Text(
+                                    '변경',
+                                    style: TextStyle(
+                                        color: mainColor, fontSize: 15),
+                                  ),
+                                ),
+                              ),
+                              bottom: -15,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.height * 0.08,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Color(0xFFF7F7F7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: 10),
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  color: Color(0xFFFF8888), //0xFFFF8888
                                 ),
                                 child: Text(
-                                  '변경',
-                                  style:
-                                      TextStyle(color: mainColor, fontSize: 15),
+                                  '장점',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      height: 17 / 20,
+                                      color: Colors.white),
                                 ),
                               ),
-                            ),
-                            bottom: -15,
+                              SizedBox(width: 11),
+                              Expanded(
+                                child: Container(
+                                  child: TextFormField(
+                                    autofocus: false,
+                                    showCursor: false,
+                                    cursorColor: Colors.black,
+                                    keyboardType: TextInputType.text,
+                                    maxLength: 20,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    decoration: new InputDecoration(
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        hintText: "장점을 입력하세요 (최대 20자)"),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      height: 10 / 30,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 45,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        height: MediaQuery.of(context).size.height * 0.08,
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xFFF7F7F7),
                         ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3),
-                                color: Color(0xFFFF8888),
-                              ),
-                              child: Text(
-                                '장점',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    height: 17 / 20,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            SizedBox(width: 11),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(top: 5),
-                                child: TextFormField(
-                                  autofocus: false,
-                                  showCursor: false,
-                                  keyboardType: TextInputType.text,
-                                  maxLength: 20,
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      hintText: "장점을 입력하세요 (최대 20자)"),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.height * 0.08,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Color(0xFFF7F7F7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: 10),
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  color: Color(0xFF5D99F2),
+                                ),
+                                child: Text(
+                                  '단점',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      height: 17 / 20,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              SizedBox(width: 11),
+                              Expanded(
+                                child: Container(
+                                  child: TextFormField(
+                                    autofocus: false,
+                                    showCursor: false,
+                                    cursorColor: Colors.black,
+                                    keyboardType: TextInputType.text,
+                                    maxLength: 20,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    decoration: new InputDecoration(
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        hintText: "단점을 입력하세요 (최대 20자)"),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14,
+                                      height: 10 / 30,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        height: MediaQuery.of(context).size.height * 0.08,
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xFFF7F7F7),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3),
-                                color: Color(0xFF5D99F2),
-                              ),
-                              child: Text(
-                                '단점',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    height: 17 / 20,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            SizedBox(width: 11),
-                            Expanded(
-                              child: Container(
-                                child: TextFormField(
-                                  autofocus: false,
-                                  showCursor: false,
-                                  cursorColor: Colors.black,
-                                  keyboardType: TextInputType.text,
-                                  maxLength: 20,
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: new InputDecoration(
-                                      border: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
-                                      hintText: "단점을 입력하세요 (최대 20자)"),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14,
-                                    height: 10 / 30,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        margin: EdgeInsets.only(top: 30),
-                        width: MediaQuery.of(context).size.width,
-                        child: CupertinoButton(
+                        Container(
+                          height: 50,
+                          margin: EdgeInsets.only(top: 15),
+                          width: MediaQuery.of(context).size.width,
+                          child: CupertinoButton(
                             color: mainColor,
                             padding: EdgeInsets.all(0),
                             child: Text(
@@ -381,44 +403,50 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                               ),
                             ),
                             // TODO: 등록로직 필요 (정민님)
-                            onPressed: () => _auth.currentUser == null
-                                ? LoginHandler(context)
-                                : _registerFlow()),
-                      ),
-                      Offstage(
-                        offstage: !emojiShowing,
-                        child: SizedBox(
-                          height: 250,
-                          child: EmojiPicker(
-                              onEmojiSelected:
-                                  (Category category, Emoji emoji) {
-                                _controller
-                                  ..text = emoji.emoji
-                                  ..selection = TextSelection.fromPosition(
-                                      TextPosition(
-                                          offset: _controller.text.length));
-                              },
-                              config: const Config(
-                                  columns: 8,
-                                  emojiSizeMax: 32.0,
-                                  verticalSpacing: 0,
-                                  horizontalSpacing: 0,
-                                  initCategory: Category.RECENT,
-                                  bgColor: Colors.white,
-                                  iconColor: Colors.grey,
-                                  showRecentsTab: true,
-                                  recentsLimit: 28,
-                                  noRecentsText: 'No Recents',
-                                  noRecentsStyle: TextStyle(
-                                      fontSize: 20, color: Colors.black26),
-                                  categoryIcons: CategoryIcons(),
-                                  buttonMode: ButtonMode.MATERIAL)),
+                            onPressed: () async {
+                              _auth.currentUser == null
+                                  ? LoginHandler(context)
+                                  : await Provider.of<DripRoomProvider>(context,
+                                          listen: false)
+                                      .dripComment(evaluationItem);
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                        Offstage(
+                          offstage: !emojiShowing,
+                          child: SizedBox(
+                            height: 130,
+                            child: EmojiPicker(
+                                onEmojiSelected:
+                                    (Category category, Emoji emoji) {
+                                  _controller
+                                    ..text = emoji.emoji
+                                    ..selection = TextSelection.fromPosition(
+                                        TextPosition(
+                                            offset: _controller.text.length));
+                                },
+                                config: const Config(
+                                    columns: 10,
+                                    emojiSizeMax: 20.0,
+                                    verticalSpacing: 0,
+                                    horizontalSpacing: 0,
+                                    initCategory: Category.RECENT,
+                                    bgColor: Colors.white,
+                                    iconColor: Colors.grey,
+                                    showRecentsTab: true,
+                                    recentsLimit: 30,
+                                    noRecentsText: 'No Recents',
+                                    noRecentsStyle: TextStyle(
+                                        fontSize: 20, color: Colors.black26),
+                                    categoryIcons: CategoryIcons(),
+                                    buttonMode: ButtonMode.MATERIAL)),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ));
+                ));
+          });
         });
   }
 
