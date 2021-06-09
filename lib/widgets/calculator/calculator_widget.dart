@@ -403,6 +403,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: CompanyListBuilder(context));
         }).whenComplete(() {
+          Provider.of<CalculatorProvider>(context,listen:false).clearQuery();
+          _searchController.text='';
       //SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
   }
@@ -518,6 +520,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                             return CompanyItem(
                               company:
                                   calculatorProvider.searchCompanyList[index],
+                              query: calculatorProvider.query,
                               onTap: setCompanyValue,
                             );
                           }),

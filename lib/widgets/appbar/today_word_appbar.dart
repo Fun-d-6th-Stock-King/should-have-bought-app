@@ -11,10 +11,10 @@ Widget TodayWordAppBar(BuildContext context) {
       style: TextStyle(color: Colors.white),
     ),
     elevation: 0,
-    actions: <Widget>[
-      IconButton(
-          icon: Image(image: AssetImage('assets/icons/ico_search_white.png')),
-          onPressed: null),
-    ],
+    // actions: <Widget>[
+    //   IconButton(
+    //       icon: Image(image: AssetImage('assets/icons/ico_search_white.png')),
+    //       onPressed: null),
+    // ],
   );
 }
