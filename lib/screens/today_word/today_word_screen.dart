@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,11 @@ class TodayWordScreen extends StatefulWidget {
 
 class _TodayWordScreenState extends State<TodayWordScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -98,9 +104,19 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
     );
   }
 
-  _writeWord(BuildContext context) {
-    TextEditingController _topController;
-    TextEditingController _bottomController;
+  void _writeWord(BuildContext context) {
+    final _topController = TextEditingController();
+    final _bottomController = TextEditingController();
+    bool writeLoading = false;
+    _topController.addListener(() {});
+    _bottomController.addListener(() {});
+
+    @override
+    void dispose() {
+      _topController.dispose();
+      _bottomController.dispose();
+      super.dispose();
+    }
 
     showModalBottomSheet(
         context: context,
@@ -124,10 +140,18 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 10),
-                  Align(
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
                     alignment: Alignment.centerRight,
-                    child: Icon(Icons.exit_to_app_sharp),
+                    child: InkWell(
+                      child: Icon(
+                        Icons.close,
+                        size: 24,
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -136,14 +160,18 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
                       style: kWordWriteTitleStyle,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(13.0),
                       color: Color(0xFFF7F7F7),
                     ),
                     child: TextFormField(
                       controller: _topController,
+                      textAlignVertical: TextAlignVertical.center,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
@@ -161,7 +189,6 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
                       ],
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        counterText: '',
                       ),
                     ),
                   ),
@@ -179,58 +206,102 @@ class _TodayWordScreenState extends State<TodayWordScreen> {
                     ),
                     child: TextField(
                       controller: _bottomController,
-                      autofocus: true,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 4,
-                      maxLength: 80,
                       keyboardType: TextInputType.multiline,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(80),
+                      ],
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 10.0,
                           vertical: 10.0,
                         ),
                         border: InputBorder.none,
-                        counterStyle: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w400,
-                        ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 23),
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(13.0),
-                      color: mainColor,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '작성 완료',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                  SizedBox(height: 20),
+                  InkWell(
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(13.0),
+                        color: mainColor,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '작성 완료',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
+                    onTap: () async {
+                      final topText = _topController?.text;
+                      final bottomText = _bottomController?.text;
+                      if (topText.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: Text('단어 이름을 입력해주세요!'),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              )
+                            ],
+                          ),
+                        );
+                      } else if (bottomText.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: Text('단어 내용을 입력해주세요!'),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              )
+                            ],
+                          ),
+                        );
+                      } else {
+                        setState(() {
+                          writeLoading = true;
+                        });
+                        await Provider.of<TodayWordProvider>(context,
+                                listen: false)
+                            .saveWord({
+                          'wordName': _topController.text,
+                          'mean': _bottomController.text,
+                        }).then((value) {
+                          setState(() {
+                            writeLoading = false;
+                          });
+                        });
+                        if (!writeLoading) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
                   )
                 ],
               ),
             ),
           );
         });
-    // var parmeters = <String, dynamic>{
-    //   'order': 'LATELY',
-    //   'pageNo': '1',
-    //   'pageSize': '100'
-    // };
-    //     .getWordList(parmeters);
-    // Provider.of<TodayWordProvider>(context, listen: false).getMore();
   }
 }
 
