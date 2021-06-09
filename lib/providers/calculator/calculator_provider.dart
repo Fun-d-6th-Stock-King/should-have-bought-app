@@ -14,7 +14,7 @@ import 'package:should_have_bought_app/models/calculator/current_stock_price.dar
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
-  List<HighPriceTenYear> _tenYearHighList = [];
+  List<HighPriceTenYear> _tenYearHighList = [HighPriceTenYear(),HighPriceTenYear(),HighPriceTenYear(),HighPriceTenYear()];
   List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
   CalculatorStockAll calculationResultAll;

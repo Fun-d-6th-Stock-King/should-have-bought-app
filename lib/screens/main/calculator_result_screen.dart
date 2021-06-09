@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ import 'package:should_have_bought_app/widgets/calculator/result/at_this_time_wi
 import 'package:should_have_bought_app/widgets/calculator/result/best_price_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/should_bought_this_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/buy_or_not_widget.dart';
+import 'package:should_have_bought_app/widgets/util/admob_util.dart';
 
 class CalculatorResultScreen extends StatefulWidget {
   static const routeId = '/calculator-result';
@@ -32,8 +34,61 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color topColor;
   AssetImage chickImage;
   bool isBottomSheet = false;
+  AdmobInterstitial interstitialAd;
   bool isLoading = false;
   CalculatorStock calculatorResult;
+
+  @override
+  void initState() {
+    super.initState();
+    reBuildApi();
+    initAdmob();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    setDynamicOption();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    interstitialAd.dispose();
+    super.dispose();
+  }
+
+  void initAdmob() {
+    interstitialAd = AdmobInterstitial(
+      adUnitId: getInterstitialAdUnitId(),
+      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
+        if (event == AdmobAdEvent.closed) interstitialAd.load();
+        handleEvent(event, args, 'Interstitial');
+      },
+    );
+    interstitialAd.load();
+  }
+
+  void handleEvent(
+      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
+    switch (event) {
+      case AdmobAdEvent.loaded:
+        print('New Admob $adType Ad loaded!');
+        break;
+      case AdmobAdEvent.opened:
+        print('Admob $adType Ad opened!');
+        break;
+      case AdmobAdEvent.closed:
+        {
+          randomValues();
+          break;
+        }
+      case AdmobAdEvent.failedToLoad:
+        print('Admob $adType failed to load. :(');
+        break;
+      default:
+    }
+  }
 
   void setDynamicOption() {
     final percent = Provider.of<CalculatorProvider>(context, listen: false)
@@ -62,7 +117,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
   void setChick() {}
 
-  void randomValues(BuildContext context) {
+  void randomValues() {
     setState(() {
       isLoading = true;
     });
@@ -88,11 +143,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     reBuildApi();
   }
 
-  @override
-  void initState() {
-    reBuildApi();
-    super.initState();
-  }
 
   void reBuildApi() {
     Provider.of<CalculatorProvider>(context, listen: false).getSectorData();
@@ -105,12 +155,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         isBottomSheet = true;
       });
     }
-  }
-
-  @override
-  void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    setDynamicOption();
   }
 
   @override
@@ -358,8 +402,14 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             ),
             child: isLoading
                 ? LoadingRandomWidget()
-                : RandomWidget(onTap: () {
-                    randomValues(context);
+                : RandomWidget(onTap: () async {
+                    getAdMobCounter().then((value) async {
+                      if (value == true) {
+                        interstitialAd.show();
+                      } else {
+                        randomValues();
+                      }
+                    });
                   }),
           ),
         ],
@@ -587,28 +637,33 @@ class MainBottomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final investPrice = numberWithComma(
-        Provider.of<CalculatorProvider>(context).calculationResult.investPrice);
-    return AutoSizeText.rich(
-      TextSpan(
-        style: TextStyle(
-          fontSize: 24,
-          color: textColor,
-          fontWeight: FontWeight.w300,
+    return Consumer<CalculatorProvider>(
+        builder: (context, calculatorProvider, child) {
+      String investPrice = numberWithComma(
+          Provider.of<CalculatorProvider>(context)
+              .calculationResult
+              .investPrice);
+      return AutoSizeText.rich(
+        TextSpan(
+          style: TextStyle(
+            fontSize: 24,
+            color: textColor,
+            fontWeight: FontWeight.w300,
+          ),
+          children: <TextSpan>[
+            TextSpan(
+              text: investPrice,
+              style: kMainBoldTextStyle,
+            ),
+            TextSpan(
+              text: '원 샀으면 지금..?',
+            ),
+          ],
         ),
-        children: <TextSpan>[
-          TextSpan(
-            text: investPrice,
-            style: kMainBoldTextStyle,
-          ),
-          TextSpan(
-            text: '원 샀으면 지금..?',
-          ),
-        ],
-      ),
-      maxLines: 1,
-      minFontSize: 10,
-    );
+        maxLines: 1,
+        minFontSize: 10,
+      );
+    });
   }
 }
 

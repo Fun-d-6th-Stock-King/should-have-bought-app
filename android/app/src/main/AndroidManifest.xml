@@ -40,6 +40,9 @@
                <data android:scheme="kakaoe5687159bd1b4768b1c21cfd1551fbfa" android:host="oauth"/>
            </intent-filter>
        </activity>
+       <meta-data
+           android:name="com.google.android.gms.ads.APPLICATION_ID"
+           android:value="ca-app-pub-3526133822093148~8461525286"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

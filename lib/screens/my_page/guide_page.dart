@@ -8,6 +8,7 @@ class GuidePage extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(builder: (context, constrains) {
         return Container(
+          alignment: Alignment.center,
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: SizedBox(
