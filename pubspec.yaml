@@ -149,6 +149,26 @@ flutter:
     - assets/icons/2x/ico_refresh.png
     - assets/icons/3x/ico_refresh.png
     - assets/icons/4x/ico_refresh.png
+    - assets/icons/ico_back.png
+    - assets/icons/1.5x/ico_back.png
+    - assets/icons/2x/ico_back.png
+    - assets/icons/3x/ico_back.png
+    - assets/icons/4x/ico_back.png
+    - assets/icons/ico_back_white.png
+    - assets/icons/1.5x/ico_back_white.png
+    - assets/icons/2x/ico_back_white.png
+    - assets/icons/3x/ico_back_white.png
+    - assets/icons/4x/ico_back_white.png
+    - assets/icons/ico_random_white.png
+    - assets/icons/1.5x/ico_random_white.png
+    - assets/icons/2x/ico_random_white.png
+    - assets/icons/3x/ico_random_white.png
+    - assets/icons/4x/ico_random_white.png
+    - assets/icons/ico_search.png
+    - assets/icons/1.5x/ico_search.png
+    - assets/icons/2x/ico_search.png
+    - assets/icons/3x/ico_search.png
+    - assets/icons/4x/ico_search.png
     - assets/images/image_chick.png
     - assets/images/1.5x/image_chick.png
     - assets/images/2x/image_chick.png
