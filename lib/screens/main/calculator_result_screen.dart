@@ -33,8 +33,10 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   Color textColor;
   Color topColor;
   AssetImage chickImage;
+  bool isBottomSheet = false;
   AdmobInterstitial interstitialAd;
   bool isLoading = false;
+  CalculatorStock calculatorResult;
 
   @override
   void initState() {
@@ -145,51 +147,135 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
   void reBuildApi() {
     Provider.of<CalculatorProvider>(context, listen: false).getSectorData();
     Provider.of<CalculatorProvider>(context, listen: false).getTenYearHigher();
+    calculatorResult = Provider.of<CalculatorProvider>(context, listen: false)
+        .calculationResult;
+    if (calculatorResult.exceptionCase.isExceptCase) {
+      setState(() {
+        isBottomSheet = true;
+      });
+    }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
+    print(isBottomSheet);
     return Scaffold(
-      body: ListView(
-        children: [
-          Frame(child: CalculatorResultWidget()),
-          SizedBox(height: 50),
-          Frame(child: SalaryYearMonthWidget()),
-          SizedBox(height: 50),
-          Frame(child: IncreaseRateTabWidget()),
-          SizedBox(height: 40),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: CurrentValueWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: TenYearChartWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: BestPriceWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: AtThisTimeWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: ShouldBoughtThisWidget()),
-          SizedBox(height: 50),
-          Divider(thickness: 7, color: Color(0xFFF2F2F2)),
-          SizedBox(height: 50),
-          Frame(child: BuyOrNotWidget()),
-          SizedBox(height: 50),
-        ],
+      bottomSheet: isBottomSheet == true
+          ? Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    topLeft: Radius.circular(25)),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black38, spreadRadius: 0, blurRadius: 1),
+                ],
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 19,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: '10년 전',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '에는 상장 전인 종목이예요. \n 대신 ',
+                        ),
+                        TextSpan(
+                          text: '5년 전',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '정보를 알려드릴게요.',
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isBottomSheet = false;
+                      });
+                    },
+                    child: Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: mainColor,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '네, 알겠어요.',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          : null,
+      body: Container(
+        child: ListView(
+          children: [
+            Frame(child: CalculatorResultWidget(context)),
+            SizedBox(height: 50),
+            Frame(child: SalaryYearMonthWidget()),
+            SizedBox(height: 50),
+            Frame(child: IncreaseRateTabWidget()),
+            SizedBox(height: 40),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: CurrentValueWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: TenYearChartWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: BestPriceWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: AtThisTimeWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: ShouldBoughtThisWidget()),
+            SizedBox(height: 50),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 50),
+            Frame(child: BuyOrNotWidget()),
+            SizedBox(height: 50),
+          ],
+        ),
       ),
     );
   }
 
-  Widget CalculatorResultWidget() {
+  Widget CalculatorResultWidget(BuildContext context) {
     return Stack(
       children: <Widget>[
         CustomPaint(
@@ -206,7 +292,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         Column(
           children: [
             SizedBox(height: 10),
-            CalculatorResultAppBar(),
+            CalculatorResultAppBar(context),
             SizedBox(height: 2),
             Container(
               height: 175,
@@ -223,6 +309,18 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
             ResultCardWidget(),
           ],
         ),
+        isBottomSheet == true
+            ? GestureDetector(
+                onTap: () {
+                  setState(() => isBottomSheet = false);
+                },
+                child: CustomPaint(
+                  painter: MyPainter(Colors.black.withOpacity(0.5)),
+                  size: Size(MediaQuery.of(context).size.width,
+                      MediaQuery.of(context).size.height),
+                ),
+              )
+            : Container(),
       ],
     );
   }
@@ -304,7 +402,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     );
   }
 
-  Widget CalculatorResultAppBar() {
+  Widget CalculatorResultAppBar(BuildContext context) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

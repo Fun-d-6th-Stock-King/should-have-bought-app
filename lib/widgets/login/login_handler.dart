@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/widgets/login/login_widget.dart';
 import 'package:should_have_bought_app/widgets/util/loading/loading_widget.dart';
+import 'package:should_have_bought_app/providers/my_page/my_page_provider.dart';
 
 void LoginHandler(BuildContext context, {String buyOrNotStockCode}) {
   Future<void> future = showModalBottomSheet<void>(
@@ -28,6 +29,7 @@ void LoginHandler(BuildContext context, {String buyOrNotStockCode}) {
         );
       });
   future.then((void value) {
+    Provider.of<MyPageProvider>(context, listen: false).setIsLogin(true);
     if(buyOrNotStockCode != null) {
       Provider.of<BuyOrNotProvider>(context, listen: false).getBuyOrNotStock(
           buyOrNotStockCode);
@@ -45,7 +47,7 @@ Widget _handleLogin() {
         }
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
-            print(snapshot.data);
+            print(snapshot.hasData);
           }
         }
         return LoginWidget();
