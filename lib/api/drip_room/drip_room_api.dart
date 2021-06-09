@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:should_have_bought_app/api/buy_or_not/buy_or_not_api.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
+
 import '../api.dart';
 import 'package:http/http.dart' as http;
 
@@ -71,4 +75,22 @@ class DripRoomApi extends Api{
     throw Exception(
         "${response.statusCode}:${utf8.decode(response.bodyBytes)}");
   }
+
+  static Future noEvalList() async {
+    var header = await Api.getHeader();
+
+    final response = await http.get(
+      Uri.parse("$stockApiUrl/api/evaluate/no-eval-list"),
+      headers: header,
+    );
+    print('[GET] /api/evaluate/no-eval-list');
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
+      return responseBody;
+    }
+    throw Exception(
+        "${response.statusCode}:${utf8.decode(response.bodyBytes)}");
+  }
+
 }
