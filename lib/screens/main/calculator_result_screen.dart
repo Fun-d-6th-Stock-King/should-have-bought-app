@@ -391,7 +391,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.arrow_back_ios, color: textColor),
             onPressed: () => Navigator.of(context).pop('update'),
           ),
           Container(
@@ -402,16 +402,21 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
               color: Color(0x80FFFFFF),
             ),
             child: isLoading
-                ? LoadingRandomWidget()
-                : RandomWidget(onTap: () async {
-                    getAdMobCounter().then((value) async {
-                      if (value == true) {
-                        interstitialAd.show();
-                      } else {
-                        randomValues();
-                      }
-                    });
-                  }),
+                ? LoadingRandomWidget(
+                    color: textColor,
+                  )
+                : RandomWidget(
+                    onTap: () async {
+                      getAdMobCounter().then((value) async {
+                        if (value == true) {
+                          interstitialAd.show();
+                        } else {
+                          randomValues();
+                        }
+                      });
+                    },
+                    color: textColor,
+                  ),
           ),
         ],
       ),

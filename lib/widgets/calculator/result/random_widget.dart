@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class RandomWidget extends StatefulWidget {
   final VoidCallback onTap;
-  RandomWidget({@required this.onTap});
+  final Color color;
+  RandomWidget({@required this.onTap, this.color = Colors.black});
 
   @override
   _RandomWidgetState createState() => _RandomWidgetState();
@@ -22,11 +23,14 @@ class _RandomWidgetState extends State<RandomWidget>
           padding: EdgeInsets.only(top: 7),
           child: Column(
             children: [
-              Image(image: AssetImage('assets/icons/ico_random.png')),
+              Image(
+                image: AssetImage('assets/icons/ico_random.png'),
+                color: widget.color,
+              ),
               Padding(padding: EdgeInsets.only(bottom: 2)),
               Text(
                 '랜덤',
-                style: TextStyle(fontSize: 11, color: Color(0xFF828282)),
+                style: TextStyle(fontSize: 11, color: widget.color),
               )
             ],
           ),
