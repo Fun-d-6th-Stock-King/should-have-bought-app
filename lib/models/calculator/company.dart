@@ -7,7 +7,7 @@ class Company {
   Company({@required this.company, @required this.code});
 
   factory Company.fromJson(dynamic json) {
-    return Company(company: json['company'], code: json['code']);
+    return Company(company: json['company'] ?? json['name'], code: json['code']);
   }
 
   Map<String, dynamic> toMap() {

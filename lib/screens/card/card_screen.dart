@@ -1,11 +1,14 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
+import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/screens/card/card_button.dart';
+import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/card_appbar.dart';
 import 'package:should_have_bought_app/widgets/card/lib/swipe_cards.dart';
 import 'package:should_have_bought_app/widgets/chart/chart_wiget.dart';
@@ -20,25 +23,26 @@ class _CreateCardScreen extends State<CardScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    await Provider.of<CardProvider>(context, listen: false).getToDoEvalList();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Object>(
-        future:
-            Provider.of<CardProvider>(context, listen: false).getToDoEvalList(),
+        future: Provider.of<CardProvider>(context, listen: false).getToDoEvalList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data);
-            return CardScreenWidget();
+            return CardScreenWidget(data: snapshot.data);
           }
-          return CircularProgressIndicator();
+          return CardScreenWidget(isLoading: true);
         });
   }
 }
 
 class CardScreenWidget extends StatefulWidget {
+  final bool isLoading;
+  List<Company> data;
+  CardScreenWidget({this.data,this.isLoading = false});
+
   @override
   _CreateCardScreenWidget createState() => _CreateCardScreenWidget();
 }
@@ -46,16 +50,10 @@ class CardScreenWidget extends StatefulWidget {
 class _CreateCardScreenWidget extends State<CardScreenWidget>
     with TickerProviderStateMixin {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<SwipeItem> _swipeItems = List<SwipeItem>();
+  List<SwipeItem> _swipeItems =[];
   MatchEngine _matchEngine;
   List<String> _names = ["삼성전자", "SK 하이닉스", "카카오", "현대자동차", "네이버"];
-  List<Color> _colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange
-  ];
+
   AnimationController _leftAniController;
   AnimationController _rightAniController;
   AnimationController _upAniController;
@@ -65,9 +63,10 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
 
   @override
   void initState() {
-    for (int i = 0; i < _names.length; i++) {
-      _swipeItems.add(SwipeItem(
-          content: Content(text: _names[i], color: _colors[i]),
+    List<StockHist> tests = Provider.of<CardProvider>(context,listen: false).test;
+    _swipeItems = tests.map<SwipeItem>((item) {
+      return SwipeItem(
+          content: item,
           likeAction: () {
             print('RIGHT');
             setState(() => rightVisible = true);
@@ -91,8 +90,8 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
               setState(() => upVisible = false);
               _upAniController.reset();
             });
-          }));
-    }
+          });
+    }).toList();
 
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
     _leftAniController = AnimationController(
@@ -116,46 +115,54 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         key: _scaffoldKey,
         appBar: CardAppBar(context),
         body: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom:100),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+              padding: const EdgeInsets.only(bottom: 100),
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.end, children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     CardButton(
                         title: "살래",
                         icon: Image(
-                            image: AssetImage('assets/icons/ico_card_left.png')),
+                            image:
+                                AssetImage('assets/icons/ico_card_left.png')),
                         onPressed: () {
-                          _matchEngine.currentItem.nope();
+                          if (widget.isLoading == false) {
+                            _matchEngine.currentItem.nope();
+                          }
                         }),
                     CardButton(
                         title: "몰라",
                         icon: Image(
                             image: AssetImage('assets/icons/ico_card_up.png')),
                         onPressed: () {
-                          _matchEngine.currentItem.superLike();
+                          if (widget.isLoading == false) {
+                            _matchEngine.currentItem.superLike();
+                          }
                         }),
                     CardButton(
                         title: "말래",
                         icon: Image(
-                            image: AssetImage('assets/icons/ico_card_right.png')),
+                            image:
+                                AssetImage('assets/icons/ico_card_right.png')),
                         onPressed: () {
-                          _matchEngine.currentItem.like();
+                          if(widget.isLoading == false) {
+                            _matchEngine.currentItem.like();
+                          }
                         }),
                   ],
                 )
               ]),
             ),
             Container(
-              height: MediaQuery.of(context).size.height-240,
+              height: MediaQuery.of(context).size.height - 240,
               child: SwipeCards(
                 matchEngine: _matchEngine,
                 itemBuilder: (BuildContext context, int index) {
@@ -211,6 +218,8 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
   }
 
   Widget BuyOrNotCard(int index) {
+    print('aaa');
+    print(_swipeItems[index].content.toMap());
     return Container(
       child: Card(
         elevation: 0.4,
@@ -222,7 +231,7 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
           children: [
             Container(
                 height: MediaQuery.of(context).size.height * 0.33,
-                child: ChartWidget()),
+                child: widget.isLoading ? Center(child: CircularProgressIndicator()): ChartWidget(_swipeItems[index].content)),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 18.0),
               child: Column(
@@ -232,11 +241,26 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(_swipeItems[index].content.text),
-                        Padding(padding: EdgeInsets.only(left: 7)),
+                        AutoSizeText(
+                          _swipeItems[index].content?.company ??'',
+                          presetFontSizes: [20, 22],
+                          maxLines: 1,
+                        ),
+                        //Text(_swipeItems[index].content?.company ??''),
+                        Padding(padding: EdgeInsets.only(left: 10)),
                         Text(
-                          '▼ 82,600',
-                          style: TextStyle(color: Color(0xFF5D99F2)),
+                          emojiIncreaseOrDecrease(_swipeItems[index].content?.changeInPercent ?? 0),
+                          style: TextStyle(
+                            fontSize: 12,
+                            height: 2.5,
+                            color:colorIncreaseOrDecrease(_swipeItems[index].content?.changeInPercent ?? 0)
+                          ),
+                        ),
+                        AutoSizeText(
+                          '${numberWithComma(_swipeItems[index].content?.price.toString() ??'')}',
+                          presetFontSizes: [20, 22],
+                          maxLines: 1,
+                          style: TextStyle(color: colorIncreaseOrDecrease(_swipeItems[index].content?.changeInPercent ?? 0)),
                         ),
                       ],
                     ),
@@ -299,11 +323,4 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
       ),
     );
   }
-}
-
-class Content {
-  final String text;
-  final Color color;
-
-  Content({this.text, this.color});
 }
