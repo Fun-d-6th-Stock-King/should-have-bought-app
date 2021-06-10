@@ -19,7 +19,7 @@ class _MyPageScreenState extends State<MyPageScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _launchURL(url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+      await canLaunch(url) ? await launch(url,enableJavaScript: true) : throw 'Could not launch $url';
 
   @override
   void initState() {
@@ -120,13 +120,17 @@ class _MyPageScreenState extends State<MyPageScreen> {
                           });
                         }
                       },
-                      child: Text(
-                        isNotLogin(_auth.currentUser)
-                            ? '로그인' : '로그아웃',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                      child: Container(
+                        width: 120,
+                        padding: EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          isNotLogin(_auth.currentUser)
+                              ? '로그인' : '로그아웃',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
@@ -139,14 +143,18 @@ class _MyPageScreenState extends State<MyPageScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        _launchURL('https://www.notion.so/2a6eaa0887f5420289bf3b3d5cd08380');
+                        _launchURL(Uri.parse('https://www.notion.so/2a6eaa0887f5420289bf3b3d5cd08380').toString());
                       },
-                      child: Text(
-                        '팀원소개',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                      child: Container(
+                        width: 120,
+                        padding: EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text(
+                          '팀원소개',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
