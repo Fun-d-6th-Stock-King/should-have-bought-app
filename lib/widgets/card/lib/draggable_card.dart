@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 
 enum SlideDirection { left, right, up }
 enum SlideRegion { inNopeRegion, inLikeRegion, inSuperLikeRegion }
@@ -28,6 +30,7 @@ class DraggableCard extends StatefulWidget {
 
 class _DraggableCardState extends State<DraggableCard>
     with TickerProviderStateMixin {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
   Offset cardOffset = const Offset(0.0, 0.0);
   Offset dragStart;
@@ -116,7 +119,6 @@ class _DraggableCardState extends State<DraggableCard>
   @override
   void didUpdateWidget(DraggableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     if (widget.card.key != oldWidget.card.key) {
       cardOffset = const Offset(0.0, 0.0);
     }
@@ -185,7 +187,6 @@ class _DraggableCardState extends State<DraggableCard>
 
   void _onPanStart(DragStartDetails details) {
     dragStart = details.globalPosition;
-
     if (slideBackAnimation.isAnimating) {
       slideBackAnimation.stop(canceled: true);
     }
@@ -226,31 +227,38 @@ class _DraggableCardState extends State<DraggableCard>
     final isInLeftRegion = (cardOffset.dx / context.size?.width) < -0.15;
     final isInRightRegion = (cardOffset.dx / context.size?.width ) > 0.15;
     final isInTopRegion = (cardOffset.dy / context.size?.height) < -0.15;
-
-    setState(() {
-      if (isInLeftRegion || isInRightRegion) {
-        slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size?.width));
-        slideOutAnimation.forward(from: 0.0);
-
-        slideOutDirection =
-        isInLeftRegion ? SlideDirection.left : SlideDirection.right;
-      } else if (isInTopRegion) {
-        slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size?.height));
-        slideOutAnimation.forward(from: 0.0);
-
-        slideOutDirection = SlideDirection.up;
-      } else {
+    if(_auth.currentUser == null) {
+      setState(() {
         slideBackStart = cardOffset;
         slideBackAnimation.forward(from: 0.0);
-      }
+      });
+      LoginHandler(context);
+    }else {
+      setState(() {
+        if (isInLeftRegion || isInRightRegion) {
+          slideOutTween = Tween(
+              begin: cardOffset, end: dragVector * (2 * context.size?.width));
+          slideOutAnimation.forward(from: 0.0);
 
-      slideRegion = null;
-      if (null != widget.onSlideRegionUpdate) {
-        widget.onSlideRegionUpdate(slideRegion);
-      }
-    });
+          slideOutDirection =
+          isInLeftRegion ? SlideDirection.left : SlideDirection.right;
+        } else if (isInTopRegion) {
+          slideOutTween = Tween(
+              begin: cardOffset, end: dragVector * (2 * context.size?.height));
+          slideOutAnimation.forward(from: 0.0);
+
+          slideOutDirection = SlideDirection.up;
+        } else {
+          slideBackStart = cardOffset;
+          slideBackAnimation.forward(from: 0.0);
+        }
+
+        slideRegion = null;
+        if (null != widget.onSlideRegionUpdate) {
+          widget.onSlideRegionUpdate(slideRegion);
+        }
+      });
+    }
   }
 
   double _rotation(Rect dragBounds) {
@@ -278,7 +286,6 @@ class _DraggableCardState extends State<DraggableCard>
     if (!isAnchorInitialized) {
       _initAnchor();
     }
-    print(anchorBounds?.width );
     return Transform(
       transform: Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
         ..rotateZ(_rotation(anchorBounds)),
