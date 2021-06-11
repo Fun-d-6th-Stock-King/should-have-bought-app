@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/providers/card/card_provider.dart';
 import 'package:should_have_bought_app/screens.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
@@ -25,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
-  void didChangeDependencies() async{
+  void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
