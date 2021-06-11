@@ -11,6 +11,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/card/chart_dto.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/screens/card/card_button.dart';
+import 'package:should_have_bought_app/screens/util/skeleton_widget.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/card_appbar.dart';
 import 'package:should_have_bought_app/widgets/card/lib/swipe_cards.dart';
@@ -38,7 +39,7 @@ class _CreateCardScreen extends State<CardScreen> {
           if (snapshot.hasData) {
             return CardScreenWidget(data: snapshot.data);
           }
-          return Center(child: CircularProgressIndicator());
+          return noCardScreenWidget(context);
         });
   }
 }
@@ -202,7 +203,7 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                 itemBuilder: (BuildContext context, int index) {
                   return BuyOrNotCard(index);
                 },
-                onStackFinished: () async{
+                onStackFinished: () async {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("카드가 없습니다."),
                     duration: Duration(milliseconds: 500),
@@ -211,7 +212,9 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                     status: 'loading...',
                     maskType: EasyLoadingMaskType.none,
                   );
-                  final testss = await Provider.of<CardProvider>(context, listen: false).getToDoEvalList();
+                  final testss =
+                      await Provider.of<CardProvider>(context, listen: false)
+                          .getToDoEvalList();
                   print('final');
                   print(testss);
                   List<SwipeItem> addCardList = CreateSwipeItem(testss);
@@ -409,4 +412,139 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
       ),
     );
   }
+}
+
+Widget noCardScreenWidget(BuildContext context) {
+  return Scaffold(
+      appBar: CardAppBar(context),
+      body: Stack(children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 100),
+          child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                CardButton(
+                    title: "살래",
+                    icon: Image(
+                        image: AssetImage('assets/icons/ico_card_left.png')),
+                    onPressed: () {}),
+                CardButton(
+                    title: "몰라",
+                    icon: Image(
+                        image: AssetImage('assets/icons/ico_card_up.png')),
+                    onPressed: () {}),
+                CardButton(
+                    title: "말래",
+                    icon: Image(
+                        image: AssetImage('assets/icons/ico_card_right.png')),
+                    onPressed: () {}),
+              ],
+            )
+          ]),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Container(
+              height: MediaQuery.of(context).size.height - 260,
+              child: Container(
+                child: Card(
+                  elevation: 0.4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                          height: MediaQuery.of(context).size.height * 0.33,
+                          child: Center(child: CircularProgressIndicator())),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 18.0),
+                        child: Column(
+                          children: [
+                            DefaultTextStyle(
+                              style: kCardTitleTextStyle,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  skeletonText(90, 15),
+                                  //Text(_swipeItems[index].content?.company ??''),
+                                  Padding(padding: EdgeInsets.only(left: 10)),
+                                  Text(
+                                    '',
+                                  ),
+                                  AutoSizeText(
+                                    '',
+                                    presetFontSizes: [20, 22],
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            DefaultTextStyle(
+                              style: kCardContentTextStyle,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Card(
+                                        color: Color(0xFFFF6258),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0)),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(horizontal: 7),
+                                          child: Text('장점',
+                                              style:
+                                                  TextStyle(color: Colors.white)),
+                                        ),
+                                      ),
+                                      Padding(padding: EdgeInsets.only(left: 8)),
+                                      skeletonText(90, 15)
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  //Divider(height: 2, color: Colors.grey,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Card(
+                                        color: Color(0xFF5D99F2),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0)),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(horizontal: 7),
+                                          child: Text('단점',
+                                              style:
+                                                  TextStyle(color: Colors.white)),
+                                        ),
+                                      ),
+                                      Padding(padding: EdgeInsets.only(left: 8)),
+                                      skeletonText(90, 15),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )),
+        )
+      ]));
 }
