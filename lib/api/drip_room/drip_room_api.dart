@@ -7,9 +7,8 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 import '../api.dart';
 import 'package:http/http.dart' as http;
 
-class DripRoomApi extends Api{
+class DripRoomApi extends Api {
   static Future getTodayBest() async {
-
     Map<String, String> header = await Api.getHeader();
 
     final response = await http.get(
@@ -18,29 +17,30 @@ class DripRoomApi extends Api{
     );
     print('[GET] /api/buyornot/today-best');
     print(response.statusCode);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       final resposeBody = json.decode(utf8.decode(response.bodyBytes));
       return resposeBody;
     }
-    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
+    throw Exception(
+        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
   }
 
   static Future getEvaluationList(Map<String, dynamic> params) async {
     print(params);
     Map<String, String> header = await Api.getHeader();
     final response = await http.get(
-      Uri.parse("$stockApiUrl/api/buyornot")
-          .replace(queryParameters: params),
+      Uri.parse("$stockApiUrl/api/buyornot").replace(queryParameters: params),
       headers: header,
     );
 
     print('[GET] /api/buyornot');
     print(response.statusCode);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       final resposeBody = json.decode(utf8.decode(response.bodyBytes));
       return resposeBody;
     }
-    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
+    throw Exception(
+        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
   }
 
   static Future getBestEvaluationList(String stockCode, Map params) async {
@@ -52,11 +52,12 @@ class DripRoomApi extends Api{
     );
     print('[GET] /api/:stockCode/best');
     print(response.statusCode);
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       final resposeBody = json.decode(utf8.decode(response.bodyBytes));
       return resposeBody;
     }
-    throw Exception(response.statusCode.toString()+":"+ utf8.decode(response.bodyBytes));
+    throw Exception(
+        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
   }
 
   static Future likeDrip(int evaluateId) async {
@@ -93,4 +94,22 @@ class DripRoomApi extends Api{
         "${response.statusCode}:${utf8.decode(response.bodyBytes)}");
   }
 
+  static Future dripSave(Map data) async {
+    var header = await Api.getHeader();
+
+    final response = await http.post(
+      Uri.parse("$stockApiUrl/api/evaluate"),
+      headers: header,
+      body: jsonEncode(data),
+    );
+    print('[POST] /api/evaluate');
+    print(response.statusCode);
+    print(data);
+    if (response.statusCode == 200) {
+      final responseBody = json.decode(utf8.decode(response.bodyBytes));
+      return responseBody;
+    }
+    throw Exception(
+        "${response.statusCode}:${utf8.decode(response.bodyBytes)}");
+  }
 }
