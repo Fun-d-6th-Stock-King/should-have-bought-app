@@ -21,7 +21,9 @@ class DripRoomProvider with ChangeNotifier {
     _pageInfo = PageInfo.fromJson(result['pageInfo']);
     print(_evaluationItemList);
     // List addEvaluationItemList = list.map((evaluationItem) => EvaluationItem.fromJson(evaluationItem)).toList();
-    _evaluationItemList = list.map((evaluationItem) => EvaluationItem.fromJson(evaluationItem)).toList();
+    _evaluationItemList = list
+        .map((evaluationItem) => EvaluationItem.fromJson(evaluationItem))
+        .toList();
 
     notifyListeners();
 
@@ -41,14 +43,22 @@ class DripRoomProvider with ChangeNotifier {
 
   Future likeDrip(EvaluationItem evaluationItem) async {
     final result = await DripRoomApi.likeDrip(evaluationItem.id);
-    int findIndex = _evaluationItemList.indexWhere((element) => element.id == evaluationItem.id);
+    int findIndex = _evaluationItemList
+        .indexWhere((element) => element.id == evaluationItem.id);
 
-    EvaluationItem findEvaluationItem =_evaluationItemList[findIndex];
+    EvaluationItem findEvaluationItem = _evaluationItemList[findIndex];
     _evaluationItemList[findIndex] = EvaluationItem.fromJson({
       ...findEvaluationItem.toMap(),
       'userlike': !findEvaluationItem.userlike,
-      'likeCount': result['like'] == true ?  findEvaluationItem.likeCount+1 : findEvaluationItem.likeCount-1
+      'likeCount': result['like'] == true
+          ? findEvaluationItem.likeCount + 1
+          : findEvaluationItem.likeCount - 1
     });
+    notifyListeners();
+  }
+
+  Future dripSave(Map data) async {
+    await DripRoomApi.dripSave(data);
     notifyListeners();
   }
 }

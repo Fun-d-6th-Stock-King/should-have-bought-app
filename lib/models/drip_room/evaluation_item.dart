@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class EvaluationItem {
@@ -8,6 +6,7 @@ class EvaluationItem {
   final String company;
   final String pros;
   final String cons;
+  final String giphyImgId;
   final String uid;
   final int likeCount;
   final String displayName;
@@ -15,20 +14,31 @@ class EvaluationItem {
   final bool userlike;
 
   EvaluationItem(
-      {@required this.id, @required this.code, @required this.company, @required this.pros, @required this.cons, @required this.uid, @required this.likeCount, @required this.displayName, @required this.createdDate, @required this.userlike});
+      {@required this.id,
+      @required this.code,
+      @required this.company,
+      @required this.pros,
+      @required this.cons,
+      @required this.giphyImgId,
+      @required this.uid,
+      @required this.likeCount,
+      @required this.displayName,
+      @required this.createdDate,
+      @required this.userlike});
 
   factory EvaluationItem.fromJson(dynamic json) {
     return EvaluationItem(
-        id: json['id'],
-        code: json['code'] ?? '',
-        company: json['company'] ?? '',
-        pros: json['pros'] ?? '',
-        cons: json['cons'] ?? '',
-        uid: json['uid'] ?? '',
-        likeCount: json['likeCount'] ?? 0,
-        displayName: json['displayName'] ?? '닉네임',
-        createdDate: json['createdDate'] ?? '',
-        userlike: json['userlike'] ?? false,
+      id: json['id'],
+      code: json['code'] ?? '',
+      company: json['company'] ?? '',
+      pros: json['pros'] ?? '',
+      cons: json['cons'] ?? '',
+      giphyImgId: json['giphyImgId'] ?? '',
+      uid: json['uid'] ?? '',
+      likeCount: json['likeCount'] ?? 0,
+      displayName: json['displayName'] ?? '닉네임',
+      createdDate: json['createdDate'] ?? '',
+      userlike: json['userlike'] ?? false,
     );
   }
 
@@ -39,6 +49,7 @@ class EvaluationItem {
       'company': company,
       'pros': pros,
       'cons': cons,
+      'giphyImgId': giphyImgId,
       'uid': uid,
       'likeCount': likeCount,
       'displayName': displayName,
@@ -53,5 +64,5 @@ class EvaluationItem {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-          other is EvaluationItem && code == other.code && company == other.company;
+      other is EvaluationItem && code == other.code && company == other.company;
 }

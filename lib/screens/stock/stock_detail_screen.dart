@@ -42,7 +42,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
         body: TabBarView(
           children: [
             BuyorNotTabScreen(widget.company),
-            DripRoomTabScreen(),
+            DripRoomTabScreen(widget.company),
           ],
         ),
       ),
@@ -50,11 +50,8 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
   }
 }
 
-
-
 const tabStyle = TextStyle(
   fontWeight: FontWeight.w500,
   fontSize: 16,
   height: 23 / 16,
 );
-
