@@ -20,6 +20,8 @@ import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 import 'company_item.dart';
 
+import 'package:should_have_bought_app/screens/main/refactor_calculator_result_screen.dart';
+
 class CalculatorWidget extends StatefulWidget {
   @override
   _CalculatorWidgetState createState() => _CalculatorWidgetState();
@@ -243,8 +245,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                           intToCurrency(_priceController.text))
                                   .toMap())
                               .then((value) {
-                            Navigator.of(context)
-                                .pushNamed(CalculatorResultScreen.routeId)
+                            return Navigator.of(context)
+                                .pushNamed(
+                                    RefactorCalculatorResultScreen.routeId)
                                 .then((value) => {
                                       if (value == 'update')
                                         {
@@ -403,8 +406,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: CompanyListBuilder(context));
         }).whenComplete(() {
-          Provider.of<CalculatorProvider>(context,listen:false).clearQuery();
-          _searchController.text='';
+      Provider.of<CalculatorProvider>(context, listen: false).clearQuery();
+      _searchController.text = '';
       //SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
   }
