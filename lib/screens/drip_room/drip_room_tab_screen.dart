@@ -4,25 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:should_have_bought_app/models/buy_or_not/stock_evaluation_item.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
-import 'package:should_have_bought_app/models/util/page_info.dart';
-import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
+
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
-import 'package:should_have_bought_app/models/calculator/company.dart';
-import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
-import 'package:should_have_bought_app/screens.dart';
-import 'package:should_have_bought_app/screens/util/skeleton_widget.dart';
-import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
-import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
-import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
-import 'dart:convert';
-import 'package:should_have_bought_app/api/api.dart';
-import 'package:http/http.dart' as http;
 
 class DripRoomTabScreen extends StatefulWidget {
   static const routeId = '/select-drip';
@@ -52,25 +41,20 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
 
   @override
   void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    Map<String, dynamic> parmeters = {
-      'order': 'POPULARITY',
-      'pageNo': '1',
-      'pageSize': '100'
-    };
     setState(() {
       isLoading = true;
     });
-    await Provider.of<DripRoomProvider>(context, listen: false);
 
     if (isLoading) {
       await EasyLoading.show(
         status: 'loading...',
         maskType: EasyLoadingMaskType.none,
       );
-      Provider.of<DripRoomProvider>(context, listen: false)
-          .getBestEvaluateList(1, 3, 'MONTH12', widget.company.code)
+      await Provider.of<DripRoomProvider>(context, listen: false)
+          .getBestEvaluateList(1, 3, 'MONTH12', widget.company.code);
+      await Provider.of<DripRoomProvider>(context, listen: false)
+          .getStockEvaluateList(1, 100, 'LATELY', widget.company.code)
           .then((value) => EasyLoading.dismiss());
     }
     setState(() {
@@ -119,7 +103,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                 child: emptyDripListRoomScreen(context),
                 builder: (context, dripRoomProvider, child) {
                   List evaluationItemList =
-                      dripRoomProvider.stockEvaluationList.evaluationList;
+                      dripRoomProvider.bestStockEvaluationList.evaluationList;
                   return evaluationItemList == null
                       ? child
                       : ListView.builder(
@@ -128,67 +112,64 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                           controller: _scrollController,
                           scrollDirection: Axis.horizontal,
                           itemCount: evaluationItemList.length,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Container(
+                          itemBuilder: (context, index) => Container(
                             child: BestDripCardListWidget(
                                 evaluationItemList[index]),
                           ),
                         );
                 })),
-        // Consumer<DripRoomProvider>(
-        //     child: emptyDripListRoomScreen(context),
-        //     builder: (context, dripRoomProvider, child) {
-        //       List evaluationItemList = dripRoomProvider.evaluationItemList;
-        //       return dripRoomProvider.evaluationItemList.length == 0
-        //           ? child
-        //           : Column(children: [
-        //               Container(
-        //                 padding: const EdgeInsets.symmetric(horizontal: 22),
-        //                 child: Row(
-        //                   children: [
-        //                     Text(
-        //                       "전체",
-        //                       textAlign: TextAlign.left,
-        //                       style: TextStyle(
-        //                           color: Colors.black,
-        //                           fontSize: 18,
-        //                           fontWeight: FontWeight.normal),
-        //                     ),
-        //                     SizedBox(width: 5),
-        //                     Text(evaluationItemList.length.toString()),
-        //                   ],
-        //                 ),
-        //               ),
-        //               ListView.builder(
-        //                   physics: BouncingScrollPhysics(),
-        //                   shrinkWrap: true,
-        //                   itemCount: evaluationItemList.length,
-        //                   itemBuilder: (BuildContext context, int index) =>
-        //                       Container(
-        //                           alignment: Alignment.centerLeft,
-        //                           child: Column(children: [
-        //                             SizedBox(height: 10),
-        //                             Container(
-        //                               child: BestDripCardListWidget(
-        //                                   evaluationItemList[index]),
-        //                             ),
-        //                             SizedBox(height: 15),
-        //                           ])))
-        //             ]);
-        //     })
+        Consumer<DripRoomProvider>(
+            child: emptyDripListRoomScreen(context),
+            builder: (context, dripRoomProvider, child) {
+              List evaluationItemList =
+                  dripRoomProvider.stockEvaluationList.evaluationList;
+              return evaluationItemList == null
+                  ? child
+                  : Column(children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Text(
+                              "전체",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            SizedBox(width: 5),
+                            Text(evaluationItemList.length.toString()),
+                          ],
+                        ),
+                      ),
+                      ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: evaluationItemList.length,
+                        itemBuilder: (context, index) => Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: BestDripCardListWidget(
+                            evaluationItemList[index],
+                          ),
+                        ),
+                      ),
+                    ]);
+            })
       ])),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 50.0),
         child: FloatingActionButton(
           backgroundColor: mainColor,
-          onPressed: () => _showCreateDripSheet(context),
+          onPressed: () {
+            _showCreateDripSheet(context);
+          },
           child: Icon(Icons.add),
         ),
       ),
     );
   }
 
-  // TODO: 등록 버튼 (정민님)
   void _showCreateDripSheet(BuildContext context) async {
     var heightOfModalBottomSheet = 450.0;
     var clickCount = 0;
@@ -204,8 +185,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
         builder: (ctx) {
           emojiShowing = false;
           heightOfModalBottomSheet = 450.0;
-          return StatefulBuilder(builder: (BuildContext context,
-              StateSetter setState /*You can rename this!*/) {
+          return StatefulBuilder(builder: (context, setState) {
             return SingleChildScrollView(
                 child: AnimatedPadding(
                     padding: MediaQuery.of(context).viewInsets,
@@ -433,6 +413,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                       : Provider.of<DripRoomProvider>(context,
                                               listen: false)
                                           .dripSave(data);
+                                  Navigator.of(context).pop();
                                 },
                               ),
                             ),
@@ -443,7 +424,6 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                 child: EmojiPicker(
                                     onEmojiSelected:
                                         (Category category, Emoji emoji) {
-                                      print(emoji.emoji);
                                       _giphyImgId
                                         ..text = emoji.emoji
                                         ..selection =
@@ -494,7 +474,6 @@ class BestDripCardListWidget extends StatelessWidget {
               width: size.width * 0.9,
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 15, bottom: 15),
-              margin: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),

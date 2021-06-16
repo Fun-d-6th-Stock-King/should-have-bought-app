@@ -107,4 +107,20 @@ class DripRoomApi extends Api {
     throw Exception(
         '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
+
+  static Future getStockEvaluationList(String stockCode, Map params) async {
+    Map<String, String> header = await Api.getHeader();
+    final response = await http.get(
+      Uri.parse("$stockApiUrl/api/buyornot/$stockCode/evaluate")
+          .replace(queryParameters: params),
+      headers: header,
+    );
+
+    if (response.statusCode == 200) {
+      final resposeBody = json.decode(utf8.decode(response.bodyBytes));
+      return resposeBody;
+    }
+    throw Exception(
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
+  }
 }

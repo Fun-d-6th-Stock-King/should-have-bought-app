@@ -9,10 +9,12 @@ class DripRoomProvider with ChangeNotifier {
   List _evaluationItemList = [];
   PageInfo _pageInfo = PageInfo();
   EvaluationItem _todayBest = EvaluationItem();
+  StockEvaluationList _bestStockEvaluationList = StockEvaluationList();
   StockEvaluationList _stockEvaluationList = StockEvaluationList();
 
   bool _isLoading = false;
 
+  StockEvaluationList get bestStockEvaluationList => _bestStockEvaluationList;
   StockEvaluationList get stockEvaluationList => _stockEvaluationList;
   List get evaluationItemList => _evaluationItemList;
   PageInfo get pageInfo => _pageInfo;
@@ -71,15 +73,31 @@ class DripRoomProvider with ChangeNotifier {
     };
     final result = await DripRoomApi.getBestEvaluationList(code, params);
     final list = result['evaluationList'];
-    _stockEvaluationList.evaluationList = list
+    _bestStockEvaluationList.evaluationList = list
         .map<StockEvaluationItem>((item) => StockEvaluationItem.fromJson(item))
         .toList();
-    _stockEvaluationList.pageInfo = result['pageInfo'];
+    _bestStockEvaluationList.pageInfo = result['pageInfo'];
     notifyListeners();
   }
 
   Future dripSave(Map data) async {
     await DripRoomApi.dripSave(data);
+    notifyListeners();
+  }
+
+  Future getStockEvaluateList(
+      int pageNo, int pageSize, String order, String code) async {
+    final Map<String, String> params = {
+      'pageNo': pageNo.toString(),
+      'pageSize': pageSize.toString(),
+      'order': order,
+    };
+    final result = await DripRoomApi.getStockEvaluationList(code, params);
+    final list = result['evaluationList'];
+    _stockEvaluationList.evaluationList = list
+        .map<StockEvaluationItem>((item) => StockEvaluationItem.fromJson(item))
+        .toList();
+    _stockEvaluationList.pageInfo = result['pageInfo'];
     notifyListeners();
   }
 }
