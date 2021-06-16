@@ -1,22 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/result_card_widget.dart';
-import 'package:should_have_bought_app/widgets/appbar/calculator_result_appbar.dart';
 
 class CalculatorResultWidget extends StatefulWidget {
   final Color topColor;
   final Color textColor;
   final AssetImage chickImage;
-  final CalculatorStock calculationResult;
 
   const CalculatorResultWidget({
     this.topColor,
     this.textColor,
     this.chickImage,
-    this.calculationResult,
   });
 
   @override
@@ -26,62 +25,63 @@ class CalculatorResultWidget extends StatefulWidget {
 class _CalculatorResultWidgetState extends State<CalculatorResultWidget> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CustomPaint(
-          painter: MyPainter(widget.topColor),
-          size: Size(516, 316),
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 130),
-          alignment: Alignment.center,
-          child: Image(
-            image: widget.chickImage,
+    return Consumer<CalculatorProvider>(
+        builder: (context, calculatorProvider, child) {
+      final calculationResult = calculatorProvider.calculationResult;
+      return Stack(
+        children: <Widget>[
+          CustomPaint(
+            painter: MyPainter(widget.topColor),
+            size: Size(516, 316),
           ),
-        ),
-        Column(
-          children: [
-            SizedBox(height: 10),
-            // CalculatorResultAppbar(
-            //   textColor: widget.textColor,
-            // ),
-            SizedBox(height: 2),
-            Container(
-              height: 175,
-              child: Column(
-                children: [
-                  MainTopText(
-                    textColor: widget.textColor,
-                    investDate: widget.calculationResult.investDate,
-                  ),
-                  MainMidText(
-                    textColor: widget.textColor,
-                    companyName: widget.calculationResult.name,
-                  ),
-                  MainBottomText(
-                    textColor: widget.textColor,
-                    investPrice: widget.calculationResult.investPrice,
-                  ),
-                ],
-              ),
+          Container(
+            padding: EdgeInsets.only(top: 130),
+            alignment: Alignment.center,
+            child: Image(
+              image: widget.chickImage,
             ),
-            ResultCardWidget(calculationResult: widget.calculationResult)
-          ],
-        ),
-        // isBottomSheet == true
-        //     ? GestureDetector(
-        //         onTap: () {
-        //           setState(() => isBottomSheet = false);
-        //         },
-        //         child: CustomPaint(
-        //           painter: MyPainter(Colors.black.withOpacity(0.5)),
-        //           size: Size(MediaQuery.of(context).size.width,
-        //               MediaQuery.of(context).size.height),
-        //         ),
-        //       )
-        //     : Container(),
-      ],
-    );
+          ),
+          Column(
+            children: [
+              SizedBox(height: 10),
+              SizedBox(height: 2),
+              Container(
+                height: 175,
+                child: Column(
+                  children: [
+                    MainTopText(
+                      textColor: widget.textColor,
+                      investDate: calculationResult.investDate,
+                    ),
+                    MainMidText(
+                      textColor: widget.textColor,
+                      companyName: calculationResult.name,
+                    ),
+                    MainBottomText(
+                      textColor: widget.textColor,
+                      investPrice: calculationResult.investPrice,
+                    ),
+                  ],
+                ),
+              ),
+              ResultCardWidget(calculationResult: calculationResult)
+            ],
+          ),
+          // isBottomSheet == true
+          //     ? GestureDetector(
+          //         onTap: () {
+          //           setState(() => isBottomSheet = false);
+          //         },
+          //         child: CustomPaint(
+          //           painter: MyPainter(Colors.black.withOpacity(0.5)),
+          //           size: Size(MediaQuery.of(context).size.width,
+          //               MediaQuery.of(context).size.height),
+          //         ),
+          //       )
+          //     : Container(),
+        ],
+      );
+    });
   }
 }
 

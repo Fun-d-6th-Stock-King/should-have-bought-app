@@ -6,10 +6,20 @@ import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
 
-class SalaryYearMonthWidget extends StatelessWidget {
-  final CalculatorStock calculationResult;
+class SalaryYearMonthWidget extends StatefulWidget {
+  @override
+  _SalaryYearMonthWidgetState createState() => _SalaryYearMonthWidgetState();
+}
 
-  const SalaryYearMonthWidget({this.calculationResult});
+class _SalaryYearMonthWidgetState extends State<SalaryYearMonthWidget> {
+  CalculatorStock calculationResult;
+
+  @override
+  void initState() {
+    calculationResult = Provider.of<CalculatorProvider>(context, listen: false)
+        .calculationResult;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

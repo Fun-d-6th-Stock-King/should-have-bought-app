@@ -71,36 +71,28 @@ class _RefactorCalculatorResultScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer2<CalculatorProvider, BuyOrNotProvider>(
-        builder: (context, calcualtorProvider, buyornotProvider, child) {
-          final calculationResult = calcualtorProvider.calculationResult;
-          return NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    floating: true,
-                    backgroundColor: topColor,
-                  )
-                ];
-              },
-              body: ListView(
-                children: <Widget>[
-                  Frame(
-                    child: CalculatorResultWidget(
-                      topColor: topColor,
-                      textColor: textColor,
-                      chickImage: chickImage,
-                      calculationResult: calculationResult,
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  Frame(
-                      child: SalaryYearMonthWidget(
-                    calculationResult: calculationResult,
-                  )),
-                ],
-              ));
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              floating: true,
+              backgroundColor: topColor,
+            )
+          ];
         },
+        body: ListView(
+          children: <Widget>[
+            Frame(
+              child: CalculatorResultWidget(
+                topColor: topColor,
+                textColor: textColor,
+                chickImage: chickImage,
+              ),
+            ),
+            SizedBox(height: 50),
+            Frame(child: SalaryYearMonthWidget()),
+          ],
+        ),
       ),
     );
   }
