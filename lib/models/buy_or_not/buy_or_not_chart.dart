@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class BuyOrNotChart {
   final String symbol;
   final String date;
-  final double open;
-  final double low;
-  final double high;
-  final double close;
-  final double adjClose;
-  final int volume;
+  final num open;
+  final num low;
+  final num high;
+  final num close;
+  final num adjClose;
+  final num volume;
 
   BuyOrNotChart(
       {@required this.symbol,

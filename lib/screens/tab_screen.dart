@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/screens.dart'
     show MainScreen, DripRoomScreen, CardScreen, TodayWordScreen, MyPageScreen;
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
+import 'package:should_have_bought_app/providers/admob/admob_provider.dart';
 
 class TabScreen extends StatefulWidget {
   final int selectIndex;
@@ -31,6 +33,7 @@ class _TabScreenState extends State<TabScreen> {
       TodayWordScreen(),
       MyPageScreen(),
     ];
+    Provider.of<AdmobProvider>(context, listen: false).initAdmob(context);
   }
 
   @override
