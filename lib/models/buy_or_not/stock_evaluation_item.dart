@@ -28,6 +28,8 @@ class StockEvaluationItem {
     pros = map['pros'];
     uid = map['uid'];
     userLike = map['userLike'];
-    recentComment = StockComment.fromJson(map['recentComment']);
+    if (map['recentComment'] != null) {
+      recentComment = StockComment.fromJson(map['recentComment']);
+    }
   }
 }
