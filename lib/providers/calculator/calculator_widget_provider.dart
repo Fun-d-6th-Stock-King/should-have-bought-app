@@ -32,12 +32,20 @@ class CalculatorWidgetProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setPrice(String price) {
+    _price = price;
+    notifyListeners();
+  }
+
   void setLoading(bool isloading) {
     _isLoading = isloading;
     notifyListeners();
   }
   void setSendCalcuatorDto(CalculatorDto sendCalcuatorDto) {
-    _sendCalcuatorDto =sendCalcuatorDto;
+    _sendCalcuatorDto = sendCalcuatorDto;
+    _selectedDateValue = sendCalcuatorDto.investDate;
+    _selectedCompany =  Company(company: sendCalcuatorDto.company, code: sendCalcuatorDto.code);
+    _price = sendCalcuatorDto.investPrice.toString();
     notifyListeners();
   }
 }
