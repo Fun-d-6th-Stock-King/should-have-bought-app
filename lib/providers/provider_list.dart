@@ -8,6 +8,7 @@ import 'package:should_have_bought_app/providers/dummy.dart';
 import 'package:should_have_bought_app/providers/today_word/today_word_provider.dart';
 import 'package:should_have_bought_app/providers/my_page/my_page_provider.dart';
 import 'package:should_have_bought_app/providers/card/card_provider.dart';
+import 'package:should_have_bought_app/providers/admob/admob_provider.dart';
 
 List<SingleChildWidget> kProviders = [
   // Example
@@ -34,5 +35,8 @@ List<SingleChildWidget> kProviders = [
   ),
   ChangeNotifierProvider<CardProvider>(
       create: (context) => CardProvider()
+  ),
+  ChangeNotifierProvider<AdmobProvider>(
+      create: (context) => AdmobProvider()
   ),
 ];

@@ -62,11 +62,13 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
     interstitialAd = AdmobInterstitial(
       adUnitId: getInterstitialAdUnitId(),
       listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-        if (event == AdmobAdEvent.closed) interstitialAd.load();
+        if (event == AdmobAdEvent.closed) {
+          print('admob closed and reload');
+          interstitialAd.load();
+        }
         handleEvent(event, args, 'Interstitial');
       },
     );
-    interstitialAd.load();
   }
 
   void handleEvent(
@@ -407,6 +409,12 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                   )
                 : RandomWidget(
                     onTap: () async {
+                      interstitialAd.isLoaded.then((value) {
+                        print('Admob: isLoad?');
+                        print(value);
+                        if(value == false){
+                          interstitialAd.load();
+                        }});
                       getAdMobCounter().then((value) async {
                         if (value == true) {
                           interstitialAd.show();
@@ -426,6 +434,7 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
 
 class DateExceptText extends StatelessWidget {
   final CalculatorStock calculatorResult;
+
   const DateExceptText(this.calculatorResult);
 
   @override
@@ -464,6 +473,7 @@ class DateExceptText extends StatelessWidget {
 
 class PriceExceptText extends StatelessWidget {
   final CalculatorStock calculatorResult;
+
   const PriceExceptText(this.calculatorResult);
 
   @override

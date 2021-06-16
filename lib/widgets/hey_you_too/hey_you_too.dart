@@ -9,6 +9,7 @@ import 'package:should_have_bought_app/providers/calculator/calculator_widget_pr
 import 'package:should_have_bought_app/screens/main/calculator_result_screen.dart';
 import 'package:should_have_bought_app/widgets/util/admob_util.dart';
 import 'history_card.dart';
+import 'package:should_have_bought_app/providers/admob/admob_provider.dart';
 
 class HeyYouToo extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _HeyYouTooState extends State<HeyYouToo> {
   @override
   void initState() {
     super.initState();
-    initAdmob();
+    interstitialAd = Provider.of<AdmobProvider>(context, listen:false).interstitialAd;
   }
 
   @override
@@ -37,55 +38,6 @@ class _HeyYouTooState extends State<HeyYouToo> {
     _scrollController.dispose();
     interstitialAd.dispose();
     super.dispose();
-  }
-
-  void initAdmob() {
-    interstitialAd = AdmobInterstitial(
-      adUnitId: getInterstitialAdUnitId(),
-      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-        if (event == AdmobAdEvent.closed) interstitialAd.load();
-        handleEvent(event, args, 'Interstitial');
-      },
-    );
-    interstitialAd.load();
-  }
-
-  void handleEvent(
-      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
-    switch (event) {
-      case AdmobAdEvent.loaded:
-        print('New Admob $adType Ad loaded!');
-        break;
-      case AdmobAdEvent.opened:
-        print('Admob $adType Ad opened!');
-        break;
-      case AdmobAdEvent.closed:
-        {
-          sendResultScreen();
-          break;
-        }
-      case AdmobAdEvent.failedToLoad:
-        print('Admob $adType failed to load. :(');
-        break;
-      default:
-    }
-  }
-  void sendResultScreen() async {
-    CalculatorDto calculatorDto = await Provider.of<CalculatorWidgetProvider>(context, listen: false).sendCalcuatorDto;
-    await Provider.of<CalculatorProvider>(context, listen: false)
-        .getResult(calculatorDto.toMap())
-        .then((value) {
-      EasyLoading.dismiss();
-      Navigator.of(context)
-          .pushNamed(CalculatorResultScreen.routeId)
-          .then((value) => {
-        if (value == 'update')
-          {
-            Provider.of<CalculatorProvider>(context, listen: false)
-                .getHistory()
-          }
-      });
-    });
   }
 
   @override
