@@ -28,7 +28,6 @@ class AdmobProvider with ChangeNotifier {
       },
     );
     _interstitialAd.load();
-    notifyListeners();
   }
 
   void handleEvent(

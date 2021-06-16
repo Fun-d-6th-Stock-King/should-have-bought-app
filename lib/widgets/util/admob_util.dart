@@ -43,5 +43,5 @@ String getInterstitialAdUnitId() {
   //   return 'ca-app-pub-3940256099942544/1033173712';
   // }
   // ca-app-pub-3526133822093148/1512973558
-  return 'ca-app-pub-3940256099942544/1033173712';
+  return 'ca-app-pub-3526133822093148/1512973558';
 }

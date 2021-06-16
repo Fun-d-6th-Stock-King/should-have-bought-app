@@ -69,7 +69,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
         handleEvent(event, args, 'Interstitial');
       },
     );
-    interstitialAd.load();
   }
 
   void handleEvent(
@@ -410,6 +409,12 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                   )
                 : RandomWidget(
                     onTap: () async {
+                      interstitialAd.isLoaded.then((value) {
+                        print('Admob: isLoad?');
+                        print(value);
+                        if(value == false){
+                          interstitialAd.load();
+                        }});
                       getAdMobCounter().then((value) async {
                         if (value == true) {
                           interstitialAd.show();
