@@ -30,6 +30,8 @@ class StockEvaluationItem {
     userLike = map['userLike'];
     if (map['recentComment'] != null) {
       recentComment = StockComment.fromJson(map['recentComment']);
+    } else {
+      recentComment = null;
     }
   }
 }

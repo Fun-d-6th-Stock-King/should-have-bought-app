@@ -71,14 +71,11 @@ class BuyOrNotApi extends Api {
         '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
-  static Future getBestEvaluateList(
-      int pageNo, int pageSize, String period, String code) async {
+  static Future getBestEvaluateList(String stockCode, Map params) async {
     Map<String, String> header = await Api.getHeader();
-    print(
-        "$stockApiUrl/api/buyornot/$code/best?pageNo=$pageNo&pageSize=$pageSize&period=$period");
     final response = await http.get(
-      Uri.parse(
-          "$stockApiUrl/api/buyornot/$code/best?pageNo=$pageNo&pageSize=$pageSize&period=$period"),
+      Uri.parse("$stockApiUrl/api/buyornot/$stockCode/best")
+          .replace(queryParameters: params),
       headers: header,
     );
     if (response.statusCode == 200) {

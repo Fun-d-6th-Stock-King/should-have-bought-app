@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/api/drip_room/drip_room_api.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_evaluation_item.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_evaluation_list.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/models/util/page_info.dart';
 
@@ -7,8 +9,11 @@ class DripRoomProvider with ChangeNotifier {
   List _evaluationItemList = [];
   PageInfo _pageInfo = PageInfo();
   EvaluationItem _todayBest = EvaluationItem();
+  StockEvaluationList _stockEvaluationList = StockEvaluationList();
+
   bool _isLoading = false;
 
+  StockEvaluationList get stockEvaluationList => _stockEvaluationList;
   List get evaluationItemList => _evaluationItemList;
   PageInfo get pageInfo => _pageInfo;
   EvaluationItem get todayBest => _todayBest;
@@ -54,6 +59,24 @@ class DripRoomProvider with ChangeNotifier {
           ? findEvaluationItem.likeCount + 1
           : findEvaluationItem.likeCount - 1
     });
+    notifyListeners();
+  }
+
+  Future getBestEvaluateList(
+      int pageNo, int pageSize, String period, String code) async {
+    final result = await DripRoomApi.getBestEvaluationList(
+      code,
+      {
+        'pageNo': pageNo,
+        'pageSize': pageSize,
+        'period': period,
+      },
+    );
+    final list = result['evaluationList'];
+    _stockEvaluationList.evaluationList = list
+        .map<StockEvaluationItem>((item) => StockEvaluationItem.fromJson(item))
+        .toList();
+    _stockEvaluationList.pageInfo = result['pageInfo'];
     notifyListeners();
   }
 
