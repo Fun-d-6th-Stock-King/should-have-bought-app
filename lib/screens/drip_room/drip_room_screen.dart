@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
-import 'package:should_have_bought_app/widgets/drip_room/best_drip_card_widget.dart';
+import 'package:should_have_bought_app/widgets/drip_room/today_best_drip_card_widget.dart';
 import 'package:should_have_bought_app/widgets/drip_room/drip_card_widget.dart';
 import 'package:should_have_bought_app/widgets/drip_room/empty_drip_room_screen_widget.dart';
 
@@ -120,7 +120,7 @@ class DripRoomWidget extends StatelessWidget {
             ],
           ),
           SizedBox(height: 9),
-          BestDripCardWidget(),
+          TodayBestDripCardWidget(),
         ],
       ),
     );
