@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:should_have_bought_app/models/buy_or_not/stock_evaluation_item.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/util/page_info.dart';
 import 'package:should_have_bought_app/widgets/appbar/default_appbar.dart';
@@ -38,6 +39,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
   final ScrollController _scrollController = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool emojiShowing = false;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -57,22 +59,23 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
       'pageNo': '1',
       'pageSize': '100'
     };
+    setState(() {
+      isLoading = true;
+    });
+    await Provider.of<DripRoomProvider>(context, listen: false);
 
-    bool isEmpty = Provider.of<DripRoomProvider>(context, listen: false)
-                .evaluationItemList
-                .length ==
-            0
-        ? true
-        : false;
-    if (isEmpty) {
+    if (isLoading) {
       await EasyLoading.show(
         status: 'loading...',
         maskType: EasyLoadingMaskType.none,
       );
       Provider.of<DripRoomProvider>(context, listen: false)
-          .getEvaluationList(parmeters)
+          .getBestEvaluateList(1, 3, 'MONTH12', widget.company.code)
           .then((value) => EasyLoading.dismiss());
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -89,6 +92,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
           margin: const EdgeInsets.only(top: 10, bottom: 10),
           alignment: Alignment.centerLeft,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 "BEST",
@@ -97,11 +101,11 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                     fontSize: 18,
                     fontWeight: FontWeight.normal),
               ),
-              SizedBox(width: size.width * 0.55),
+              // SizedBox(width: size.width * 0.55),
               Container(
                 child: Row(
                   children: [
-                    Text('오늘HOT'),
+                    Text('전체 Hot'),
                     Icon(Icons.keyboard_arrow_down_outlined)
                   ],
                 ),
@@ -114,8 +118,9 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
             child: Consumer<DripRoomProvider>(
                 child: emptyDripListRoomScreen(context),
                 builder: (context, dripRoomProvider, child) {
-                  List evaluationItemList = dripRoomProvider.evaluationItemList;
-                  return dripRoomProvider.evaluationItemList.length == 0
+                  List evaluationItemList =
+                      dripRoomProvider.stockEvaluationList.evaluationList;
+                  return evaluationItemList == null
                       ? child
                       : ListView.builder(
                           physics: BouncingScrollPhysics(),
@@ -130,50 +135,50 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                           ),
                         );
                 })),
-        Consumer<DripRoomProvider>(
-            child: emptyDripListRoomScreen(context),
-            builder: (context, dripRoomProvider, child) {
-              List evaluationItemList = dripRoomProvider.evaluationItemList;
-              return dripRoomProvider.evaluationItemList.length == 0
-                  ? child
-                  : Column(children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 22),
-                        child: Row(
-                          children: [
-                            Text(
-                              "전체",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                            SizedBox(width: 5),
-                            Text(evaluationItemList.length.toString()),
-                          ],
-                        ),
-                      ),
-                      ListView.builder(
-                          physics: BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: evaluationItemList.length,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Column(children: [
-                                    SizedBox(height: 10),
-                                    Container(
-                                      child: BestDripCardListWidget(
-                                          evaluationItemList[index]),
-                                    ),
-                                    SizedBox(height: 15),
-                                  ])))
-                    ]);
-            })
+        // Consumer<DripRoomProvider>(
+        //     child: emptyDripListRoomScreen(context),
+        //     builder: (context, dripRoomProvider, child) {
+        //       List evaluationItemList = dripRoomProvider.evaluationItemList;
+        //       return dripRoomProvider.evaluationItemList.length == 0
+        //           ? child
+        //           : Column(children: [
+        //               Container(
+        //                 padding: const EdgeInsets.symmetric(horizontal: 22),
+        //                 child: Row(
+        //                   children: [
+        //                     Text(
+        //                       "전체",
+        //                       textAlign: TextAlign.left,
+        //                       style: TextStyle(
+        //                           color: Colors.black,
+        //                           fontSize: 18,
+        //                           fontWeight: FontWeight.normal),
+        //                     ),
+        //                     SizedBox(width: 5),
+        //                     Text(evaluationItemList.length.toString()),
+        //                   ],
+        //                 ),
+        //               ),
+        //               ListView.builder(
+        //                   physics: BouncingScrollPhysics(),
+        //                   shrinkWrap: true,
+        //                   itemCount: evaluationItemList.length,
+        //                   itemBuilder: (BuildContext context, int index) =>
+        //                       Container(
+        //                           alignment: Alignment.centerLeft,
+        //                           child: Column(children: [
+        //                             SizedBox(height: 10),
+        //                             Container(
+        //                               child: BestDripCardListWidget(
+        //                                   evaluationItemList[index]),
+        //                             ),
+        //                             SizedBox(height: 15),
+        //                           ])))
+        //             ]);
+        //     })
       ])),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 100.0),
+        padding: const EdgeInsets.only(bottom: 50.0),
         child: FloatingActionButton(
           backgroundColor: mainColor,
           onPressed: () => _showCreateDripSheet(context),
@@ -475,13 +480,12 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
 }
 
 class BestDripCardListWidget extends StatelessWidget {
-  final EvaluationItem evaluationItem;
+  final StockEvaluationItem evaluationItem;
 
   BestDripCardListWidget(this.evaluationItem);
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -497,48 +501,57 @@ class BestDripCardListWidget extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding:
-                              EdgeInsets.only(left: size.width * 0.9 * 0.7),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 28,
-                                height: 28,
-                                child: ClipOval(
-                                  child: Container(
-                                    color: evaluationItem.userlike == true
-                                        ? mainColor
-                                        : kGreyColor,
-                                    child: Image(
-                                        image: AssetImage(
-                                            'assets/icons/ico_heart.png')),
-                                  ),
-                                ),
+                        Container(
+                          padding: EdgeInsets.only(left: size.width * 0.25),
+                          child: CircleAvatar(
+                            backgroundColor:
+                                Color(0XFFCECECE).withOpacity(0.16),
+                            radius: 50.0,
+                            child: Text(
+                              evaluationItem?.giphyImgId ?? '', //이모티콘
+                              style: TextStyle(
+                                fontSize: 52,
+                                color: Colors.black,
                               ),
-                              Text(evaluationItem.likeCount.toString(),
-                                  style: TextStyle(
-                                      color: mainColor,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500)),
-                            ],
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
-                        Text(
-                          evaluationItem?.giphyImgId ?? '', //이모티콘
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                          ),
+                        SizedBox(width: size.width * 0.18),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: ClipOval(
+                                child: Container(
+                                  color: evaluationItem.userLike == true
+                                      ? mainColor
+                                      : kGreyColor,
+                                  child: Image(
+                                      image: AssetImage(
+                                          'assets/icons/ico_heart.png')),
+                                ),
+                              ),
+                            ),
+                            Text(evaluationItem.likeCount.toString(),
+                                style: TextStyle(
+                                    color: mainColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500)),
+                          ],
                         ),
                       ],
                     ),
                   ),
+                  SizedBox(height: 10),
                   IntrinsicHeight(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -558,7 +571,7 @@ class BestDripCardListWidget extends StatelessWidget {
                           thickness: 0.6,
                         ),
                         Text(
-                          evaluationItem?.createdDate ?? '',
+                          evaluationItem?.createDate ?? '',
                           style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w300,
@@ -605,7 +618,7 @@ Widget emptyDripListRoomScreen(BuildContext context) {
               ],
             ),
             SizedBox(height: 11),
-            BestDripCardListWidget(EvaluationItem())
+            BestDripCardListWidget(StockEvaluationItem())
           ],
         ),
       )

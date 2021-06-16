@@ -86,14 +86,12 @@ class BuyOrNotProvider with ChangeNotifier {
 
   Future getBestEvaluateList(
       int pageNo, int pageSize, String period, String code) async {
-    final result = await BuyOrNotApi.getBestEvaluateList(
-      code,
-      {
-        'pageNo': pageNo,
-        'pageSize': pageSize,
-        'period': period,
-      },
-    );
+    final Map<String, String> params = {
+      'pageNo': pageNo.toString(),
+      'pageSize': pageSize.toString(),
+      'period': period,
+    };
+    final result = await BuyOrNotApi.getBestEvaluateList(code, params);
     final list = result['evaluationList'];
     _stockEvaluationList.evaluationList = list
         .map<StockEvaluationItem>((item) => StockEvaluationItem.fromJson(item))
