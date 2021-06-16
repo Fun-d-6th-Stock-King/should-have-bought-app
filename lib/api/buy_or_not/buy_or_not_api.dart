@@ -1,7 +1,6 @@
 import 'dart:convert';
-
-import '../api.dart';
 import 'package:http/http.dart' as http;
+import '../api.dart';
 
 class BuyOrNotApi extends Api {
   static Future getBuyOrNotStock(String stockCode) async {
@@ -17,7 +16,7 @@ class BuyOrNotApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getBuyOrNotStockChart(String stockCode) async {
@@ -33,7 +32,7 @@ class BuyOrNotApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future setBuyOrNotStock(String stockCode, Map data) async {
@@ -51,7 +50,7 @@ class BuyOrNotApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getBuyRankList(String buySell, String rankListType) async {
@@ -69,7 +68,7 @@ class BuyOrNotApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getBestEvaluateList(
@@ -87,6 +86,6 @@ class BuyOrNotApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 }
