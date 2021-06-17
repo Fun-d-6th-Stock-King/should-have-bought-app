@@ -20,7 +20,7 @@ class CalculatorApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getCompanies() async {
@@ -35,7 +35,7 @@ class CalculatorApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getHistoryList(int pageNo, int pageSize) async {
@@ -51,7 +51,7 @@ class CalculatorApi extends Api {
       return responseBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getTenYearHigher() async {
@@ -66,7 +66,7 @@ class CalculatorApi extends Api {
       return responseBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getSectorInfor(
@@ -83,7 +83,7 @@ class CalculatorApi extends Api {
       return responseBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getAllResult(String code, int investPrice) async {
@@ -99,7 +99,7 @@ class CalculatorApi extends Api {
       return responseBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getBestPrice(
@@ -116,7 +116,7 @@ class CalculatorApi extends Api {
       return responseBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getCurrentStockPrice() async {
@@ -133,7 +133,7 @@ class CalculatorApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 
   static Future getPeriodBestPrice(String investDate) async {
@@ -149,6 +149,6 @@ class CalculatorApi extends Api {
       return resposeBody;
     }
     throw Exception(
-        response.statusCode.toString() + ":" + utf8.decode(response.bodyBytes));
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
 }

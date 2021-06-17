@@ -1,7 +1,6 @@
 import 'dart:convert';
-
-import '../api.dart';
 import 'package:http/http.dart' as http;
+import '../api.dart';
 
 class TodayWordApi extends Api {
   /// 최고의 단어 조회 api
@@ -77,5 +76,4 @@ class TodayWordApi extends Api {
     throw Exception(
         "${response.statusCode}:${utf8.decode(response.bodyBytes)}");
   }
-
 }

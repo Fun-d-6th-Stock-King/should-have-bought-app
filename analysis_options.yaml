@@ -7,3 +7,4 @@ linter:
     prefer_mixin : false
     prefer_relative_imports : false
     lines_longer_than_80_chars : false
+    omit_local_variable_types : false
