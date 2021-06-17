@@ -58,7 +58,7 @@ class DripCardWidget extends StatelessWidget {
                             ? LoginHandler(context)
                             : await Provider.of<DripRoomProvider>(context,
                                     listen: false)
-                                .likeDrip(evaluationItem);
+                                .likeDrip(evaluationItem.id);
                       },
                       child: Column(
                         children: [

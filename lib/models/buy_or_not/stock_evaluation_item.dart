@@ -7,12 +7,12 @@ class StockEvaluationItem {
   final String code;
   final String company;
   final String cons;
-  final String createDate;
+  final String createdDate;
   final String displayName;
   final String giphyImgId;
   final String pros;
   final String uid;
-  final bool userLike;
+  final bool userlike;
   final StockComment recentComment;
 
   StockEvaluationItem({
@@ -22,12 +22,12 @@ class StockEvaluationItem {
     this.code,
     this.company,
     this.cons,
-    this.createDate,
+    this.createdDate,
     this.displayName,
     this.giphyImgId,
     this.pros,
     this.uid,
-    this.userLike,
+    this.userlike,
     this.recentComment,
   });
 
@@ -45,13 +45,31 @@ class StockEvaluationItem {
       code: map['code'] ?? '',
       company: map['company'] ?? '',
       cons: map['cons'] ?? '',
-      createDate: map['createdDate'] ?? '',
+      createdDate: map['createdDate'] ?? '',
       displayName: map['displayName'] ?? '',
       giphyImgId: map['giphyImgId'] ?? '',
       pros: map['pros'] ?? '',
       uid: map['uid'] ?? '',
-      userLike: map['userLike'] ?? false,
+      userlike: map['userlike'] ?? false,
       recentComment: recentComment,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'code': code,
+      'company': company,
+      'pros': pros,
+      'cons': cons,
+      'giphyImgId': giphyImgId,
+      'uid': uid,
+      'likeCount': likeCount,
+      'displayName': displayName,
+      'createdDate': createdDate,
+      'userlike': userlike,
+      'commentCount': commentCount,
+      'recentComment': recentComment,
+    };
   }
 }

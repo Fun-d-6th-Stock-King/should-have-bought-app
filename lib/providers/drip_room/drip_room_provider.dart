@@ -13,6 +13,7 @@ class DripRoomProvider with ChangeNotifier {
   StockEvaluationList _stockEvaluationList = StockEvaluationList();
 
   bool _isLoading = false;
+  bool _isSaved = false;
 
   StockEvaluationList get bestStockEvaluationList => _bestStockEvaluationList;
   StockEvaluationList get stockEvaluationList => _stockEvaluationList;
@@ -20,6 +21,7 @@ class DripRoomProvider with ChangeNotifier {
   PageInfo get pageInfo => _pageInfo;
   EvaluationItem get todayBest => _todayBest;
   bool get isLoading => _isLoading;
+  bool get isSaved => _isSaved;
 
   Future getEvaluationList(Map<String, dynamic> params) async {
     final result = await DripRoomApi.getEvaluationList(params);
@@ -48,10 +50,10 @@ class DripRoomProvider with ChangeNotifier {
     _isLoading = isLoading;
   }
 
-  Future likeDrip(EvaluationItem evaluationItem) async {
-    final result = await DripRoomApi.likeDrip(evaluationItem.id);
-    int findIndex = _evaluationItemList
-        .indexWhere((element) => element.id == evaluationItem.id);
+  Future likeDrip(int itemId) async {
+    final result = await DripRoomApi.likeDrip(itemId);
+    int findIndex =
+        _evaluationItemList.indexWhere((element) => element.id == itemId);
 
     EvaluationItem findEvaluationItem = _evaluationItemList[findIndex];
     _evaluationItemList[findIndex] = EvaluationItem.fromJson({
@@ -61,6 +63,25 @@ class DripRoomProvider with ChangeNotifier {
           ? findEvaluationItem.likeCount + 1
           : findEvaluationItem.likeCount - 1
     });
+    notifyListeners();
+  }
+
+  Future likeDripEmoji(int itemId) async {
+    final result = await DripRoomApi.likeDrip(itemId);
+    int findIndex = _stockEvaluationList.evaluationList
+        .indexWhere((element) => element.id == itemId);
+
+    StockEvaluationItem findEvaluationItem =
+        _stockEvaluationList.evaluationList[findIndex];
+    _stockEvaluationList.evaluationList[findIndex] =
+        StockEvaluationItem.fromJson({
+      ...findEvaluationItem.toMap(),
+      'userlike': !findEvaluationItem.userlike,
+      'likeCount': result['like'] == true
+          ? findEvaluationItem.likeCount + 1
+          : findEvaluationItem.likeCount - 1
+    });
+    print(findEvaluationItem.userlike);
     notifyListeners();
   }
 
@@ -82,6 +103,11 @@ class DripRoomProvider with ChangeNotifier {
 
   Future dripSave(Map data) async {
     await DripRoomApi.dripSave(data);
+    notifyListeners();
+  }
+
+  void setIsSaved(bool isSaved) {
+    _isSaved = isSaved;
     notifyListeners();
   }
 
