@@ -63,6 +63,25 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
     });
   }
 
+  refresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    if (isLoading) {
+      await EasyLoading.show(
+        status: 'loading...',
+        maskType: EasyLoadingMaskType.none,
+      );
+      await Provider.of<DripRoomProvider>(context, listen: false)
+          .getBestEvaluateList(1, 3, 'MONTH12', widget.company.code)
+          .then((value) => EasyLoading.dismiss());
+      ;
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -116,6 +135,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                             child: EmojiDripCardWidget(
                               evaluationItemList[index],
                               _auth,
+                              notifyParent: refresh,
                               isBest: true,
                             ),
                           ),
@@ -158,6 +178,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                               child: EmojiDripCardWidget(
                                 evaluationItemList[index],
                                 _auth,
+                                notifyParent: refresh,
                                 isBest: false,
                               ),
                             ),

@@ -70,10 +70,11 @@ class DripRoomProvider with ChangeNotifier {
     final result = await DripRoomApi.likeDrip(itemId);
     int findIndex = _stockEvaluationList.evaluationList
         .indexWhere((element) => element.id == itemId);
+    int findBestIndex = _bestStockEvaluationList.evaluationList
+        .indexWhere((element) => element.id == itemId);
 
     StockEvaluationItem findEvaluationItem =
         _stockEvaluationList.evaluationList[findIndex];
-
     _stockEvaluationList.evaluationList[findIndex] =
         StockEvaluationItem.fromJson({
       ...findEvaluationItem.toMap(),
@@ -82,25 +83,18 @@ class DripRoomProvider with ChangeNotifier {
           ? findEvaluationItem.likeCount + 1
           : findEvaluationItem.likeCount - 1
     });
-
-    notifyListeners();
-  }
-
-  Future likeBestDripEmoji(int itemId) async {
-    final result = await DripRoomApi.likeDrip(itemId);
-    int findIndex = _bestStockEvaluationList.evaluationList
-        .indexWhere((element) => element.id == itemId);
-
-    StockEvaluationItem findEvaluationItem =
-        _bestStockEvaluationList.evaluationList[findIndex];
-    _bestStockEvaluationList.evaluationList[findIndex] =
-        StockEvaluationItem.fromJson({
-      ...findEvaluationItem.toMap(),
-      'userlike': !findEvaluationItem.userlike,
-      'likeCount': result['like'] == true
-          ? findEvaluationItem.likeCount + 1
-          : findEvaluationItem.likeCount - 1
-    });
+    if (findBestIndex != -1) {
+      StockEvaluationItem findBestEvaluationItem =
+          _bestStockEvaluationList.evaluationList[findBestIndex];
+      _bestStockEvaluationList.evaluationList[findBestIndex] =
+          StockEvaluationItem.fromJson({
+        ...findBestEvaluationItem.toMap(),
+        'userlike': !findBestEvaluationItem.userlike,
+        'likeCount': result['like'] == true
+            ? findBestEvaluationItem.likeCount + 1
+            : findBestEvaluationItem.likeCount - 1
+      });
+    }
     notifyListeners();
   }
 

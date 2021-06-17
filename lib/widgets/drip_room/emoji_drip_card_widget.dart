@@ -7,13 +7,24 @@ import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.da
 import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 
-class EmojiDripCardWidget extends StatelessWidget {
+class EmojiDripCardWidget extends StatefulWidget {
   final bool isBest;
   final StockEvaluationItem evaluationItem;
   final FirebaseAuth auth;
+  final Function notifyParent;
 
-  EmojiDripCardWidget(this.evaluationItem, this.auth, {@required this.isBest});
+  EmojiDripCardWidget(
+    this.evaluationItem,
+    this.auth, {
+    @required this.notifyParent,
+    @required this.isBest,
+  });
 
+  @override
+  _EmojiDripCardWidgetState createState() => _EmojiDripCardWidgetState();
+}
+
+class _EmojiDripCardWidgetState extends State<EmojiDripCardWidget> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -43,7 +54,7 @@ class EmojiDripCardWidget extends StatelessWidget {
                                 Color(0XFFCECECE).withOpacity(0.16),
                             radius: 50.0,
                             child: Text(
-                              evaluationItem?.giphyImgId ?? '', //이모티콘
+                              widget.evaluationItem?.giphyImgId ?? '', //이모티콘
                               style: TextStyle(
                                 fontSize: 52,
                                 color: Colors.black,
@@ -59,34 +70,24 @@ class EmojiDripCardWidget extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () async {
-                                auth.currentUser == null
+                                widget.auth.currentUser == null
                                     ? LoginHandler(context)
-                                    : isBest
-                                        ? {
-                                            await Provider.of<DripRoomProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .likeBestDripEmoji(
-                                                    evaluationItem.id),
-                                            await Provider.of<DripRoomProvider>(
-                                                    context,
-                                                    listen: false)
-                                                .likeDripEmoji(
-                                                    evaluationItem.id)
-                                          }
-                                        : await Provider.of<DripRoomProvider>(
-                                                context,
-                                                listen: false)
-                                            .likeDripEmoji(evaluationItem.id);
+                                    : await Provider.of<DripRoomProvider>(
+                                            context,
+                                            listen: false)
+                                        .likeDripEmoji(
+                                            widget.evaluationItem.id);
+                                widget.notifyParent();
                               },
                               child: SizedBox(
                                 width: 28,
                                 height: 28,
                                 child: ClipOval(
                                   child: Container(
-                                    color: evaluationItem.userlike == true
-                                        ? mainColor
-                                        : kGreyColor,
+                                    color:
+                                        widget.evaluationItem.userlike == true
+                                            ? mainColor
+                                            : kGreyColor,
                                     child: Image(
                                         image: AssetImage(
                                             'assets/icons/ico_heart.png')),
@@ -94,7 +95,7 @@ class EmojiDripCardWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Text(evaluationItem.likeCount.toString(),
+                            Text(widget.evaluationItem.likeCount.toString(),
                                 style: TextStyle(
                                     color: mainColor,
                                     fontSize: 11,
@@ -113,7 +114,7 @@ class EmojiDripCardWidget extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 13.0),
                         ),
                         Text(
-                          evaluationItem?.displayName ?? '',
+                          widget.evaluationItem?.displayName ?? '',
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -124,7 +125,7 @@ class EmojiDripCardWidget extends StatelessWidget {
                           thickness: 0.6,
                         ),
                         Text(
-                          evaluationItem?.createdDate ?? '',
+                          widget.evaluationItem?.createdDate ?? '',
                           style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w300,
@@ -137,8 +138,8 @@ class EmojiDripCardWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 13.0),
                     child: ProsAndConsWidget(
-                      pros: evaluationItem?.pros ?? '',
-                      cons: evaluationItem?.cons ?? '',
+                      pros: widget.evaluationItem?.pros ?? '',
+                      cons: widget.evaluationItem?.cons ?? '',
                     ),
                   ),
                   SizedBox(height: 5),
