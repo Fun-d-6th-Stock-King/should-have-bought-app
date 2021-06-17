@@ -98,30 +98,30 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                 ],
               ),
             ),
-            SizedBox(
-              height: size.height * 0.45,
-              child: Consumer<DripRoomProvider>(
-                child: emptyDripListRoomScreen(context, _auth),
-                builder: (context, dripRoomProvider, child) {
-                  List evaluationItemList =
-                      dripRoomProvider.bestStockEvaluationList.evaluationList;
-                  return evaluationItemList == null
-                      ? child
-                      : ListView.builder(
+            Consumer<DripRoomProvider>(
+              child: emptyDripListRoomScreen(context, _auth),
+              builder: (context, dripRoomProvider, child) {
+                List evaluationItemList =
+                    dripRoomProvider.bestStockEvaluationList.evaluationList;
+                return evaluationItemList == null
+                    ? child
+                    : Container(
+                        height: size.height * 0.45,
+                        child: ListView.builder(
                           physics: BouncingScrollPhysics(),
                           shrinkWrap: true,
-                          controller: _scrollController,
                           scrollDirection: Axis.horizontal,
                           itemCount: evaluationItemList.length,
                           itemBuilder: (context, index) => Container(
                             child: EmojiDripCardWidget(
                               evaluationItemList[index],
                               _auth,
+                              isBest: true,
                             ),
                           ),
-                        );
-                },
-              ),
+                        ),
+                      );
+              },
             ),
             Consumer<DripRoomProvider>(
               child: emptyDripListRoomScreen(context, _auth),
@@ -158,6 +158,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                               child: EmojiDripCardWidget(
                                 evaluationItemList[index],
                                 _auth,
+                                isBest: false,
                               ),
                             ),
                           ),

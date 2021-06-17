@@ -8,10 +8,11 @@ import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 
 class EmojiDripCardWidget extends StatelessWidget {
+  final bool isBest;
   final StockEvaluationItem evaluationItem;
   final FirebaseAuth auth;
 
-  EmojiDripCardWidget(this.evaluationItem, this.auth);
+  EmojiDripCardWidget(this.evaluationItem, this.auth, {@required this.isBest});
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +61,23 @@ class EmojiDripCardWidget extends StatelessWidget {
                               onTap: () async {
                                 auth.currentUser == null
                                     ? LoginHandler(context)
-                                    : await Provider.of<DripRoomProvider>(
-                                            context,
-                                            listen: false)
-                                        .likeDripEmoji(evaluationItem.id);
+                                    : isBest
+                                        ? {
+                                            await Provider.of<DripRoomProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .likeBestDripEmoji(
+                                                    evaluationItem.id),
+                                            await Provider.of<DripRoomProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .likeDripEmoji(
+                                                    evaluationItem.id)
+                                          }
+                                        : await Provider.of<DripRoomProvider>(
+                                                context,
+                                                listen: false)
+                                            .likeDripEmoji(evaluationItem.id);
                               },
                               child: SizedBox(
                                 width: 28,

@@ -73,6 +73,7 @@ class DripRoomProvider with ChangeNotifier {
 
     StockEvaluationItem findEvaluationItem =
         _stockEvaluationList.evaluationList[findIndex];
+
     _stockEvaluationList.evaluationList[findIndex] =
         StockEvaluationItem.fromJson({
       ...findEvaluationItem.toMap(),
@@ -81,7 +82,25 @@ class DripRoomProvider with ChangeNotifier {
           ? findEvaluationItem.likeCount + 1
           : findEvaluationItem.likeCount - 1
     });
-    print(findEvaluationItem.userlike);
+
+    notifyListeners();
+  }
+
+  Future likeBestDripEmoji(int itemId) async {
+    final result = await DripRoomApi.likeDrip(itemId);
+    int findIndex = _bestStockEvaluationList.evaluationList
+        .indexWhere((element) => element.id == itemId);
+
+    StockEvaluationItem findEvaluationItem =
+        _bestStockEvaluationList.evaluationList[findIndex];
+    _bestStockEvaluationList.evaluationList[findIndex] =
+        StockEvaluationItem.fromJson({
+      ...findEvaluationItem.toMap(),
+      'userlike': !findEvaluationItem.userlike,
+      'likeCount': result['like'] == true
+          ? findEvaluationItem.likeCount + 1
+          : findEvaluationItem.likeCount - 1
+    });
     notifyListeners();
   }
 
