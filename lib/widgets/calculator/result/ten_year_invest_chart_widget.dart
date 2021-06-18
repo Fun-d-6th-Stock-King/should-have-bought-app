@@ -20,13 +20,13 @@ class TenYearChartWidget extends StatefulWidget {
 class _TenYearChartWidgetState extends State<TenYearChartWidget> {
   @override
   void didChangeDependencies() async {
-    final code = Provider.of<CalculatorProvider>(context, listen: false)
-        .latestDto['code'];
-    await Provider.of<BuyOrNotProvider>(context, listen: false).setChartLoading(true);
-    await Provider.of<BuyOrNotProvider>(context, listen: false)
-        .getBuyOrNotStockChart(code)
-        .then((value) => Provider.of<BuyOrNotProvider>(context, listen: false)
-            .setChartLoading(false));
+    // final code = Provider.of<CalculatorProvider>(context, listen: false)
+    //     .latestDto['code'];
+    // await Provider.of<BuyOrNotProvider>(context, listen: false).setChartLoading(true);
+    // await Provider.of<BuyOrNotProvider>(context, listen: false)
+    //     .getBuyOrNotStockChart(code)
+    //     .then((value) => Provider.of<BuyOrNotProvider>(context, listen: false)
+    //         .setChartLoading(false));
     super.didChangeDependencies();
   }
 

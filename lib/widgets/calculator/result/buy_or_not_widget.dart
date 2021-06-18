@@ -16,12 +16,12 @@ class BuyOrNotWidget extends StatefulWidget {
 class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
   @override
   void didChangeDependencies() {
-    final _lastDto =
-        Provider.of<CalculatorProvider>(context, listen: false).latestDto;
-    Provider.of<BuyOrNotProvider>(context, listen: false)
-        .getBuyOrNotStock(_lastDto['code']);
-    Provider.of<BuyOrNotProvider>(context, listen: false)
-        .getBestEvaluateList(1, 1, 'MONTH12', _lastDto['code']);
+    // final _lastDto =
+    //     Provider.of<CalculatorProvider>(context, listen: false).latestDto;
+    // Provider.of<BuyOrNotProvider>(context, listen: false)
+    //     .getBuyOrNotStock(_lastDto['code']);
+    // Provider.of<BuyOrNotProvider>(context, listen: false)
+    //     .getBestEvaluateList(1, 1, 'MONTH12', _lastDto['code']);
     super.didChangeDependencies();
   }
 

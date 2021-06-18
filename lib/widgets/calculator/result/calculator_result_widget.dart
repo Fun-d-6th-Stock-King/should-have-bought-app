@@ -5,18 +5,23 @@ import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/loading_random_widget.dart';
+import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/result_card_widget.dart';
 
 class CalculatorResultWidget extends StatefulWidget {
   final Color topColor;
   final Color textColor;
   final AssetImage chickImage;
+  final bool isLoading;
+  final Function onTap;
 
-  const CalculatorResultWidget({
-    this.topColor,
-    this.textColor,
-    this.chickImage,
-  });
+  const CalculatorResultWidget(
+      {this.topColor,
+      this.textColor,
+      this.chickImage,
+      this.isLoading = false,
+      this.onTap});
 
   @override
   _CalculatorResultWidgetState createState() => _CalculatorResultWidgetState();
@@ -35,7 +40,7 @@ class _CalculatorResultWidgetState extends State<CalculatorResultWidget> {
             size: Size(516, 316),
           ),
           Container(
-            padding: EdgeInsets.only(top: 130),
+            padding: EdgeInsets.only(top: 190),
             alignment: Alignment.center,
             child: Image(
               image: widget.chickImage,
@@ -44,6 +49,11 @@ class _CalculatorResultWidgetState extends State<CalculatorResultWidget> {
           Column(
             children: [
               SizedBox(height: 10),
+              CalculatorResultAppbar(
+                textColor: widget.textColor,
+                isLoading: widget.isLoading,
+                onTap: widget.onTap,
+              ),
               SizedBox(height: 2),
               Container(
                 height: 175,
@@ -64,6 +74,9 @@ class _CalculatorResultWidgetState extends State<CalculatorResultWidget> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
               ResultCardWidget(calculationResult: calculationResult)
             ],
           ),
@@ -82,6 +95,50 @@ class _CalculatorResultWidgetState extends State<CalculatorResultWidget> {
         ],
       );
     });
+  }
+}
+
+class CalculatorResultAppbar extends StatelessWidget {
+  final Color textColor;
+  final bool isLoading;
+  final Function onTap;
+
+  const CalculatorResultAppbar({
+    this.textColor,
+    this.onTap,
+    this.isLoading = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: textColor),
+            onPressed: () => Navigator.of(context).pop('update'),
+          ),
+          Container(
+            height: 48,
+            width: 48,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              color: Color(0x80FFFFFF),
+            ),
+            child: isLoading
+                ? LoadingRandomWidget(
+                    color: textColor,
+                  )
+                : RandomWidget(
+                    onTap: onTap,
+                    color: textColor,
+                  ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

@@ -43,7 +43,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma(price);
-    interstitialAd = Provider.of<AdmobProvider>(context, listen:false).interstitialAd;
+    interstitialAd =
+        Provider.of<AdmobProvider>(context, listen: false).interstitialAd;
   }
 
   @override
@@ -216,7 +217,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               .then((value) {
                             return Navigator.of(context)
                                 .pushNamed(
-                                    RefactorCalculatorResultScreen.routeId)
+                                  RefactorCalculatorResultScreen.routeId,
+                                )
                                 .then((value) => {
                                       if (value == 'update')
                                         {
@@ -326,7 +328,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               ],
               controller: _priceController,
               onChanged: (value) {
-                Provider.of<CalculatorWidgetProvider>(context,listen:false).setPrice(intToCurrency(value).toString());
+                Provider.of<CalculatorWidgetProvider>(context, listen: false)
+                    .setPrice(intToCurrency(value).toString());
               },
               style: TextStyle(
                 color: Colors.black,

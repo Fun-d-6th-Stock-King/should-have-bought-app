@@ -14,9 +14,9 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
   Color kospiBoxColor;
   Color industryBoxColor;
 
-  void setBoxColor() {
-    final sectorData =
-        Provider.of<CalculatorProvider>(context, listen: false).sectorData;
+  void setBoxColor(SectorData sectorData) {
+    // final sectorData =
+    //     Provider.of<CalculatorProvider>(context, listen: false).sectorData;
     if (sectorData != null) {
       if (sectorData.kospiYieldPercent > 0) {
         kospiBoxColor = Color(0xffFFEFF0);
@@ -40,8 +40,8 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    await Provider.of<CalculatorProvider>(context, listen: false)
-        .getSectorData();
+    // await Provider.of<CalculatorProvider>(context, listen: false)
+    //     .getSectorData();
   }
 
   @override
@@ -50,7 +50,7 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
         builder: (context, calculatorProvider, child) {
       SectorData sectorData = calculatorProvider.sectorData;
       CalculatorStock calculationResult = calculatorProvider.calculationResult;
-      setBoxColor();
+      setBoxColor(sectorData);
       return sectorData == null
           ? Center(child: CircularProgressIndicator())
           : DefaultTabController(
