@@ -12,8 +12,8 @@ class BestPriceWidget extends StatefulWidget {
 class _BestPriceWidgetState extends State<BestPriceWidget> {
   @override
   void didChangeDependencies() async {
-    // await Provider.of<CalculatorProvider>(context, listen: false)
-    //     .getBestPrice();
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getBestPrice();
     super.didChangeDependencies();
   }
 

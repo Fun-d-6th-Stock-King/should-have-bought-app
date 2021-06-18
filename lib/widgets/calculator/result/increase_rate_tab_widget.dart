@@ -15,8 +15,6 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
   Color industryBoxColor;
 
   void setBoxColor(SectorData sectorData) {
-    // final sectorData =
-    //     Provider.of<CalculatorProvider>(context, listen: false).sectorData;
     if (sectorData != null) {
       if (sectorData.kospiYieldPercent > 0) {
         kospiBoxColor = Color(0xffFFEFF0);
@@ -38,10 +36,9 @@ class _IncreaseRateTabWidgetState extends State<IncreaseRateTabWidget> {
 
   @override
   void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getSectorData();
     super.didChangeDependencies();
-    // await Provider.of<CalculatorProvider>(context, listen: false)
-    //     .getSectorData();
   }
 
   @override

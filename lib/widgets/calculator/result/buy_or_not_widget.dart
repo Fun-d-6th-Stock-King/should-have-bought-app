@@ -6,6 +6,7 @@ import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
 import 'package:should_have_bought_app/models/buy_or_not/stock_evaluation_item.dart';
 import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
+import 'package:should_have_bought_app/screens/util/skeleton_widget.dart';
 import 'package:should_have_bought_app/utils.dart';
 
 class BuyOrNotWidget extends StatefulWidget {
@@ -16,12 +17,12 @@ class BuyOrNotWidget extends StatefulWidget {
 class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
   @override
   void didChangeDependencies() {
-    // final _lastDto =
-    //     Provider.of<CalculatorProvider>(context, listen: false).latestDto;
-    // Provider.of<BuyOrNotProvider>(context, listen: false)
-    //     .getBuyOrNotStock(_lastDto['code']);
-    // Provider.of<BuyOrNotProvider>(context, listen: false)
-    //     .getBestEvaluateList(1, 1, 'MONTH12', _lastDto['code']);
+    final _lastDto =
+        Provider.of<CalculatorProvider>(context, listen: false).latestDto;
+    Provider.of<BuyOrNotProvider>(context, listen: false)
+        .getBuyOrNotStock(_lastDto['code']);
+    Provider.of<BuyOrNotProvider>(context, listen: false)
+        .getBestEvaluateList(1, 1, 'MONTH12', _lastDto['code']);
     super.didChangeDependencies();
   }
 
@@ -33,7 +34,7 @@ class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
       final _buyStock = buyOrNotProvider.buyOrNotStock;
       final _stockResult = calculatorProvider.calculationResult;
       final _stockEvaluateList =
-          buyOrNotProvider.stockEvaluationList.evaluationList;
+          buyOrNotProvider.stockEvaluationList?.evaluationList;
       if (_stockEvaluateList != null && _stockEvaluateList.isNotEmpty) {
         _bestStockEvaluateList = _stockEvaluateList[0];
       }
@@ -54,7 +55,9 @@ class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
           SizedBox(height: 15),
           Text('${_stockResult.name} 살래 말래?'),
           SizedBox(height: 10),
-          BuyOrNotBox(buyStock: _buyStock),
+          _buyStock == null
+              ? skeletonText(double.infinity, 60)
+              : BuyOrNotBox(buyStock: _buyStock),
           SizedBox(height: 15.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +72,10 @@ class _BuyOrNotWidgetState extends State<BuyOrNotWidget> {
                 ),
               ),
               SizedBox(height: 10.0),
-              BestOneLineBox(bestStockEvaluateList: _bestStockEvaluateList),
+              _stockEvaluateList == null
+                  ? skeletonText(double.infinity, 50)
+                  : BestOneLineBox(
+                      bestStockEvaluateList: _bestStockEvaluateList),
             ],
           ),
         ],

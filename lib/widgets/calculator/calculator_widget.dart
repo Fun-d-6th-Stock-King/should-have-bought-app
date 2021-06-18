@@ -217,9 +217,10 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                               .then((value) {
                             return Navigator.of(context)
                                 .pushNamed(
-                                  RefactorCalculatorResultScreen.routeId,
+                                  CalculatorResultScreen.routeId,
                                 )
                                 .then((value) => {
+                                      cleanProvider(context),
                                       if (value == 'update')
                                         {
                                           Provider.of<CalculatorProvider>(
