@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:should_have_bought_app/screens/my_page/guide_page.dart';
+import 'package:should_have_bought_app/screens/drip_room/add_search_screen.dart';
 import 'screens.dart' show CalculatorResultScreen;
 
 Map<String, Widget Function(BuildContext)> kRoutes = {
@@ -12,4 +13,5 @@ Map<String, Widget Function(BuildContext)> kRoutes = {
   // EditProductScreen.routeId: (ctx) => EditProductScreen(),
   // DripRoomTabScreen.routeId: (ctx) => DripRoomTabScreen(),
   GuidePage.routeId: (ctx) => GuidePage(),
+  AddSearchScreen.routeId: (ctx) => AddSearchScreen(),
 };
