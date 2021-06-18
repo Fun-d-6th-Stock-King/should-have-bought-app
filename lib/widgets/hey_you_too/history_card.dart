@@ -38,6 +38,7 @@ class HistoryCard extends StatelessWidget {
           Provider.of<CalculatorWidgetProvider>(context,listen: false)
               .setSendCalcuatorDto(CalculatorDto(
               code: history.code,
+              company: history.company,
               investDate: reverseDateValue[history.investDateName],
               investPrice: int.parse(history.investPrice)
           ));

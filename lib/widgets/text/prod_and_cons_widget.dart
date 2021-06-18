@@ -8,8 +8,7 @@ class ProsAndConsWidget extends StatelessWidget {
   final String cons;
   final bool isLoading;
 
-  ProsAndConsWidget(
-      {@required this.pros, @required this.cons, @required this.isLoading});
+  ProsAndConsWidget({@required this.pros, @required this.cons, this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +36,17 @@ class ProsAndConsWidget extends StatelessWidget {
             (isLoading != null && isLoading)
                 ? skeletonText(80, 15)
                 : Expanded(
-              child: AutoSizeText(
-                pros ?? '',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    height: 20 / 14),
-                presetFontSizes: [14, 13],
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+                    child: AutoSizeText(
+                      pros ?? '',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          height: 20 / 14),
+                      presetFontSizes: [14, 13],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
           ],
         ),
         SizedBox(
@@ -74,17 +73,17 @@ class ProsAndConsWidget extends StatelessWidget {
             (isLoading != null && isLoading)
                 ? skeletonText(80, 15)
                 : Expanded(
-              child: AutoSizeText(
-                cons ?? '',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    height: 20 / 14),
-                presetFontSizes: [14, 13],
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+                    child: AutoSizeText(
+                      cons ?? '',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          height: 20 / 14),
+                      presetFontSizes: [14, 13],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
           ],
         )
       ],

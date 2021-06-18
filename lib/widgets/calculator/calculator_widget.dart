@@ -19,6 +19,7 @@ import 'package:should_have_bought_app/screens/main/calculator_result_screen.dar
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/random_widget.dart';
 import 'company_item.dart';
+import 'package:should_have_bought_app/providers/admob/admob_provider.dart';
 
 import 'package:should_have_bought_app/screens/main/refactor_calculator_result_screen.dart';
 
@@ -42,7 +43,7 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma(price);
-    initAdmob();
+    interstitialAd = Provider.of<AdmobProvider>(context, listen:false).interstitialAd;
   }
 
   @override
@@ -87,38 +88,6 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
         ),
       ),
     );
-  }
-
-  void initAdmob() {
-    interstitialAd = AdmobInterstitial(
-      adUnitId: getInterstitialAdUnitId(),
-      listener: (AdmobAdEvent event, Map<String, dynamic> args) {
-        if (event == AdmobAdEvent.closed) interstitialAd.load();
-        handleEvent(event, args, 'Interstitial');
-      },
-    );
-    interstitialAd.load();
-  }
-
-  void handleEvent(
-      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
-    switch (event) {
-      case AdmobAdEvent.loaded:
-        print('New Admob $adType Ad loaded!');
-        break;
-      case AdmobAdEvent.opened:
-        print('Admob $adType Ad opened!');
-        break;
-      case AdmobAdEvent.closed:
-        {
-          sendResultScreen();
-          break;
-        }
-      case AdmobAdEvent.failedToLoad:
-        print('Admob $adType failed to load. :(');
-        break;
-      default:
-    }
   }
 
   void sendResultScreen() async {
@@ -356,6 +325,9 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                 CurrencyInputFormatter(maxDigits: 10)
               ],
               controller: _priceController,
+              onChanged: (value) {
+                Provider.of<CalculatorWidgetProvider>(context,listen:false).setPrice(intToCurrency(value).toString());
+              },
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 28,
@@ -588,6 +560,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
 
     Provider.of<CalculatorWidgetProvider>(context, listen: false)
         .setCompanyAndDateValue(companyList[RandomCompany], dates[RandomDate]);
+    Provider.of<CalculatorWidgetProvider>(context, listen: false)
+        .setPrice(prices[RandomPrice]);
     _priceController.text = numberWithComma(prices[RandomPrice]);
   }
 }
