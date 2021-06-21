@@ -8,7 +8,6 @@ import 'package:should_have_bought_app/widgets/login/login_handler.dart';
 import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 
 class EmojiDripCardWidget extends StatefulWidget {
-  final bool isBest;
   final StockEvaluationItem evaluationItem;
   final FirebaseAuth auth;
   final Function notifyParent;
@@ -17,7 +16,6 @@ class EmojiDripCardWidget extends StatefulWidget {
     this.evaluationItem,
     this.auth, {
     @required this.notifyParent,
-    @required this.isBest,
   });
 
   @override

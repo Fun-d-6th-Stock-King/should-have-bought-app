@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
-
+import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
+import 'package:should_have_bought_app/screens/drip_room/add_search_screen.dart';
 import 'package:should_have_bought_app/widgets/appbar/drip_room_appbar.dart';
 import 'package:should_have_bought_app/widgets/background/flat_background_frame.dart';
 import 'package:should_have_bought_app/widgets/drip_room/today_best_drip_card_widget.dart';
@@ -94,6 +96,23 @@ class _DripRoomScreenState extends State<DripRoomScreen> {
                         }),
                   );
           }),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 100.0),
+        child: FloatingActionButton(
+          backgroundColor: mainColor,
+          onPressed: () {
+            Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddSearchScreen(type: 'drip')))
+                .then((_) {
+              Provider.of<CalculatorProvider>(context, listen: false)
+                  .clearQuery();
+            });
+          },
+          child: Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
