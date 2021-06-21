@@ -9,8 +9,9 @@ import 'package:should_have_bought_app/screens/buy_or_not/buy_or_not_tab_screen.
 class StockDetailScreen extends StatefulWidget {
   final Company company;
   final int initialIndex;
+  final bool seached;
 
-  StockDetailScreen(this.company, this.initialIndex);
+  StockDetailScreen(this.company, this.initialIndex, {this.seached});
 
   @override
   _StockDetailScreenState createState() => _StockDetailScreenState();
@@ -42,7 +43,10 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
         body: TabBarView(
           children: [
             BuyorNotTabScreen(widget.company),
-            DripRoomTabScreen(widget.company),
+            DripRoomTabScreen(
+              widget.company,
+              searched: widget.seached,
+            ),
           ],
         ),
       ),

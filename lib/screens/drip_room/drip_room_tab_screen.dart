@@ -11,13 +11,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/providers/drip_room/drip_room_provider.dart';
-import 'package:should_have_bought_app/widgets/text/prod_and_cons_widget.dart';
 import 'package:should_have_bought_app/widgets/drip_room/emoji_drip_card_widget.dart';
 
 class DripRoomTabScreen extends StatefulWidget {
   static const routeId = '/select-drip';
   final Company company;
-  DripRoomTabScreen(this.company);
+  final bool searched;
+  DripRoomTabScreen(this.company, {this.searched});
   @override
   _DripRoomTabScreenState createState() => _DripRoomTabScreenState();
 }
@@ -26,10 +26,19 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
   final TextEditingController _cons = TextEditingController();
   final TextEditingController _pros = TextEditingController();
   final TextEditingController _giphyImgId = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool emojiShowing = false;
   bool isLoading = false;
+
+  @override
+  void initState() {
+    if (widget.searched != null && widget.searched == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showCreateDripSheet(context);
+      });
+    }
+    super.initState();
+  }
 
   @override
   void dispose() {
