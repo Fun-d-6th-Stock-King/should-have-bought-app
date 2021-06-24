@@ -10,6 +10,8 @@ import 'package:should_have_bought_app/screens/main/calculator_result_screen.dar
 import 'package:should_have_bought_app/providers/admob/admob_provider.dart';
 
 class TabScreen extends StatefulWidget {
+  static const routeId = '/';
+
   final int selectIndex;
   TabScreen({@required this.selectIndex});
   @override

@@ -7,7 +7,8 @@ import 'package:kakao_flutter_sdk/common.dart';
 import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/providers/provider_list.dart';
 import 'package:should_have_bought_app/routes.dart';
-import 'package:should_have_bought_app/screens.dart' show TabScreen;
+import 'package:should_have_bought_app/screens.dart'
+    show TabScreen, OnBoardingScreen;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 Future main() async {
@@ -28,8 +29,6 @@ Future main() async {
   runApp(MyApp());
 }
 
-
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -37,29 +36,24 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: kProviders,
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Should Have Bought',
-        theme: ThemeData(
-          primaryColor: Color.fromARGB(255, 229, 229, 229),
-          accentColor: Colors.black,
-          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
-        ),
-        builder: EasyLoading.init(),
-        //     (context, child) {
-        //   return ScrollConfiguration(
-        //     behavior: MyBehavior(),
-        //     child: child,
-        //   );
-        // },
-        routes: kRoutes,
-        home: Scaffold(
-          body: Center(
-            child: TabScreen(),
+          debugShowCheckedModeBanner: false,
+          title: 'Should Have Bought',
+          theme: ThemeData(
+            primaryColor: Color.fromARGB(255, 229, 229, 229),
+            accentColor: Colors.black,
+            bottomSheetTheme:
+                BottomSheetThemeData(backgroundColor: Colors.transparent),
           ),
-        ),
-        // initialRoute: '/',
-        // routes: kRoutes,
-      ),
+          builder: EasyLoading.init(),
+          routes: kRoutes,
+          // home: Scaffold(
+          //   body: Center(
+          //     child: TabScreen(),
+          //   ),
+          // ),
+          initialRoute: OnBoardingScreen.routeId
+          // routes: kRoutes,
+          ),
     );
   }
 }

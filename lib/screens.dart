@@ -8,3 +8,4 @@ export 'screens/my_page/my_page_screen.dart';
 export 'screens/today_word/today_word_screen.dart';
 export 'screens/util/loading_screen.dart';
 export 'screens/main/hey_to_you_more_screen.dart';
+export 'screens/main/on_boarding_screen.dart';
