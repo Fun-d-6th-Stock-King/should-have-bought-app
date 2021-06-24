@@ -129,11 +129,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       dotsFlex: 2,
       done: const Text(
         '둘러보기',
-        style: TextStyle(fontWeight: FontWeight.w500, color: mainColor),
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          color: mainColor,
+          fontSize: 14,
+        ),
       ),
       curve: Curves.fastLinearToSlowEaseIn,
       controlsMargin: const EdgeInsets.all(8),
-      controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+      controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 8.0),
       dotsDecorator: const DotsDecorator(
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
