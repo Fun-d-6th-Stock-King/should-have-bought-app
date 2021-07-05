@@ -21,6 +21,8 @@ import 'package:should_have_bought_app/widgets/calculator/result/random_widget.d
 import 'company_item.dart';
 import 'package:should_have_bought_app/providers/admob/admob_provider.dart';
 
+import 'package:should_have_bought_app/screens/main/refactor_calculator_result_screen.dart';
+
 class CalculatorWidget extends StatefulWidget {
   @override
   _CalculatorWidgetState createState() => _CalculatorWidgetState();
@@ -41,7 +43,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
     futureGetCompanyList =
         Provider.of<CalculatorProvider>(context, listen: false).getCompanies();
     _priceController.text = numberWithComma(price);
-    interstitialAd = Provider.of<AdmobProvider>(context, listen:false).interstitialAd;
+    interstitialAd =
+        Provider.of<AdmobProvider>(context, listen: false).interstitialAd;
   }
 
   @override
@@ -212,9 +215,12 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                                           intToCurrency(_priceController.text))
                                   .toMap())
                               .then((value) {
-                            Navigator.of(context)
-                                .pushNamed(CalculatorResultScreen.routeId)
+                            return Navigator.of(context)
+                                .pushNamed(
+                                  CalculatorResultScreen.routeId,
+                                )
                                 .then((value) => {
+                                      cleanProvider(context),
                                       if (value == 'update')
                                         {
                                           Provider.of<CalculatorProvider>(
@@ -323,7 +329,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
               ],
               controller: _priceController,
               onChanged: (value) {
-                Provider.of<CalculatorWidgetProvider>(context,listen:false).setPrice(intToCurrency(value).toString());
+                Provider.of<CalculatorWidgetProvider>(context, listen: false)
+                    .setPrice(intToCurrency(value).toString());
               },
               style: TextStyle(
                 color: Colors.black,
@@ -375,8 +382,8 @@ class _CalculatorWidgetState extends State<CalculatorWidget> {
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: CompanyListBuilder(context));
         }).whenComplete(() {
-          Provider.of<CalculatorProvider>(context,listen:false).clearQuery();
-          _searchController.text='';
+      Provider.of<CalculatorProvider>(context, listen: false).clearQuery();
+      _searchController.text = '';
       //SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
   }

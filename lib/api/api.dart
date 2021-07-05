@@ -3,9 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final stockApiUrl = env['STOCK_API'];
 final firebaseFunctionApi = env['FIREBASE_FUNCTION_API'];
+final newsApiKey = env['NEWS_API_KEY'];
 
 class Api {
-  static Future<String> getToken() async{
+  static Future<String> getToken() async {
     final user = await FirebaseAuth.instance.currentUser;
     print('[getToken]');
     if (user != null) {

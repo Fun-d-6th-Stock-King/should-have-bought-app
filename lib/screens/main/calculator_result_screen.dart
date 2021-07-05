@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_dto.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
+import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
 import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/calculator/result/current_value_widget.dart';
@@ -116,8 +117,6 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
       });
     }
   }
-
-  void setChick() {}
 
   void randomValues() {
     setState(() {
@@ -409,12 +408,14 @@ class _CalculatorResultScreenState extends State<CalculatorResultScreen> {
                   )
                 : RandomWidget(
                     onTap: () async {
+                      cleanProvider(context);
                       interstitialAd.isLoaded.then((value) {
                         print('Admob: isLoad?');
                         print(value);
-                        if(value == false){
+                        if (value == false) {
                           interstitialAd.load();
-                        }});
+                        }
+                      });
                       getAdMobCounter().then((value) async {
                         if (value == true) {
                           interstitialAd.show();

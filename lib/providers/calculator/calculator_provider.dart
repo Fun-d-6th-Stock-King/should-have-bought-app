@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/api/calculator/calculator_api.dart';
-import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
@@ -10,20 +9,47 @@ import 'package:should_have_bought_app/models/calculator/result/period_best_pric
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 import 'package:should_have_bought_app/models/calculator/result/best_price.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
+import 'package:should_have_bought_app/models/calculator/news_article.dart';
 
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
   List _searchCompanyList = [];
   String _query = '';
-  List<HighPriceTenYear> _tenYearHighList = [HighPriceTenYear(),HighPriceTenYear(),HighPriceTenYear(),HighPriceTenYear()];
+  List<HighPriceTenYear> _tenYearHighList = [
+    HighPriceTenYear(),
+    HighPriceTenYear(),
+    HighPriceTenYear(),
+    HighPriceTenYear()
+  ];
   List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
-  CalculatorStockAll calculationResultAll;
-  CalculatorStock calculationResult;
-  BestPrice bestPriceResult;
-  SectorData sectorData;
+  CalculatorStockAll _calculationResultAll;
+  CalculatorStock _calculationResult;
+  BestPrice _bestPriceResult;
+  SectorData _sectorData;
+  List<NewsArticle> _headlienList = <NewsArticle>[];
   List<PeriodBestPrice> _periodBestPriceList = <PeriodBestPrice>[];
   List<CurrentStockPrice> _currentStockPriceList = <CurrentStockPrice>[];
+
+  CalculatorStock get calculationResult {
+    return _calculationResult;
+  }
+
+  CalculatorStockAll get calculationResultAll {
+    return _calculationResultAll;
+  }
+
+  BestPrice get bestPriceResult {
+    return _bestPriceResult;
+  }
+
+  SectorData get sectorData {
+    return _sectorData;
+  }
+
+  List get headlineList {
+    return _headlienList;
+  }
 
   List get companyList {
     return _companyList;
@@ -40,6 +66,7 @@ class CalculatorProvider with ChangeNotifier {
   List get calculateHistory {
     return _calculateHistory;
   }
+
   String get query => _query;
 
   List<CurrentStockPrice> get currentStockPriceList => _currentStockPriceList;
@@ -78,7 +105,7 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getResult(params);
     print(result);
     // ToDo: 모델 객체 만들어서 처리 필요.
-    calculationResult = CalculatorStock.fromJson(result);
+    _calculationResult = CalculatorStock.fromJson(result);
     notifyListeners();
   }
 
@@ -86,7 +113,7 @@ class CalculatorProvider with ChangeNotifier {
     latestDto = params;
     final result = await CalculatorApi.getResult(params);
     print(result);
-    calculationResult = CalculatorStock.fromJson(result);
+    _calculationResult = CalculatorStock.fromJson(result);
     notifyListeners();
   }
 
@@ -108,9 +135,8 @@ class CalculatorProvider with ChangeNotifier {
 
     print(list);
     if (list != null) {
-      _tenYearHighList = list
-          .map((item) => HighPriceTenYear.fromJson(item))
-          .toList();
+      _tenYearHighList =
+          list.map((item) => HighPriceTenYear.fromJson(item)).toList();
       notifyListeners();
     }
   }
@@ -120,31 +146,39 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getHistoryList(pageNo, pageSize);
     list = result['calculationHistList'];
     if (list != null) {
-      _calculateHistory =
-          list.map<CalculatorHistory>((history) => CalculatorHistory.fromJson(history)).toList();
+      _calculateHistory = list
+          .map<CalculatorHistory>(
+              (history) => CalculatorHistory.fromJson(history))
+          .toList();
       notifyListeners();
     }
   }
 
   Future getSectorData() async {
-    final result = await CalculatorApi.getSectorInfor(latestDto['code'],
-        latestDto['investDate'], int.parse(latestDto['investPrice']));
-    sectorData = SectorData.fromJson(result);
-    notifyListeners();
+    if (_sectorData == null) {
+      final result = await CalculatorApi.getSectorInfor(latestDto['code'],
+          latestDto['investDate'], int.parse(latestDto['investPrice']));
+      _sectorData = SectorData.fromJson(result);
+      notifyListeners();
+    }
   }
 
   Future getFourResult() async {
-    final result = await CalculatorApi.getAllResult(
-        latestDto['code'], int.parse(latestDto['investPrice']));
-    calculationResultAll = CalculatorStockAll.fromJson(result);
-    notifyListeners();
+    if (_calculationResultAll == null) {
+      final result = await CalculatorApi.getAllResult(
+          latestDto['code'], int.parse(latestDto['investPrice']));
+      _calculationResultAll = CalculatorStockAll.fromJson(result);
+      notifyListeners();
+    }
   }
 
   Future getBestPrice() async {
-    final result = await CalculatorApi.getBestPrice(latestDto['code'],
-        latestDto['investDate'], int.parse(latestDto['investPrice']));
-    bestPriceResult = BestPrice.fromJson(result);
-    notifyListeners();
+    if (_bestPriceResult == null) {
+      final result = await CalculatorApi.getBestPrice(latestDto['code'],
+          latestDto['investDate'], int.parse(latestDto['investPrice']));
+      _bestPriceResult = BestPrice.fromJson(result);
+      notifyListeners();
+    }
   }
 
   Future getCurrentStockPrice() async {
@@ -158,14 +192,33 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   Future getPeriodBestPrice() async {
-    final result =
-        await CalculatorApi.getPeriodBestPrice(latestDto['investDate']);
-    final list = result['yieldSortList'];
+    if (_periodBestPriceList.isEmpty) {
+      final result =
+          await CalculatorApi.getPeriodBestPrice(latestDto['investDate']);
+      final list = result['yieldSortList'];
+      if (list != null) {
+        _periodBestPriceList = list
+            .map<PeriodBestPrice>(
+                (sortedStock) => PeriodBestPrice.fromJson(sortedStock))
+            .toList();
+      }
+      notifyListeners();
+    }
+  }
+
+  Future cleanValue() async {
+    _sectorData = null;
+    _bestPriceResult = null;
+    _calculationResultAll = null;
+    _periodBestPriceList.clear();
+  }
+
+  Future getHeadliens() async {
+    final result = await CalculatorApi.getNewsTopHeadline();
+    final list = result['articles'];
     if (list != null) {
-      _periodBestPriceList = list
-          .map<PeriodBestPrice>(
-              (sortedStock) => PeriodBestPrice.fromJson(sortedStock))
-          .toList();
+      _headlienList =
+          list.map<NewsArticle>((item) => NewsArticle.fromJson(item)).toList();
     }
     notifyListeners();
   }

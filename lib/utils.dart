@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:should_have_bought_app/constant.dart';
+import 'package:should_have_bought_app/providers/buy_or_not/buy_or_not_provider.dart';
+import 'package:should_have_bought_app/providers/calculator/calculator_provider.dart';
 
 String numberWithComma(String value) {
   if (value == '') return '0';
@@ -107,8 +110,10 @@ String emojiIncreaseOrDecrease(double percent) {
 }
 
 List<TextSpan> highlightOccurrences(String source, String query) {
-  if (query == null || query.isEmpty || !source.toLowerCase().contains(query.toLowerCase())) {
-    return [ TextSpan(text: source) ];
+  if (query == null ||
+      query.isEmpty ||
+      !source.toLowerCase().contains(query.toLowerCase())) {
+    return [TextSpan(text: source)];
   }
   final matches = query.toLowerCase().allMatches(source.toLowerCase());
 
@@ -126,7 +131,7 @@ List<TextSpan> highlightOccurrences(String source, String query) {
 
     children.add(TextSpan(
       text: source.substring(match.start, match.end),
-      style: TextStyle(color:mainColor),
+      style: TextStyle(color: mainColor),
     ));
 
     if (i == matches.length - 1 && match.end != source.length) {
@@ -138,4 +143,9 @@ List<TextSpan> highlightOccurrences(String source, String query) {
     lastMatchEnd = match.end;
   }
   return children;
+}
+
+Future<void> cleanProvider(BuildContext context) async {
+  await Provider.of<CalculatorProvider>(context, listen: false).cleanValue();
+  await Provider.of<BuyOrNotProvider>(context, listen: false).cleanValue();
 }

@@ -12,5 +12,5 @@ Map<String, Widget Function(BuildContext)> kRoutes = {
   // UserProductsScreen.routeId: (ctx) => UserProductsScreen(),
   // EditProductScreen.routeId: (ctx) => EditProductScreen(),
   // DripRoomTabScreen.routeId: (ctx) => DripRoomTabScreen(),
-  GuidePage.routeId: (ctx) => GuidePage(),
+  GuidePage.routeId: (ctx) => GuidePage()
 };
