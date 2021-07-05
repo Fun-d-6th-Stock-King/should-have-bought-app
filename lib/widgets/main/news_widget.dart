@@ -78,15 +78,17 @@ class NewsItem extends StatelessWidget {
                 ),
               ],
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                newsItem.urlToImage,
-                fit: BoxFit.cover,
-                width: 80,
-                height: 80,
-              ),
-            )
+            newsItem.urlToImage != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      newsItem.urlToImage,
+                      fit: BoxFit.cover,
+                      width: 80,
+                      height: 80,
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),

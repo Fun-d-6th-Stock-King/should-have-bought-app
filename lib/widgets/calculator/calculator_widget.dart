@@ -21,8 +21,6 @@ import 'package:should_have_bought_app/widgets/calculator/result/random_widget.d
 import 'company_item.dart';
 import 'package:should_have_bought_app/providers/admob/admob_provider.dart';
 
-import 'package:should_have_bought_app/screens/main/refactor_calculator_result_screen.dart';
-
 class CalculatorWidget extends StatefulWidget {
   @override
   _CalculatorWidgetState createState() => _CalculatorWidgetState();
