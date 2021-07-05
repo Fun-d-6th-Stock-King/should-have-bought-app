@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/api/calculator/calculator_api.dart';
-import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_history.dart';
 import 'package:should_have_bought_app/models/calculator/calculator_stock.dart';
 import 'package:should_have_bought_app/models/calculator/company.dart';
@@ -10,6 +9,7 @@ import 'package:should_have_bought_app/models/calculator/result/period_best_pric
 import 'package:should_have_bought_app/models/calculator/result/sectorData.dart';
 import 'package:should_have_bought_app/models/calculator/result/best_price.dart';
 import 'package:should_have_bought_app/models/calculator/current_stock_price.dart';
+import 'package:should_have_bought_app/models/calculator/news_article.dart';
 
 class CalculatorProvider with ChangeNotifier {
   List _companyList = [];
@@ -24,11 +24,16 @@ class CalculatorProvider with ChangeNotifier {
   List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
   CalculatorStockAll _calculationResultAll;
-  CalculatorStock calculationResult;
+  CalculatorStock _calculationResult;
   BestPrice _bestPriceResult;
   SectorData _sectorData;
+  List<NewsArticle> _headlienList = <NewsArticle>[];
   List<PeriodBestPrice> _periodBestPriceList = <PeriodBestPrice>[];
   List<CurrentStockPrice> _currentStockPriceList = <CurrentStockPrice>[];
+
+  CalculatorStock get calculationResult {
+    return _calculationResult;
+  }
 
   CalculatorStockAll get calculationResultAll {
     return _calculationResultAll;
@@ -40,6 +45,10 @@ class CalculatorProvider with ChangeNotifier {
 
   SectorData get sectorData {
     return _sectorData;
+  }
+
+  List get headlineList {
+    return _headlienList;
   }
 
   List get companyList {
@@ -96,7 +105,7 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getResult(params);
     print(result);
     // ToDo: 모델 객체 만들어서 처리 필요.
-    calculationResult = CalculatorStock.fromJson(result);
+    _calculationResult = CalculatorStock.fromJson(result);
     notifyListeners();
   }
 
@@ -104,7 +113,7 @@ class CalculatorProvider with ChangeNotifier {
     latestDto = params;
     final result = await CalculatorApi.getResult(params);
     print(result);
-    calculationResult = CalculatorStock.fromJson(result);
+    _calculationResult = CalculatorStock.fromJson(result);
     notifyListeners();
   }
 
@@ -202,5 +211,15 @@ class CalculatorProvider with ChangeNotifier {
     _bestPriceResult = null;
     _calculationResultAll = null;
     _periodBestPriceList.clear();
+  }
+
+  Future getHeadliens() async {
+    final result = await CalculatorApi.getNewsTopHeadline();
+    final list = result['articles'];
+    if (list != null) {
+      _headlienList =
+          list.map<NewsArticle>((item) => NewsArticle.fromJson(item)).toList();
+    }
+    notifyListeners();
   }
 }

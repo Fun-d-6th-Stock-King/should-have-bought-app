@@ -12,6 +12,7 @@ import 'package:should_have_bought_app/widgets/main/current_stock_price_widget.d
 import 'package:should_have_bought_app/widgets/main/header_widget.dart';
 import 'package:should_have_bought_app/widgets/main/sell_at_this_time_widget.dart';
 import 'package:should_have_bought_app/widgets/main/this_buy_or_not_widget.dart';
+import 'package:should_have_bought_app/widgets/main/news_widget.dart';
 import 'package:should_have_bought_app/widgets/today_word/today_word_best.dart';
 
 class MainScreen extends StatefulWidget {
@@ -67,9 +68,14 @@ class _MainScreenState extends State<MainScreen> {
             Divider(thickness: 7, color: Color(0xFFF2F2F2)),
             SizedBox(height: 43),
             Frame(
-              child: MainTitle(title: "그때 살걸... 야, 너두?", more: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => HeyToYouMoreScreen()));
-              }),
+              child: MainTitle(
+                  title: "그때 살걸... 야, 너두?",
+                  more: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HeyToYouMoreScreen()));
+                  }),
             ),
             SizedBox(height: 16),
             HeyYouToo(),
@@ -124,7 +130,6 @@ class _MainScreenState extends State<MainScreen> {
             SizedBox(height: 51),
             Divider(thickness: 7, color: Color(0xFFF2F2F2)),
             SizedBox(height: 43),
-            //TODO: 살까말까 랭킹 더보기
             Frame(child: MainTitle(title: "이거 살까? 말까?")),
             SizedBox(height: 23),
             ThisBuyOrNotWidget(),
@@ -133,6 +138,12 @@ class _MainScreenState extends State<MainScreen> {
             Frame(child: MainTitle(title: "이때 팔걸")),
             SizedBox(height: 23),
             SellAtThisTimeWidget(),
+            SizedBox(height: 43),
+            Divider(thickness: 7, color: Color(0xFFF2F2F2)),
+            SizedBox(height: 43),
+            Frame(child: MainTitle(title: "뉴스도 좀 보고 그래요")),
+            SizedBox(height: 23),
+            Frame(child: NewsWidget()),
             SizedBox(height: 43),
             SizedBox(height: 100),
           ],
@@ -161,16 +172,16 @@ class MainTitle extends StatelessWidget {
         more == null
             ? Row()
             : InkWell(
-              onTap: () {
-                more();
-              },
-              child: Row(
+                onTap: () {
+                  more();
+                },
+                child: Row(
                   children: <Widget>[
                     Text('더보기'),
                     Icon(Icons.keyboard_arrow_right_outlined),
                   ],
                 ),
-            )
+              )
         //Icon(Icons.fiber_manual_record_rounded, color: Color(0xFF828282))
       ],
     );

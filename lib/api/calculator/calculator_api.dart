@@ -151,4 +151,18 @@ class CalculatorApi extends Api {
     throw Exception(
         '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
   }
+
+  static Future getNewsTopHeadline() async {
+    print('$newsApiKey');
+    final response = await http.get(
+      Uri.parse(
+          "https://newsapi.org/v2/top-headlines?apiKey=$newsApiKey&country=kr&category=business"),
+    );
+    if (response.statusCode == 200) {
+      final resposeBody = json.decode(utf8.decode(response.bodyBytes));
+      return resposeBody;
+    }
+    throw Exception(
+        '${response.statusCode.toString()} : ${utf8.decode(response.bodyBytes)}');
+  }
 }

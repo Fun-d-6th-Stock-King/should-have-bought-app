@@ -119,3 +119,9 @@ const kWordWriteTitleStyle = TextStyle(
   fontSize: 15,
   fontWeight: FontWeight.w600,
 );
+
+const kNewsTitleStyle = TextStyle(
+  fontSize: 12,
+  fontWeight: FontWeight.w300,
+  color: Color(0xFF797979),
+);
