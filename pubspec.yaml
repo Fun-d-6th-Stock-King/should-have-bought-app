@@ -44,6 +44,7 @@ dependencies:
   url_launcher: ^6.0.6
   admob_flutter: ^1.0.1
   shared_preferences: ^2.0.6
+  introduction_screen: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -168,6 +169,11 @@ flutter:
     - assets/icons/2x/ico_search.png
     - assets/icons/3x/ico_search.png
     - assets/icons/4x/ico_search.png
+    - assets/icons/main_icon.png
+    - assets/icons/1.5x/main_icon.png
+    - assets/icons/2x/main_icon.png
+    - assets/icons/3x/main_icon.png
+    - assets/icons/4x/main_icon.png
     - assets/images/image_chick.png
     - assets/images/1.5x/image_chick.png
     - assets/images/2x/image_chick.png
@@ -178,6 +184,26 @@ flutter:
     - assets/images/2x/guide.png
     - assets/images/3x/guide.png
     - assets/images/4x/guide.png
+    - assets/images/on_boarding_1.png
+    - assets/images/1.5x/on_boarding_1.png
+    - assets/images/2x/on_boarding_1.png
+    - assets/images/3x/on_boarding_1.png
+    - assets/images/4x/on_boarding_1.png
+    - assets/images/on_boarding_2.png
+    - assets/images/1.5x/on_boarding_2.png
+    - assets/images/2x/on_boarding_2.png
+    - assets/images/3x/on_boarding_2.png
+    - assets/images/4x/on_boarding_2.png
+    - assets/images/on_boarding_3.png
+    - assets/images/1.5x/on_boarding_3.png
+    - assets/images/2x/on_boarding_3.png
+    - assets/images/3x/on_boarding_3.png
+    - assets/images/4x/on_boarding_3.png
+    - assets/images/on_boarding_4.png
+    - assets/images/1.5x/on_boarding_4.png
+    - assets/images/2x/on_boarding_4.png
+    - assets/images/3x/on_boarding_4.png
+    - assets/images/4x/on_boarding_4.png
   # example:
   # fonts:
   #   - family: Schyler

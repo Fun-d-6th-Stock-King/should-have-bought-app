@@ -5,10 +5,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:kakao_flutter_sdk/common.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:should_have_bought_app/providers/provider_list.dart';
 import 'package:should_have_bought_app/routes.dart';
-import 'package:should_have_bought_app/screens.dart' show TabScreen;
+import 'package:should_have_bought_app/screens.dart' show OnBoardingScreen;
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+
+int initScreen;
 
 Future main() async {
   // TODO : .env.prod 사용시 file not found 에러, 확인 필요
@@ -25,10 +28,11 @@ Future main() async {
   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
   //   statusBarColor: Colors.transparent,
   // ));
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  initScreen = await prefs.getInt("initScreen");
+  await prefs.setInt("initScreen", 1);
   runApp(MyApp());
 }
-
-
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -42,23 +46,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Color.fromARGB(255, 229, 229, 229),
           accentColor: Colors.black,
-          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.transparent),
+          bottomSheetTheme:
+              BottomSheetThemeData(backgroundColor: Colors.transparent),
         ),
         builder: EasyLoading.init(),
-        //     (context, child) {
-        //   return ScrollConfiguration(
-        //     behavior: MyBehavior(),
-        //     child: child,
-        //   );
-        // },
         routes: kRoutes,
-        home: Scaffold(
-          body: Center(
-            child: TabScreen(),
-          ),
-        ),
-        // initialRoute: '/',
-        // routes: kRoutes,
+        initialRoute: initScreen == 0 || initScreen == null
+            ? OnBoardingScreen.routeId
+            : "/",
       ),
     );
   }
