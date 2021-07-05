@@ -224,7 +224,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
         )),
         builder: (ctx) {
           emojiShowing = false;
-          heightOfModalBottomSheet = 450.0;
+          heightOfModalBottomSheet = 460.0;
           return StatefulBuilder(builder: (context, setState) {
             return SingleChildScrollView(
                 child: AnimatedPadding(
@@ -281,10 +281,10 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                         emojiShowing = !emojiShowing;
                                         clickCount += 1;
                                         if (clickCount == 1) {
-                                          heightOfModalBottomSheet += 150;
+                                          heightOfModalBottomSheet += 200;
                                         } else {
                                           clickCount = 0;
-                                          heightOfModalBottomSheet -= 150;
+                                          heightOfModalBottomSheet -= 200;
                                         }
                                       });
                                     },
@@ -344,7 +344,6 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                         controller: _pros,
                                         autofocus: false,
                                         showCursor: false,
-                                        cursorColor: Colors.black,
                                         keyboardType: TextInputType.text,
                                         maxLength: 20,
                                         textAlignVertical:
@@ -400,8 +399,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                                     child: Container(
                                       child: TextFormField(
                                         autofocus: false,
-                                        showCursor: true,
-                                        cursorColor: Colors.black,
+                                        showCursor: false,
                                         keyboardType: TextInputType.text,
                                         maxLength: 20,
                                         controller: _cons,
@@ -460,7 +458,7 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
                             Offstage(
                               offstage: !emojiShowing,
                               child: SizedBox(
-                                height: 130,
+                                height: 200,
                                 child: EmojiPicker(
                                     onEmojiSelected:
                                         (Category category, Emoji emoji) {

@@ -27,13 +27,15 @@ class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
   @override
   void initState() {
     super.initState();
-    interstitialAd = Provider.of<AdmobProvider>(context, listen:false).interstitialAd;
+    interstitialAd =
+        Provider.of<AdmobProvider>(context, listen: false).interstitialAd;
   }
 
   @override
-  void didChangeDependencies() async{
+  void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    await Provider.of<CalculatorProvider>(context, listen: false).getHistory(pageSize: 100);
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getHistory(pageSize: 100);
     super.didChangeDependencies();
   }
 
@@ -56,16 +58,16 @@ class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
         elevation: 0,
         actions: [
           InkWell(
-            onTap: () async {
-              await EasyLoading.show(
-                status: 'loading...',
-                maskType: EasyLoadingMaskType.none,
-              );
-              await Provider.of<CalculatorProvider>(context, listen: false)
-                  .getHistory(pageSize: 100).then((value) => EasyLoading.dismiss());
-            }, 
-            child: Image(image: AssetImage("assets/icons/ico_refresh.png"))
-          ),
+              onTap: () async {
+                await EasyLoading.show(
+                  status: 'loading...',
+                  maskType: EasyLoadingMaskType.none,
+                );
+                await Provider.of<CalculatorProvider>(context, listen: false)
+                    .getHistory(pageSize: 100)
+                    .then((value) => EasyLoading.dismiss());
+              },
+              child: Image(image: AssetImage("assets/icons/ico_refresh.png"))),
         ],
         centerTitle: true,
         title: Text(''),
@@ -73,41 +75,41 @@ class _CreateHeyToYouMoreScreenState extends State<HeyToYouMoreScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Consumer<CalculatorProvider>(
-          builder: (context, calculatorProvider, child) {
-            List<CalculatorHistory> _historyList = calculatorProvider.calculateHistory;
-            return ListView.builder(
-                itemCount: _historyList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == 0) {
-                    return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 25),
-                              Text('다른 사람들은', style: HeyToYouMoreScreenHeaderStyle),
-                              Text('어떤 종목을 후회중일까?',
-                                  style: HeyToYouMoreScreenHeaderStyle),
-                              Text('다른 사람들의 검색결과를 최신순으로 확인해보세요!',
-                                  style: HeyToYouMoreScreenSubHeaderStyle),
-                              SizedBox(height: 30),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: HeyToYouMoreCard(_historyList[index], interstitialAd),
-                              )
-                            ]
-                        )
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: HeyToYouMoreCard(_historyList[index], interstitialAd),
-                  );
-                });
-          }
-        ),
+            builder: (context, calculatorProvider, child) {
+          List<CalculatorHistory> _historyList =
+              calculatorProvider.calculateHistory;
+          return ListView.builder(
+              itemCount: _historyList.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 25),
+                            Text('다른 사람들은',
+                                style: HeyToYouMoreScreenHeaderStyle),
+                            Text('어떤 종목을 후회중일까?',
+                                style: HeyToYouMoreScreenHeaderStyle),
+                            Text('다른 사람들의 검색결과를 최신순으로 확인해보세요!',
+                                style: HeyToYouMoreScreenSubHeaderStyle),
+                            SizedBox(height: 30),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: HeyToYouMoreCard(
+                                  _historyList[index], interstitialAd),
+                            )
+                          ]));
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: HeyToYouMoreCard(_historyList[index], interstitialAd),
+                );
+              });
+        }),
       ),
     );
   }
@@ -121,47 +123,53 @@ class HeyToYouMoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async{
+      onTap: () async {
         await EasyLoading.show(
           status: 'loading...',
           maskType: EasyLoadingMaskType.none,
         );
-        Provider.of<CalculatorWidgetProvider>(context,listen: false)
+        Provider.of<CalculatorWidgetProvider>(context, listen: false)
             .setSendCalcuatorDto(CalculatorDto(
-            code: calculatorHistory.code,
-            company: calculatorHistory.company,
-            investDate: reverseDateValue[calculatorHistory.investDateName],
-            investPrice: int.parse(calculatorHistory.investPrice)
-        ));
+                code: calculatorHistory.code,
+                company: calculatorHistory.company,
+                investDate: reverseDateValue[calculatorHistory.investDateName],
+                investPrice: int.parse(calculatorHistory.investPrice)));
         getAdMobCounter().then((value) async {
           if (value == true) {
             interstitialAd.show();
           } else {
-            await Provider.of<CalculatorProvider>(context,
-                listen: false)
+            await Provider.of<CalculatorProvider>(context, listen: false)
                 .getResult(CalculatorDto(
-                code: calculatorHistory.code,
-                investDate: reverseDateValue[calculatorHistory.investDateName],
-                investPrice: int.parse(calculatorHistory.investPrice)
-            ).toMap()).then((value) {
+                        code: calculatorHistory.code,
+                        investDate:
+                            reverseDateValue[calculatorHistory.investDateName],
+                        investPrice: int.parse(calculatorHistory.investPrice))
+                    .toMap())
+                .then((value) {
               EasyLoading.dismiss();
               Navigator.of(context)
                   .pushNamed(CalculatorResultScreen.routeId)
                   .then((value) => {
-                if (value == 'update')
-                  {
-                    Provider.of<CalculatorProvider>(context,
-                        listen: false)
-                        .getHistory()
-                  }
-              });
+                        cleanProvider(context),
+                        if (value == 'update')
+                          {
+                            Provider.of<CalculatorProvider>(context,
+                                    listen: false)
+                                .getHistory()
+                          }
+                      });
             });
-          }});
+          }
+        });
       },
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0),
-          color: calculatorHistory.yieldPercent.toDouble() == 0 ? Color(0xFFF1F1F1) : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF),
+          color: calculatorHistory.yieldPercent.toDouble() == 0
+              ? Color(0xFFF1F1F1)
+              : calculatorHistory.yieldPercent.toDouble() > 0
+                  ? Color(0xFFFF6B76)
+                  : Color(0xFF4990FF),
         ),
         constraints: BoxConstraints(minHeight: 158),
         child: Padding(
@@ -180,7 +188,10 @@ class HeyToYouMoreCard extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                               height: 23 / 16,
-                              color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : Colors.white,
+                              color:
+                                  calculatorHistory.yieldPercent.toDouble() == 0
+                                      ? Colors.black
+                                      : Colors.white,
                             )),
                         Padding(padding: EdgeInsets.only(right: 10)),
                         Text(calculatorHistory?.createdDateText ?? '',
@@ -188,7 +199,10 @@ class HeyToYouMoreCard extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               fontSize: 12,
                               height: 18 / 12,
-                              color: calculatorHistory.yieldPercent.toDouble() == 0 ? Color(0xFF828282) : Colors.white,
+                              color:
+                                  calculatorHistory.yieldPercent.toDouble() == 0
+                                      ? Color(0xFF828282)
+                                      : Colors.white,
                             )),
                       ],
                     ),
@@ -200,15 +214,23 @@ class HeyToYouMoreCard extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               fontSize: 13,
                               height: 15 / 13,
-                              color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : Colors.white,
+                              color:
+                                  calculatorHistory.yieldPercent.toDouble() == 0
+                                      ? Colors.black
+                                      : Colors.white,
                             )),
                         Padding(padding: EdgeInsets.only(right: 10)),
-                        Text(numberWithComma(calculatorHistory?.investPrice ?? ''),
+                        Text(
+                            numberWithComma(
+                                calculatorHistory?.investPrice ?? ''),
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                               height: 18 / 16,
-                              color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : Colors.white,
+                              color:
+                                  calculatorHistory.yieldPercent.toDouble() == 0
+                                      ? Colors.black
+                                      : Colors.white,
                             )),
                       ],
                     ),
@@ -239,7 +261,15 @@ class HeyToYouMoreCard extends StatelessWidget {
                                       fontWeight: FontWeight.w700,
                                       fontSize: 18,
                                       height: 32 / 27,
-                                      color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF)),
+                                      color: calculatorHistory.yieldPercent
+                                                  .toDouble() ==
+                                              0
+                                          ? Colors.black
+                                          : calculatorHistory.yieldPercent
+                                                      .toDouble() >
+                                                  0
+                                              ? Color(0xFFFF6B76)
+                                              : Color(0xFF4990FF)),
                                   presetFontSizes: [16, 18],
                                   maxLines: 1,
                                 ),
@@ -249,19 +279,35 @@ class HeyToYouMoreCard extends StatelessWidget {
                                       fontWeight: FontWeight.w700,
                                       fontSize: 22,
                                       height: 32 / 27,
-                                      color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF)),
+                                      color: calculatorHistory.yieldPercent
+                                                  .toDouble() ==
+                                              0
+                                          ? Colors.black
+                                          : calculatorHistory.yieldPercent
+                                                      .toDouble() >
+                                                  0
+                                              ? Color(0xFFFF6B76)
+                                              : Color(0xFF4990FF)),
                                   presetFontSizes: [20, 22],
                                   maxLines: 1,
                                 ),
                               ],
                             ),
                             AutoSizeText(
-                              "(${calculatorHistory.yieldPercent.toDouble() > 0 ? "+": ''}${calculatorHistory?.yieldPercent ?? 0}%)",
+                              "(${calculatorHistory.yieldPercent.toDouble() > 0 ? "+" : ''}${calculatorHistory?.yieldPercent ?? 0}%)",
                               style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 22,
                                   height: 32 / 27,
-                                  color: calculatorHistory.yieldPercent.toDouble() == 0 ? Colors.black : calculatorHistory.yieldPercent.toDouble() > 0 ? Color(0xFFFF6B76) : Color(0xFF4990FF)),
+                                  color: calculatorHistory.yieldPercent
+                                              .toDouble() ==
+                                          0
+                                      ? Colors.black
+                                      : calculatorHistory.yieldPercent
+                                                  .toDouble() >
+                                              0
+                                          ? Color(0xFFFF6B76)
+                                          : Color(0xFF4990FF)),
                               presetFontSizes: [20, 22],
                               maxLines: 1,
                             ),
@@ -305,10 +351,7 @@ class HeyToYouMoreCard extends StatelessWidget {
       ),
     );
   }
-
 }
-
-
 
 const HeyToYouMoreScreenHeaderStyle = TextStyle(
   fontWeight: FontWeight.bold,

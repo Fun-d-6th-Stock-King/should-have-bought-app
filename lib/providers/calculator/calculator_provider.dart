@@ -23,13 +23,29 @@ class CalculatorProvider with ChangeNotifier {
   ];
   List<CalculatorHistory> _calculateHistory = [];
   Map latestDto;
-  CalculatorStockAll calculationResultAll;
-  CalculatorStock calculationResult;
-  BestPrice bestPriceResult;
-  SectorData sectorData;
+  CalculatorStockAll _calculationResultAll;
+  CalculatorStock _calculationResult;
+  BestPrice _bestPriceResult;
+  SectorData _sectorData;
   List<NewsArticle> _headlienList = <NewsArticle>[];
   List<PeriodBestPrice> _periodBestPriceList = <PeriodBestPrice>[];
   List<CurrentStockPrice> _currentStockPriceList = <CurrentStockPrice>[];
+
+  CalculatorStock get calculationResult {
+    return _calculationResult;
+  }
+
+  CalculatorStockAll get calculationResultAll {
+    return _calculationResultAll;
+  }
+
+  BestPrice get bestPriceResult {
+    return _bestPriceResult;
+  }
+
+  SectorData get sectorData {
+    return _sectorData;
+  }
 
   List get headlineList {
     return _headlienList;
@@ -89,7 +105,7 @@ class CalculatorProvider with ChangeNotifier {
     final result = await CalculatorApi.getResult(params);
     print(result);
     // ToDo: 모델 객체 만들어서 처리 필요.
-    calculationResult = CalculatorStock.fromJson(result);
+    _calculationResult = CalculatorStock.fromJson(result);
     notifyListeners();
   }
 
@@ -97,7 +113,7 @@ class CalculatorProvider with ChangeNotifier {
     latestDto = params;
     final result = await CalculatorApi.getResult(params);
     print(result);
-    calculationResult = CalculatorStock.fromJson(result);
+    _calculationResult = CalculatorStock.fromJson(result);
     notifyListeners();
   }
 
@@ -139,24 +155,30 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   Future getSectorData() async {
-    final result = await CalculatorApi.getSectorInfor(latestDto['code'],
-        latestDto['investDate'], int.parse(latestDto['investPrice']));
-    sectorData = SectorData.fromJson(result);
-    notifyListeners();
+    if (_sectorData == null) {
+      final result = await CalculatorApi.getSectorInfor(latestDto['code'],
+          latestDto['investDate'], int.parse(latestDto['investPrice']));
+      _sectorData = SectorData.fromJson(result);
+      notifyListeners();
+    }
   }
 
   Future getFourResult() async {
-    final result = await CalculatorApi.getAllResult(
-        latestDto['code'], int.parse(latestDto['investPrice']));
-    calculationResultAll = CalculatorStockAll.fromJson(result);
-    notifyListeners();
+    if (_calculationResultAll == null) {
+      final result = await CalculatorApi.getAllResult(
+          latestDto['code'], int.parse(latestDto['investPrice']));
+      _calculationResultAll = CalculatorStockAll.fromJson(result);
+      notifyListeners();
+    }
   }
 
   Future getBestPrice() async {
-    final result = await CalculatorApi.getBestPrice(latestDto['code'],
-        latestDto['investDate'], int.parse(latestDto['investPrice']));
-    bestPriceResult = BestPrice.fromJson(result);
-    notifyListeners();
+    if (_bestPriceResult == null) {
+      final result = await CalculatorApi.getBestPrice(latestDto['code'],
+          latestDto['investDate'], int.parse(latestDto['investPrice']));
+      _bestPriceResult = BestPrice.fromJson(result);
+      notifyListeners();
+    }
   }
 
   Future getCurrentStockPrice() async {
@@ -170,16 +192,25 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   Future getPeriodBestPrice() async {
-    final result =
-        await CalculatorApi.getPeriodBestPrice(latestDto['investDate']);
-    final list = result['yieldSortList'];
-    if (list != null) {
-      _periodBestPriceList = list
-          .map<PeriodBestPrice>(
-              (sortedStock) => PeriodBestPrice.fromJson(sortedStock))
-          .toList();
+    if (_periodBestPriceList.isEmpty) {
+      final result =
+          await CalculatorApi.getPeriodBestPrice(latestDto['investDate']);
+      final list = result['yieldSortList'];
+      if (list != null) {
+        _periodBestPriceList = list
+            .map<PeriodBestPrice>(
+                (sortedStock) => PeriodBestPrice.fromJson(sortedStock))
+            .toList();
+      }
+      notifyListeners();
     }
-    notifyListeners();
+  }
+
+  Future cleanValue() async {
+    _sectorData = null;
+    _bestPriceResult = null;
+    _calculationResultAll = null;
+    _periodBestPriceList.clear();
   }
 
   Future getHeadliens() async {

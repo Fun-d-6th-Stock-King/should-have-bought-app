@@ -22,7 +22,8 @@ class _TenYearChartWidgetState extends State<TenYearChartWidget> {
   void didChangeDependencies() async {
     final code = Provider.of<CalculatorProvider>(context, listen: false)
         .latestDto['code'];
-    await Provider.of<BuyOrNotProvider>(context, listen: false).setChartLoading(true);
+    await Provider.of<BuyOrNotProvider>(context, listen: false)
+        .setChartLoading(true);
     await Provider.of<BuyOrNotProvider>(context, listen: false)
         .getBuyOrNotStockChart(code)
         .then((value) => Provider.of<BuyOrNotProvider>(context, listen: false)

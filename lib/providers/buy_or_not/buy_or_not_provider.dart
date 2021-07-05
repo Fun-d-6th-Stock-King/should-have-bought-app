@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:should_have_bought_app/api/buy_or_not/buy_or_not_api.dart';
-import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_chart.dart';
 import 'package:should_have_bought_app/models/buy_or_not/buy_or_not_stock.dart';
 import 'package:should_have_bought_app/models/buy_or_not/stock_hist.dart';
 import 'package:should_have_bought_app/models/buy_or_not/top_rank.dart';
@@ -10,10 +9,10 @@ import 'package:should_have_bought_app/models/buy_or_not/stock_evaluation_list.d
 import 'package:should_have_bought_app/models/buy_or_not/stock_evaluation_item.dart';
 
 class BuyOrNotProvider with ChangeNotifier {
-  BuyOrNotStock _buyOrNotStock = BuyOrNotStock();
-  StockHist _stockHist = StockHist();
-  EvaluationItem _evaluationItem = EvaluationItem();
-  StockEvaluationList _stockEvaluationList = StockEvaluationList();
+  BuyOrNotStock _buyOrNotStock;
+  StockHist _stockHist;
+  EvaluationItem _evaluationItem;
+  StockEvaluationList _stockEvaluationList;
   TopRank _topRank =
       TopRank(topRankEvaluation: TopRankEvaluation(), topRankList: []);
   bool _isLoadingBuyOrNot = false;
@@ -28,11 +27,12 @@ class BuyOrNotProvider with ChangeNotifier {
   bool get isLoadingChart => _isLoadingChart;
 
   Future getBuyOrNotStock(String stockCode) async {
-    final result = await BuyOrNotApi.getBuyOrNotStock(stockCode);
-    _buyOrNotStock = BuyOrNotStock.fromJson(result);
-
-    notifyListeners();
-    //return addEvaluationItemList;
+    if (_buyOrNotStock == null) {
+      final result = await BuyOrNotApi.getBuyOrNotStock(stockCode);
+      _buyOrNotStock = BuyOrNotStock.fromJson(result);
+      notifyListeners();
+      print("buyornotsotck");
+    }
   }
 
   Future getBuyOrNotStockChart(String stockCode) async {
@@ -86,17 +86,28 @@ class BuyOrNotProvider with ChangeNotifier {
 
   Future getBestEvaluateList(
       int pageNo, int pageSize, String period, String code) async {
-    final Map<String, String> params = {
-      'pageNo': pageNo.toString(),
-      'pageSize': pageSize.toString(),
-      'period': period,
-    };
-    final result = await BuyOrNotApi.getBestEvaluateList(code, params);
-    final list = result['evaluationList'];
-    _stockEvaluationList.evaluationList = list
-        .map<StockEvaluationItem>((item) => StockEvaluationItem.fromJson(item))
-        .toList();
-    _stockEvaluationList.pageInfo = result['pageInfo'];
-    notifyListeners();
+    if (_stockEvaluationList == null) {
+      final Map<String, String> params = {
+        'pageNo': pageNo.toString(),
+        'pageSize': pageSize.toString(),
+        'period': period,
+      };
+      final result = await BuyOrNotApi.getBestEvaluateList(code, params);
+      final list = result['evaluationList'];
+      _stockEvaluationList = StockEvaluationList();
+
+      _stockEvaluationList.evaluationList = list
+          .map<StockEvaluationItem>(
+              (item) => StockEvaluationItem.fromJson(item))
+          .toList();
+      _stockEvaluationList.pageInfo = result['pageInfo'];
+      notifyListeners();
+      print('getBestEvaluateList');
+    }
+  }
+
+  Future cleanValue() async {
+    _buyOrNotStock = null;
+    _stockEvaluationList = null;
   }
 }

@@ -35,13 +35,12 @@ class HistoryCard extends StatelessWidget {
             status: 'loading...',
             maskType: EasyLoadingMaskType.none,
           );
-          Provider.of<CalculatorWidgetProvider>(context,listen: false)
+          Provider.of<CalculatorWidgetProvider>(context, listen: false)
               .setSendCalcuatorDto(CalculatorDto(
-              code: history.code,
-              company: history.company,
-              investDate: reverseDateValue[history.investDateName],
-              investPrice: int.parse(history.investPrice)
-          ));
+                  code: history.code,
+                  company: history.company,
+                  investDate: reverseDateValue[history.investDateName],
+                  investPrice: int.parse(history.investPrice)));
           getAdMobCounter().then((value) async {
             if (value == true) {
               interstitialAd.show();
@@ -57,6 +56,7 @@ class HistoryCard extends StatelessWidget {
                 Navigator.of(context)
                     .pushNamed(CalculatorResultScreen.routeId)
                     .then((value) => {
+                          cleanProvider(context),
                           if (value == 'update')
                             {
                               Provider.of<CalculatorProvider>(context,
