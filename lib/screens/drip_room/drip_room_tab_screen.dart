@@ -34,7 +34,11 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
   void initState() {
     if (widget.searched != null && widget.searched == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showCreateDripSheet(context);
+        if (_auth.currentUser == null) {
+          LoginHandler(context);
+        } else {
+          _showCreateDripSheet(context);
+        }
       });
     }
     super.initState();
@@ -202,7 +206,9 @@ class _DripRoomTabScreenState extends State<DripRoomTabScreen> {
         child: FloatingActionButton(
           backgroundColor: mainColor,
           onPressed: () {
-            _showCreateDripSheet(context);
+            _auth.currentUser == null
+                ? LoginHandler(context)
+                : _showCreateDripSheet(context);
           },
           child: Icon(Icons.add),
         ),
