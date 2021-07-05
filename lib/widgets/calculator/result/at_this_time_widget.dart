@@ -95,19 +95,10 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
     super.dispose();
   }
 
-  bool isLoading = false;
   @override
-  void didChangeDependencies() {
-    setState(() {
-      isLoading = true;
-    });
-    Provider.of<CalculatorProvider>(context, listen: false)
-        .getFourResult()
-        .then((value) {
-      setState(() {
-        isLoading = false;
-      });
-    });
+  void didChangeDependencies() async {
+    await Provider.of<CalculatorProvider>(context, listen: false)
+        .getFourResult();
     super.didChangeDependencies();
   }
 
@@ -186,7 +177,7 @@ class _AtThisTimeWidgetState extends State<AtThisTimeWidget>
             ),
           ),
           SizedBox(height: 30),
-          isLoading
+          _fourResult == null
               ? Center(child: CircularProgressIndicator())
               : Container(
                   height: 120,
