@@ -9,7 +9,7 @@ Widget CardAppBar(BuildContext context) {
     elevation: 0,
     centerTitle: true,
     title: Container(
-      width: 350,
+      width: MediaQuery.of(context).size.width * 0.5,
       child: DefaultTextStyle(
         style: TextStyle(
           color: Colors.black,

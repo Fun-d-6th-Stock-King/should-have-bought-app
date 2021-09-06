@@ -56,7 +56,6 @@ class CardScreenWidget extends StatefulWidget {
 class _CreateCardScreenWidget extends State<CardScreenWidget>
     with TickerProviderStateMixin {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   List<SwipeItem> _swipeItems = [];
   MatchEngine _matchEngine;
 
@@ -145,7 +144,6 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
         appBar: CardAppBar(context),
         body: Stack(
           children: [
@@ -224,7 +222,6 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                     _matchEngine = MatchEngine(swipeItems: addCardList);
                   });
                   await EasyLoading.dismiss();
-                  //_scaffoldKey.currentState.showSnackBar();
                 },
               ),
             ),
@@ -333,22 +330,26 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                   _evaluation.id == null
                       ? Padding(
                           padding: const EdgeInsets.only(top: 10.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                child: Text(
-                                  '아직 작성된 드립이 없어요.',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold, height: 2),
+                          child: InkWell(
+                            child: Column(
+                              children: [
+                                // TODO: 버튼 처리 > 해당 드립 작성화면으로 이동
+                                Container(
+                                  child: Text(
+                                    '아직 작성된 드립이 없어요.',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold, height: 2),
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                child: Text(
-                                  '이 종목의 최초 드립 작성자가 되세요!',
-                                  style: TextStyle(fontSize: 11),
-                                ),
-                              )
-                            ],
+                                Container(
+                                  child: Text(
+                                    '이 종목의 최초 드립 작성자가 되세요!',
+                                    style: TextStyle(fontSize: 11),
+                                  ),
+                                )
+                              ],
+                            ),
+                            onTap: () {},
                           ),
                         )
                       : DefaultTextStyle(
@@ -499,14 +500,15 @@ Widget noCardScreenWidget(BuildContext context) {
                                             borderRadius:
                                                 BorderRadius.circular(12.0)),
                                         child: Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(horizontal: 7),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 7),
                                           child: Text('장점',
-                                              style:
-                                                  TextStyle(color: Colors.white)),
+                                              style: TextStyle(
+                                                  color: Colors.white)),
                                         ),
                                       ),
-                                      Padding(padding: EdgeInsets.only(left: 8)),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 8)),
                                       skeletonText(90, 15)
                                     ],
                                   ),
@@ -524,14 +526,15 @@ Widget noCardScreenWidget(BuildContext context) {
                                             borderRadius:
                                                 BorderRadius.circular(12.0)),
                                         child: Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(horizontal: 7),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 7),
                                           child: Text('단점',
-                                              style:
-                                                  TextStyle(color: Colors.white)),
+                                              style: TextStyle(
+                                                  color: Colors.white)),
                                         ),
                                       ),
-                                      Padding(padding: EdgeInsets.only(left: 8)),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 8)),
                                       skeletonText(90, 15),
                                     ],
                                   ),
