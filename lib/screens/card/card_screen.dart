@@ -11,6 +11,7 @@ import 'package:should_have_bought_app/models/calculator/company.dart';
 import 'package:should_have_bought_app/models/card/chart_dto.dart';
 import 'package:should_have_bought_app/models/drip_room/evaluation_item.dart';
 import 'package:should_have_bought_app/screens/card/card_button.dart';
+import 'package:should_have_bought_app/screens/stock/stock_detail_screen.dart';
 import 'package:should_have_bought_app/screens/util/skeleton_widget.dart';
 import 'package:should_have_bought_app/utils.dart';
 import 'package:should_have_bought_app/widgets/appbar/card_appbar.dart';
@@ -57,6 +58,7 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
     with TickerProviderStateMixin {
   FirebaseAuth _auth = FirebaseAuth.instance;
   List<SwipeItem> _swipeItems = [];
+  List<Company> _companyList = [];
   MatchEngine _matchEngine;
 
   AnimationController _leftAniController;
@@ -71,6 +73,8 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
     List<ChartDto> cardList =
         Provider.of<CardProvider>(context, listen: false).cardList;
     _swipeItems = CreateSwipeItem(cardList);
+    _companyList =
+        Provider.of<CardProvider>(context, listen: false).toDoEvalList;
 
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
     _leftAniController = AnimationController(
@@ -268,6 +272,7 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
   Widget BuyOrNotCard(int index) {
     StockHist _stockHist = _swipeItems[index].content.stockHist;
     EvaluationItem _evaluation = _swipeItems[index].content.evaluation;
+    Company _company = _companyList[index];
     return Container(
       child: Card(
         elevation: 0.4,
@@ -333,7 +338,6 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                           child: InkWell(
                             child: Column(
                               children: [
-                                // TODO: 버튼 처리 > 해당 드립 작성화면으로 이동
                                 Container(
                                   child: Text(
                                     '아직 작성된 드립이 없어요.',
@@ -349,7 +353,16 @@ class _CreateCardScreenWidget extends State<CardScreenWidget>
                                 )
                               ],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => StockDetailScreen(
+                                            _company,
+                                            1,
+                                            seached: true,
+                                          )));
+                            },
                           ),
                         )
                       : DefaultTextStyle(
